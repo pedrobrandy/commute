@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shared Ride</title>
+  <title>Personal Ride</title>
     <style>
       body {
         font-family: 'Segoe UI', Arial, sans-serif;
@@ -333,37 +333,22 @@
     }
     </style>
 
+
 </head>
 <body>
-
   <div class="content-wrapper">
   </div>
   <!-- Page 1: Form -->
  <form id="travelForm">
-  <h2>🚐 Shared Ride</h2>
+  <h2>🚗 Personal Ride</h2>
     <p style="text-align: center; font-size: 0.85rem; color: #555; margin-top: -0.9rem; margin-bottom: 1.5rem;">
-      Share with 3–4 passengers. Route and timing are confirmed the night before based on all stops and passengers confirmed.
+      Pay for all seats and bring bags. Ideal for airport trips and direct routes—no extra stops.
     </p>
+
   <div class="form-fields">
     <div class="input-group">
       <label for="startDate">Date:</label>
       <input type="date" id="startDate" required />
-    </div>
-
-    <div class="input-group">
-      <label for="direction">Trip Direction:</label>
-      <select id="direction" required>
-        <option value="">Select direction</option>
-        <option value="kwc-t">KWC → Mississauga / Toronto</option>
-        <option value="t-kwc">Mississauga / Toronto → KWC</option>
-      </select>
-    </div>
-
-    <div class="input-group">
-      <label for="time">Selected Time:</label>
-      <select id="time" required>
-        <option value="">Select time</option>
-      </select>
     </div>
 
     <div class="input-group">
@@ -384,6 +369,7 @@
     <button type="submit">Submit</button>
   </div>
 </form>
+
     <!-- Page 2: Summary -->
     <div id="summary">
         <h2>Reservation Summary</h2>
@@ -417,7 +403,7 @@
 
     <script>
     function updateStatus(newStatus) {
-        const url = 'https://script.google.com/macros/s/AKfycbxJ6-dF6gMi_WO9pEXAoRddzZoIQ84s3kElBiitMG9KRkvSC5PXQmlurXOosRc5DOB4ww/exec';
+        const url = 'https://script.google.com/macros/s/AKfycbzBceMny9TU5KVI53TmJXfGtHoF6MY5l7jyBCRgnyg2C8Kceb9Mn0ID2li85l5J3xfi/exec';
 
         const data = new URLSearchParams();
         data.append("action", "updateLast");
@@ -453,15 +439,6 @@
     }
     </script>
 
-      </div>
-
-    </div>
-  <hr style="width: 90%; max-width: 500px; margin: 40px 0; border: none; border-top: 1px solid #ccc;" />
-
-  <p class="payment" style="text-align: center; color: #777; font-size: 0.9rem; padding: 0 20px 40px;">
-    This page is only for pre-confirmation purposes to ensure your information is accurate.
-    You are not required to make any payment or transfer money through this page.
-  </p>
     <!-- Sorry message for short rides -->
     <div id="sorryMessage">
         Sorry, we don't do this ride, thank you.
@@ -530,32 +507,10 @@
     }
 
     function calculatePrice(distanceKm) {
-        if (distanceKm >= 100) return 25;
-        if (distanceKm >= 80) return 20;
-        if (distanceKm >= 35) return 15;
+        if (distanceKm >= 100) return 100;
+        if (distanceKm >= 80) return 80;
+        if (distanceKm >= 35) return 60;
         return 0;
-    }
-
-    function convertTimeToHHMMSS(timeStr) {
-        // Convert time strings like "530am", "1pm", "9pm" to HH:mm:ss format
-        let hours, minutes = "00";
-        
-        // Extract hours and minutes
-        const match = timeStr.match(/(\d{1,2})(\d{2})?(am|pm)/i);
-        if (match) {
-            hours = parseInt(match[1]);
-            if (match[2]) minutes = match[2];
-            
-            // Convert to 24-hour format
-            if (match[3].toLowerCase() === 'pm' && hours !== 12) {
-                hours += 12;
-            } else if (match[3].toLowerCase() === 'am' && hours === 12) {
-                hours = 0;
-            }
-        }
-        
-        // Format to HH:mm:ss
-        return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
     }
 
     document.getElementById("travelForm").addEventListener("submit", async function (e) {
@@ -597,9 +552,6 @@
 
         const ETAY = document.getElementById("ETAY").value;
         const startDate = document.getElementById("startDate").value;
-        const direction = document.getElementById("direction").value;
-        const time = document.getElementById("time").value;
-        const timeValue = convertTimeToHHMMSS(time);
 
         let summaryHTML = `
           <p><strong>Name:</strong> ${user.fullName}</p>
@@ -607,8 +559,6 @@
           <p><strong>Pickup Location:</strong> ${origin}</p>
           <p><strong>Drop-off Location:</strong> ${destination}</p>
           <p><strong>Date:</strong> ${formatDate(startDate)}</p>
-          <p><strong>Direction:</strong> ${direction === 'kwc-t' ? 'KWC → Mississauga / Toronto' : 'Mississauga / Toronto → KWC'}</p>
-          <p><strong>Time:</strong> ${time}</p>
           <hr>
           <p><strong>Distance:</strong> ${drivingInfo.distanceText}</p>
           <p><strong>Arrival time goal :</strong> ${ETAY}</p>
@@ -627,30 +577,30 @@
 
         // Create FormData for Google Sheets
         const formData = new URLSearchParams();
-        formData.append('action', 'saveReservation');
-        formData.append('type', 'Shared Ride');
-        formData.append('status', 'Negociación');
-        formData.append('name', user.fullName);
-        formData.append('phone', user.phone);
-        formData.append('email', user.email);
-        formData.append('origin', origin);
-        formData.append('destination', destination);
-        formData.append('directionText', direction === 'kwc-t' ? 'KWC → Mississauga / Toronto' : 'Mississauga / Toronto → KWC');
-        formData.append('timeText', time);
-        formData.append('timeValue', timeValue);
-        formData.append('startDate', startDate);
-        formData.append('endDate', "-");
-        formData.append('distanceText', drivingInfo.distanceText);
-        formData.append('ETAY', ETAY);
-        formData.append('price', price);
-        formData.append('adjustedDrivingMinutes', adjustedTimeFormatted);
-        formData.append('adjustedDrivingDuration', adjustedTimeFormatted);
-        formData.append('transitDurationText', transitInfo.durationText);
-        formData.append('estimatedArrivalTime', "-");
+        formData.append("action", "saveReservation");
+        formData.append("type", "Personal Ride");
+        formData.append("status", "Negociación");
+        formData.append("name", user.fullName);
+        formData.append("phone", user.phone);
+        formData.append("email", user.email);
+        formData.append("origin", origin);
+        formData.append("destination", destination);
+        formData.append("directionText", "-");
+        formData.append("timeText", "-");
+        formData.append("timeValue", "-");
+        formData.append("startDate", startDate);
+        formData.append("endDate", "-");
+        formData.append("distanceText", drivingInfo.distanceText);
+        formData.append("ETAY", ETAY);
+        formData.append("price", price);
+        formData.append("adjustedDrivingMinutes", adjustedTimeFormatted);
+        formData.append("adjustedDrivingDuration", adjustedTimeFormatted);
+        formData.append("transitDurationText", transitInfo.durationText);
+        formData.append("estimatedArrivalTime", "-");
 
         // Send to Google Sheets
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbxL_IXNVOIkMmk8nV9z_-rnVs2nhMHt_xcloyPrNw6SOoWqneONlUJd8YyFBQ0Js1MB0g/exec', {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbxJ6-dF6gMi_WO9pEXAoRddzZoIQ84s3kElBiitMG9KRkvSC5PXQmlurXOosRc5DOB4ww/exec', {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: {
@@ -674,34 +624,34 @@
     window.onload = initMap;
 
     document.getElementById("direction").addEventListener("change", function () {
-      const timeSelect = document.getElementById("time");
-      const direction = this.value;
+    const timeSelect = document.getElementById("time");
+    const direction = this.value;
 
-      // Clear previous options
-      timeSelect.innerHTML = '<option value="">Select time</option>';
+    // Limpiar opciones previas
+    timeSelect.innerHTML = '<option value="">Select time</option>';
 
-      let times = [];
+    let times = [];
 
-      if (direction === "kwc-t") {
+    if (direction === "kwc-t") {
         times = [
-          { value: "530am", label: "5:30 AM" },
-          { value: "1pm", label: "1:00 PM" },
-          { value: "9pm", label: "9:00 PM" }
+        { value: "530am", label: "5:30 AM" },
+        { value: "1pm", label: "1:00 PM" },
+        { value: "9pm", label: "9:00 PM" }
         ];
-      } else if (direction === "t-kwc") {
+    } else if (direction === "t-kwc") {
         times = [
-          { value: "10am", label: "10:00 AM" },
-          { value: "4pm", label: "4:00 PM" },
-          { value: "11pm", label: "11:00 PM" }
+        { value: "10am", label: "10:00 AM" },
+        { value: "4pm", label: "4:00 PM" },
+        { value: "11pm", label: "11:00 PM" }
         ];
-      }
+    }
 
-      times.forEach(t => {
+    times.forEach(t => {
         const option = document.createElement("option");
         option.value = t.value;
         option.textContent = t.label;
         timeSelect.appendChild(option);
-      });
+    });
     });
 
     function checkUser() {
@@ -746,6 +696,7 @@
         }
     });
     </script>
-    <script src="loadNav.js"></script>
+  <script src="loadNav.js"></script>
+  <script src="loadHeader.js"></script>
 </body>
 </html>
