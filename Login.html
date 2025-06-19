@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Commut</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+
+    <div class="content-wrapper">
+        <form id="loginForm">
+    <h2>Login</h2>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+      </div>
+            <div class="form-group">
+        <label for="password">Password:</label>
+                <input type="password" id="password" required>
+      </div>
+            <div id="error-message" class="error-message"></div>
+      <button type="submit">Login</button>
+            <p class="form-footer">
+                Don't have an account? <a href="register.html">Register here</a>
+            </p>
+    </form>
+  </div>
+
+    <script src="auth.js"></script>
+  <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!email || !password) {
+                alert('Por favor, ingrese su email y contraseña');
+                return;
+            }
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'login');
+                formData.append('email', email);
+                formData.append('password', password);
+
+                console.log('Enviando solicitud de login...');
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxJ6-dF6gMi_WO9pEXAoRddzZoIQ84s3kElBiitMG9KRkvSC5PXQmlurXOosRc5DOB4ww/exec', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
+
+                console.log('Respuesta recibida:', response);
+                const result = await response.json();
+                console.log('Datos de respuesta:', result);
+
+                if (result.success) {
+                    console.log('Login exitoso, guardando datos del usuario...');
+                    // Guardar datos del usuario en localStorage
+                    localStorage.setItem('user', JSON.stringify({
+                        fullName: result.fullName,
+                        email: result.email
+                    }));
+                    
+                    console.log('Redirigiendo a la página principal...');
+                    // Redirigir a la página de inicio
+                    window.location.href = 'travel_reservation_homev1.html';
+                } else {
+                    console.log('Error en el login:', result.message);
+                    alert(result.message || 'Credenciales inválidas. Por favor, intente nuevamente.');
+                }
+            } catch (error) {
+                console.error('Error durante el login:', error);
+                alert('Error al iniciar sesión. Por favor, intente nuevamente.');
+            }
+        }
+
+        // Agregar event listener al formulario
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+
+        function checkUser() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const userInfoElement = document.getElementById('userName');
+            const logoutBtn = document.querySelector('.logout-btn');
+            const userIcon = document.querySelector('.user-icon');
+            
+            if (user) {
+                userInfoElement.textContent = `Welcome, ${user.fullName}`;
+                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+                logoutBtn.onclick = logout;
+                userIcon.className = 'fas fa-user user-icon';
+      } else {
+                userInfoElement.textContent = '';
+                logoutBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                logoutBtn.onclick = checkAuth;
+                userIcon.className = 'fas fa-sign-in-alt user-icon';
+            }
+        }
+
+        function toggleUserMenu() {
+            const userInfo = document.querySelector('.user-info');
+            userInfo.classList.toggle('mobile-active');
+        }
+
+        function checkAuth() {
+            window.location.href = 'login.html';
+        }
+
+        window.onload = checkUser;
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const userInfo = document.querySelector('.user-info');
+            const userIcon = document.querySelector('.user-icon');
+            if (!userInfo.contains(event.target)) {
+                userInfo.classList.remove('mobile-active');
+      }
+    });
+  </script>
+<script src="loadNav.js"></script>
+</body>
+</html>

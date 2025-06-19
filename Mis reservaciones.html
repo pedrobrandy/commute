@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Trips</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+      body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        margin: 0;
+        background-color: #0D1B2A;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav {
+        background-color: #fff;
+        width: 100%;
+        padding: 10px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .menu {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        list-style: none;
+        margin: 0;
+        padding: 20;
+      }
+
+      .menu-item {
+        position: relative;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #0078D4;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .submenu {
+        display: none;
+        position: absolute;
+        background: white;
+        top: 100%;
+        left: 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        padding: 10px;
+        z-index: 1000;
+      }
+
+      .menu-item:hover .submenu {
+        display: block;
+      }
+
+      .submenu a {
+        display: block;
+        padding: 5px 10px;
+        color: #0078D4;
+      }
+
+      .submenu a:hover {
+        background-color: #f0f0f0;
+      }
+
+      .content-wrapper {
+        max-width: 80%;
+        width: 100%;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
+
+      @media (max-width: 600px) {
+        nav {
+          padding: 10px;
+        }
+
+        .menu {
+          gap: 5px;
+          padding: 10px;
+        }
+
+        .user-info span {
+          display: none;
+        }
+
+        .user-icon {
+          display: block;
+          font-size: 1.2rem;
+          color: #0078D4;
+          cursor: pointer;
+          padding: 5px;
+          border-radius: 50%;
+          transition: background-color 0.3s;
+        }
+
+        .user-icon:hover {
+          background-color: #f0f0f0;
+        }
+
+        .logout-btn {
+          display: none;
+        }
+
+        .user-info.mobile-active .logout-btn {
+          display: flex;
+          position: absolute;
+          top: 100%;
+          right: 0;
+          background: white;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          border-radius: 4px;
+          padding: 10px;
+          z-index: 1000;
+          white-space: nowrap;
+          margin-top: 5px;
+        }
+
+        .user-info.mobile-active .logout-btn i {
+          margin-right: 5px;
+        }
+
+        .content-wrapper {
+          margin: 10px auto;
+          padding: 0 10px;
+        }
+
+      }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .user-info span {
+      color: #333;
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #0078D4;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .logout-btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #778DA9;
+    }
+
+    /* Estilos para el carrusel de tarjetas en desktop */
+    .carousel-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding: 20px;
+      scroll-behavior: smooth;
+      max-width: 100%;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .carousel-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .carousel-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    .carousel-container::-webkit-scrollbar-thumb {
+      background: #0078D4;
+      border-radius: 4px;
+    }
+
+    .carousel-container::-webkit-scrollbar-thumb:hover {
+      background: #005a9e;
+    }
+
+    .trip-card, .responsive-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trip-card {
+      min-width: 300px;
+      max-width: 350px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 20px;
+      margin: 10px 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .trip-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .trip-card h3 {
+      margin: 0 0 15px 0;
+      color: #778DA9;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #E0E1DD;
+      padding-bottom: 10px;
+      padding-right: 80px;
+    }
+
+    .trip-info {
+      margin-bottom: 15px;
+    }
+
+    .trip-info p {
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 5px;
+    }
+
+    .trip-info .label {
+      font-weight: 600;
+      color: #1B263B;
+      min-width: 80px;
+    }
+
+    .trip-info .value {
+      color: #415A77;
+      text-align: right;
+      flex: 1;
+      margin-left: 10px;
+    }
+
+    .status-label {
+      position: static;
+      margin-left: 8px;
+      align-self: flex-end;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background-color: #cbcbc8;
+      color: #212529;
+      font-weight: 500;
+      white-space: nowrap;
+      text-align: center;
+      max-width: 120px;
+      z-index: 10;
+      margin-bottom: 4px;
+    }
+    
+    /* Status label colors */
+    .status-label[data-status="Negociación"] {
+      background-color: #eaac8b !important;
+      color: #212529 !important;
+    }
+    
+    .status-label[data-status="Route_Assigned"] {
+      background-color: #6d597a !important;
+      color: #ffffff !important;
+    }
+    
+    .status-label[data-status="Pre-Confirmado"] {
+      background-color: #b56576 !important;
+      color: #ffffff !important;
+    }
+    
+    .status-label[data-status="Confirmed"] {
+      background-color: #e56b6f !important;
+      color: #ffffff !important;
+    }
+    
+    .status-label[data-status="Route Confirmed"] {
+      background-color: #355070 !important;
+      color: #ffffff !important;
+    }
+
+    @media (min-width: 601px) {
+      .status-label {
+        margin-top: -18px;
+        align-self: flex-start;
+        margin-bottom: 0;
+      }
+    }
+    @media (max-width: 600px) {
+      .status-label {
+        margin-top: 0;
+        margin-bottom: 4px;
+        align-self: flex-end;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .confirm-button {
+      display: -webkit-inline-box;
+      display: -moz-inline-box;
+      display: -ms-inline-flexbox;
+      display: -webkit-inline-flex;
+      display: inline-flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      flex-direction: row;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+      border-left-width: 0;
+      border-top-width: 0;
+      border-right-width: 0;
+      border-bottom-width: 0;
+      border-left-style: none;
+      border-top-style: none;
+      border-right-style: none;
+      border-bottom-style: none;
+      outline: none;
+      box-shadow: none;
+      text-decoration: none;
+      -webkit-appearance: none;
+      -webkit-transition-property: background;
+      -moz-transition-property: background;
+      transition-property: background;
+      transition-duration: 200ms;
+      transition-timing-function: cubic-bezier(0, 0, 1, 1);
+      cursor: pointer;
+      margin-left: 0;
+      margin-top: 0;
+      margin-right: 0;
+      margin-bottom: 0;
+      font-family: UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 20px;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      padding-left: 25px;
+      padding-right: 25px;
+      color: #0D1B2A;
+      background-color: #E0E1DD;
+      min-width: 130px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .confirm-button.confirm {
+      background-color: #E0E1DD;
+      color: #0D1B2A;
+    }
+
+    .confirm-button.confirm:hover {
+      background-color: #218838;
+      color: white;
+    }
+
+    .cancel-button {
+      display: -webkit-inline-box;
+      display: -moz-inline-box;
+      display: -ms-inline-flexbox;
+      display: -webkit-inline-flex;
+      display: inline-flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+      flex-direction: row;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+      border-left-width: 0;
+      border-top-width: 0;
+      border-right-width: 0;
+      border-bottom-width: 0;
+      border-left-style: none;
+      border-top-style: none;
+      border-right-style: none;
+      border-bottom-style: none;
+      outline: none;
+      box-shadow: none;
+      text-decoration: none;
+      -webkit-appearance: none;
+      -webkit-transition-property: background;
+      -moz-transition-property: background;
+      transition-property: background;
+      transition-duration: 200ms;
+      transition-timing-function: cubic-bezier(0, 0, 1, 1);
+      cursor: pointer;
+      margin-left: 0;
+      margin-top: 0;
+      margin-right: 0;
+      margin-bottom: 0;
+      font-family: UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 20px;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      padding-top: 14px;
+      padding-bottom: 14px;
+      padding-left: 25px;
+      padding-right: 25px;
+      color: #E0E1DD;
+      background-color: #1B263B;
+      min-width: 130px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cancel-button:hover {
+      background-color: #c82333;
+      color: white;
+    }
+
+    /* Estilos para la tabla (solo en móvil) */
+    .table-container {
+      display: none;
+    }
+
+    /* Ocultar tarjetas responsive en desktop */
+    #cardContainer {
+      display: none;
+    }
+
+    th, td {
+      padding: 5px 16px;
+      border-bottom: 1px solid #0D1B2A;
+      text-align: center;
+    }
+
+    th {
+      background-color: #778DA9;
+      color: #E0E1DD;
+    }
+
+    table {
+      width: 100%;
+      margin: 10px auto;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .notice {
+      font-size: 0.9rem;
+      color: #777;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Responsive para móvil */
+    @media (max-width: 768px) {
+      .carousel-container {
+        display: none;
+      }
+
+      .carousel-controls {
+        display: none;
+      }
+
+      .table-container {
+        display: none;
+      }
+
+      /* Mostrar tarjetas responsive solo en móvil */
+      #cardContainer {
+        display: block;
+      }
+
+      .responsive-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 10px;
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        position: relative;
+      }
+
+      .responsive-card p {
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      .status-label {
+        top: 4px;
+        right: 6px;
+        font-size: 0.75rem;
+        padding: 3px 7px;
+      }
+
+      .card-top-row {
+        min-height: 32px;
+      }
+
+      .van-img {
+        height: 22px;
+      }
+    }
+
+    /* Controles del carrusel */
+    .carousel-controls {
+      display: none;
+    }
+
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 120, 212, 0.9);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .carousel-btn:hover {
+      background: rgba(0, 90, 158, 1);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .carousel-btn:disabled {
+      background: rgba(204, 204, 204, 0.5);
+      cursor: not-allowed;
+      transform: translateY(-50%) scale(1);
+    }
+
+    .carousel-btn.prev {
+      left: 10px;
+    }
+
+    .carousel-btn.next {
+      right: 10px;
+    }
+
+    .van-img-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 8px 0 4px 0;
+    }
+
+    .van-img {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+
+    /* Fila superior de la tarjeta: fecha, imagen y status label */
+    .card-top-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 8px;
+      width: 100%;
+    }
+    .card-date {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .right-info-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      min-width: 110px;
+    }
+    .date-row, .time-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .date-icon, .time-icon {
+      height: 16px;
+      width: 16px;
+      display: inline-block;
+      filter: invert(13%) sepia(18%) saturate(2097%) hue-rotate(169deg) brightness(97%) contrast(98%);
+    }
+    .card-time {
+      font-size: 0.85em;
+      color: #415A77;
+      margin-top: 0;
+      font-weight: 400;
+    }
+    .van-img {
+      margin: 0 auto;
+      height: 32px;
+      z-index: 1;
+      display: block;
+    }
+    @media (max-width: 768px) {
+      .card-top-row {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .right-info-col {
+        min-width: 80px;
+      }
+      .trip-price {
+        font-size: 20px;
+      }
+      .status-label {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        max-width: 90vw;
+      }
+    }
+
+    .icon-trip {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+      vertical-align: middle;
+      fill: #0D1B2A;
+      display: inline-block;
+    }
+
+    .trip-address-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 10px 0 14px 0;
+    }
+    .address-block {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+    .address-value {
+      font-size: 0.92em;
+      color: #415A77;
+      font-weight: 400;
+      max-width: 140px;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      white-space: normal;
+    }
+    .dotted-divider {
+      border-left: 2px dashed #bfc9d1;
+      height: 32px;
+      margin: 0 10px;
+    }
+
+    .trip-price {
+      color: rgb(0, 0, 0);
+      text-align: right;
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 0 0;
+      width: auto;
+      display: block;
+      z-index: 2;
+      white-space: nowrap;
+    }
+
+    /* Agrega este CSS para el detalle expandido */
+    .route-details {
+      background: #f7f7fa;
+      border-radius: 10px;
+      margin: 10px 0 0 0;
+      padding: 12px 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-size: 0.97em;
+      color: #222;
+    }
+    .route-details-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+    }
+    .route-details-table th, .route-details-table td {
+      border-bottom: 1px solid #e0e0e0;
+      padding: 4px 6px;
+      text-align: left;
+      font-size: 0.97em;
+    }
+    .route-details-table th {
+      background: #e0e1dd;
+      color: #0D1B2A;
+      font-weight: 600;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      background: #415A77;
+      border-bottom: 1.5px solid #E0E1DD;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 0;
+      min-height: 68px;
+    }
+    .bottom-menu {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+    }
+    .bottom-menu li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+    }
+    .bottom-menu a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #E0E1DD;
+      font-weight: 500;
+      font-size: 13px;
+      padding: 0;
+      background: none;
+      border: none;
+    }
+    .nav-icon {
+      width: 33px;
+      height: 33px;
+      margin-bottom: 2px;
+      display: block;
+      filter: none;
+    }
+    .nav-label {
+      font-size: 11px;
+      color: #E0E1DD;
+      text-align: center;
+      margin-top: 0px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .user-info {
+      position: absolute;
+      right: 18px;
+      top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logout-btn {
+      background: #E0E1DD;
+      color: #1B263B;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 4px;
+      transition: background 0.2s;
+    }
+    .logout-btn:hover {
+      background: #778DA9;
+      color: #fff;
+    }
+    @media (max-width: 600px) {
+      .bottom-nav {
+        top: auto;
+        bottom: 0;
+        border-top: 1.5px solid #E0E1DD;
+        border-bottom: none;
+        min-height: 60px;
+        padding: 0;
+      }
+      .bottom-menu {
+        gap: 18px;
+      }
+      .nav-icon {
+        width: 33px;
+        height: 33px;
+      }
+      .nav-label {
+        font-size: 10px;
+      }
+      .user-info {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        left: auto;
+        z-index: 101;
+      }
+    }
+    
+    /* Filter for Rides and Contact icons to match text color */
+    .bottom-menu li:first-child .nav-icon,
+    .bottom-menu li:last-child .nav-icon {
+      filter: brightness(0) saturate(100%) invert(89%) sepia(6%) saturate(247%) hue-rotate(202deg) brightness(94%) contrast(90%);
+    }
+  </style>
+  <script src="loadNav.js"></script>
+  <script src="loadHeader.js"></script>
+</head>
+<body>
+  
+  <!-- Navigation will be loaded here by loadNav.js -->
+  
+  <!-- Carrusel de tarjetas para desktop -->
+  <div class="carousel-container" id="carouselContainer">
+    <!-- Botón Previous -->
+    <button class="carousel-btn prev" onclick="scrollCarousel('left')" id="leftBtn">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    
+    <!-- Botón Next -->
+    <button class="carousel-btn next" onclick="scrollCarousel('right')" id="rightBtn">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- Las tarjetas se generarán dinámicamente -->
+  </div>
+
+  <!-- Tabla para móvil -->
+  <div class="table-container">
+    <table id="tripTable">
+      <thead>
+        <tr>
+          <th onclick="ordenarPorFecha()">Date 🔽</th>      
+          <th>Origin</th>
+          <th>Destination</th>
+          <th style="text-align: center">Price</th>
+          <th style="text-align: center">Status</th>
+          <th style="text-align: center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rellenado con JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="cardContainer"></div>
+
+  <p class="notice">Only upcoming or active trips are listed here.</p>
+
+<script>
+  function toggleUserMenu() {
+    document.querySelector(".user-info").classList.toggle("mobile-active");
+  }
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+
+  const userData = localStorage.getItem("user");
+  const user = userData ? JSON.parse(userData) : null;
+  const email = user ? user.email : null;
+
+  console.log("Email en localStorage:", email);
+
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbxJ6-dF6gMi_WO9pEXAoRddzZoIQ84s3kElBiitMG9KRkvSC5PXQmlurXOosRc5DOB4ww/exec';
+  const proxyUrl = scriptUrl;
+
+  function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  // Fixed function to generate action buttons
+  function generateActionButtons(trip) {
+    const status = trip.status.toLowerCase().trim();
+    console.log(`Generating buttons for status: "${status}"`);
+    
+    let buttons = '';
+    
+    if (status === 'confirmed') {
+      return `<span style="color: #778DA9; font-weight: bold;">Your reservatios in confirmed we are waiting for the rest of the passengers.</span>`;
+    } else if (status === 'negociación') {
+      buttons = `
+        <button 
+          class="confirm-button confirm"
+          title="Clicking confirms you accept and pre-confirm – please only click once."
+          onclick="updateStatus('${trip.id}', 'Pre-Confirmado')">
+          Pre‑Confirm
+        </button>
+      `;
+    } else if (status.includes('route') && status.includes('assigned')) {
+      buttons = `
+        <button 
+          class="confirm-button confirm"
+          title="Clicking confirms you accept the details – please only click once."
+          onclick="updateStatus('${trip.id}', 'Confirmed')">
+          Confirm
+        </button>
+      `;
+    }
+    
+    buttons += `
+      <button 
+        class="cancel-button"
+        title="Clicking Cancel you will not recover this trip – please only click once."
+        onclick="updateStatus('${trip.id}', 'Canceled')">
+        Cancel
+      </button>
+    `;
+    
+    return buttons;
+  }
+
+  // Función para crear tarjeta de viaje
+  function createTripCard(trip) {
+    let routeDetailLink = '';
+    const routeId = trip.routeId || trip.routeID;
+    if (routeId) {
+      routeDetailLink = `<a class="route-detail-link" href="route_detail.html?routeId=${encodeURIComponent(routeId)}&name=${encodeURIComponent(trip.name)}" target="_blank" style="display:inline-block;margin:10px 0 0 0;color:#0078D4;font-weight:600;text-decoration:underline;">Ver más detalle</a>`;
+    }
+    return `
+      <div class="trip-card">
+        <div class="card-top-row">
+          <span class="card-date">
+            <span class="date-row">
+              <img src="https://icons.veryicon.com/png/o/miscellaneous/esgcc-basic-icon-library/date-71.png" class="date-icon" alt="date" />
+              ${formatDate(trip.startDate)}
+            </span>
+            <span class="time-row">
+              <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" class="time-icon" alt="time" />
+              <span class="card-time">${trip.timeText || ''}</span>
+            </span>
+          </span>
+          <span class="right-info-col">
+            <div class="status-label" id="statusLabel-${trip.id}" data-status="${trip.status}">${trip.status}</div>
+            <span class="trip-price">${trip.price} CAD</span>
+          </span>
+        </div>
+        <div class="trip-address-row">
+          <span class="address-block">
+            <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm5-2a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z" fill="currentColor"></path></svg>
+            <span class="address-value">${trip.origin}</span>
+          </span>
+          <span class="dotted-divider"></span>
+          <span class="address-block">
+            <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 10h-4v4h4v-4ZM7 7v10h10V7H7Z" fill="currentColor"></path></svg>
+            <span class="address-value">${trip.destination}</span>
+          </span>
+        </div>
+        ${routeDetailLink}
+        <div class="action-buttons">
+          ${generateActionButtons(trip)}
+        </div>
+      </div>
+    `;
+  }
+
+  // Función para hacer scroll del carrusel
+  function scrollCarousel(direction) {
+    const container = document.getElementById('carouselContainer');
+    const scrollAmount = 350; // Ancho de una tarjeta + gap
+    
+    if (direction === 'left') {
+      container.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    } else {
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  (async () => {
+    try {
+      const response = await fetch(`${proxyUrl}?route=registro&action=ver_todos&status=all`);
+      const data = await response.json();
+      console.log("Datos recibidos:", data);
+
+      if (!data.success) throw new Error(data.error);
+
+      const userEmail = email;
+      const trips = data.results.filter(t => {
+        console.log("Filtrando viaje:", t);
+
+        if (t.email !== userEmail) {
+          console.log(`Email no coincide: ${t.email} !== ${userEmail}`);
+          return false;
+        }
+
+        if (t.status.toLowerCase() === "cancelado" || t.status.toLowerCase() === "canceled") {
+          console.log("Viaje cancelado, no se muestra:", t);
+          return false;
+        }
+
+        const tripDate = new Date(t.startDate);
+        const now = new Date();
+        tripDate.setHours(0, 0, 0, 0);
+        now.setHours(0, 0, 0, 0);
+
+        return tripDate >= now;
+      });
+
+      const tbody = document.querySelector("#tripTable tbody");
+      const cardContainer = document.getElementById("cardContainer");
+      const carouselContainer = document.getElementById("carouselContainer");
+      
+      tbody.innerHTML = '';
+      cardContainer.innerHTML = '';
+      carouselContainer.innerHTML = '';
+
+      if (trips.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">No upcoming trips found</td></tr>`;
+        carouselContainer.innerHTML = `<div style="text-align:center; color:#888; padding: 40px;">No upcoming trips found</div>`;
+        return;
+      }
+
+      trips.forEach(trip => {
+        console.log(`Processing trip with status: "${trip.status}"`);
+        
+        // Crear fila para tabla móvil
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td style="white-space: nowrap;">${formatDate(trip.startDate)}</td>
+          <td style="white-space: nowrap;">${trip.origin}</td>
+          <td style="white-space: nowrap;">${trip.destination}</td>
+          <td style="white-space: nowrap;">${trip.price} CAD</td>          
+          <td>
+            <div class="buttons-container">
+              <span id="statusLabel-${trip.id}" class="status-label" data-status="${trip.status}">${trip.status}</span>
+            </div>
+          </td>
+          <td>
+            <div class="action-buttons">
+              ${generateActionButtons(trip)}
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+
+        // Crear tarjeta para carrusel desktop
+        const cardHTML = createTripCard(trip);
+        carouselContainer.appendChild(renderTripCard(trip));
+
+        // Crear tarjeta responsive para móvil
+        const card = document.createElement("div");
+        card.className = "responsive-card";
+        card.innerHTML = `
+          <div class="card-top-row">
+            <span class="card-date">
+              <span class="date-row">
+                <img src="https://icons.veryicon.com/png/o/miscellaneous/esgcc-basic-icon-library/date-71.png" class="date-icon" alt="date" />
+                ${formatDate(trip.startDate)}
+              </span>
+              <span class="time-row">
+                <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" class="time-icon" alt="time" />
+                <span class="card-time">${trip.timeText || ''}</span>
+              </span>
+            </span>
+            <span class="right-info-col">
+              <div class="status-label" id="statusLabel-${trip.id}" data-status="${trip.status}">${trip.status}</div>
+              <span class="trip-price">${trip.price} CAD</span>
+            </span>
+          </div>
+          <div class="trip-address-row">
+            <span class="address-block">
+              <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm5-2a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z" fill="currentColor"></path></svg>
+              <span class="address-value">${trip.origin}</span>
+            </span>
+            <span class="dotted-divider"></span>
+            <span class="address-block">
+              <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 10h-4v4h4v-4ZM7 7v10h10V7H7Z" fill="currentColor"></path></svg>
+              <span class="address-value">${trip.destination}</span>
+            </span>
+          </div>
+          <div class="action-buttons">
+            ${generateActionButtons(trip)}
+          </div>
+        `;
+        cardContainer.appendChild(card);
+      });
+
+    } catch (err) {
+      console.error("Error cargando viajes:", err);
+      alert("Error loading trips: " + err.message);
+    }
+  })();
+</script>
+
+<script>
+ async function updateStatus(tripId, newStatus) {
+  let confirmMessage = "Are you sure?";
+  
+  if (newStatus === 'Cancelado') {
+    confirmMessage = "Are you sure you want to cancel this trip?";
+  } else if (newStatus === 'Pre-Confirmado') {
+    confirmMessage = "Are you sure you want to pre-confirm this trip?";
+  } else if (newStatus === 'Confirmed') {
+    confirmMessage = "Are you sure you want to confirm this trip?";
+  }
+  
+  if (!confirm(confirmMessage)) return;
+
+  const scriptUrl = 'https://script.google.com/macros/s/AKfycbxJ6-dF6gMi_WO9pEXAoRddzZoIQ84s3kElBiitMG9KRkvSC5PXQmlurXOosRc5DOB4ww/exec';
+
+  const formData = `route=registro&action=actualizar_estado&id=${encodeURIComponent(tripId)}&status=${encodeURIComponent(newStatus)}`;
+
+  try {
+    const response = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formData
+    });
+
+    // Mostrar la respuesta del servidor para depuración
+    const responseData = await response.json();
+    alert(JSON.stringify(responseData));
+    location.reload();
+
+  } catch (err) {
+    console.error("Error updating status:", err);
+    location.reload();
+  }
+}
+
+let ordenDescendente = true;
+
+function ordenarPorFecha() {
+  const tbody = document.querySelector("#tripTable tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+
+  rows.sort((a, b) => {
+    const fechaA = new Date(a.children[0].textContent);
+    const fechaB = new Date(b.children[0].textContent);
+    return ordenDescendente ? fechaB - fechaA : fechaA - fechaB;
+  });
+
+  ordenDescendente = !ordenDescendente;
+
+  rows.forEach(row => tbody.appendChild(row));
+}
+
+function createRouteDetailsTable(assignments) {
+  if (!assignments.length) return '<div>No route details found.</div>';
+  let html = `<table class="route-details-table">
+    <thead><tr>
+      <th>routeId</th><th>startDate</th><th>timeValue</th><th>name</th><th>origin</th><th>duration</th><th>timePickDrop</th>
+    </tr></thead><tbody>`;
+  for (const a of assignments) {
+    html += `<tr>
+      <td>${a.routeId || ''}</td>
+      <td>${a.startDate || ''}</td>
+      <td>${a.timeValue || ''}</td>
+      <td>${a.name || ''}</td>
+      <td>${a.origin || ''}</td>
+      <td>${a.duration || ''}</td>
+      <td>${a.timePickDrop || ''}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  return html;
+}
+
+function renderTripCard(trip) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'trip-card';
+  wrapper.innerHTML = `
+    <div class="card-top-row">
+      <span class="card-date">
+        <span class="date-row">
+          <img src="https://icons.veryicon.com/png/o/miscellaneous/esgcc-basic-icon-library/date-71.png" class="date-icon" alt="date" />
+          ${formatDate(trip.startDate)}
+        </span>
+        <span class="time-row">
+          <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" class="time-icon" alt="time" />
+          <span class="card-time">${trip.timeText || ''}</span>
+        </span>
+      </span>
+      <span class="right-info-col">
+        <div class="status-label" id="statusLabel-${trip.id}" data-status="${trip.status}">${trip.status}</div>
+        <span class="trip-price">${trip.price} CAD</span>
+      </span>
+    </div>
+    <div class="trip-address-row">
+      <span class="address-block">
+        <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm5-2a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z" fill="currentColor"></path></svg>
+        <span class="address-value">${trip.origin}</span>
+      </span>
+      <span class="dotted-divider"></span>
+      <span class="address-block">
+        <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 10h-4v4h4v-4ZM7 7v10h10V7H7Z" fill="currentColor"></path></svg>
+        <span class="address-value">${trip.destination}</span>
+      </span>
+    </div>
+    <div class="action-buttons">
+      ${generateActionButtons(trip)}
+    </div>
+    <div class="route-details" style="display:none;"></div>
+  `;
+  // Click para expandir/cerrar detalles
+  wrapper.addEventListener('click', async function(e) {
+    // Evita que los botones de acción disparen el despliegue
+    if (e.target.closest('.action-buttons')) return;
+    console.log('Card clicked:', trip);
+    const detailsDiv = wrapper.querySelector('.route-details');
+    if (detailsDiv.style.display === 'block') {
+      detailsDiv.style.display = 'none';
+      detailsDiv.innerHTML = '';
+      return;
+    }
+    const routeId = trip.routeId || trip.routeID;
+    if (!routeId) return;
+    detailsDiv.style.display = 'block';
+    detailsDiv.innerHTML = '<div style="text-align:center; color:#888;">Loading route details...</div>';
+    // Fetch de la API para Route_Assignment
+    try {
+      const resp = await fetch(`${proxyUrl}?route=Route_Assignment&action=ver_todos&routeId=${encodeURIComponent(routeId)}`);
+      const data = await resp.json();
+      if (data.success && data.results && data.results.length) {
+        detailsDiv.innerHTML = createRouteDetailsTable(data.results);
+      } else {
+        detailsDiv.innerHTML = '<div>No route details found.</div>';
+      }
+    } catch (err) {
+      detailsDiv.innerHTML = '<div style="color:red;">Error loading route details</div>';
+    }
+  });
+  return wrapper;
+}
+</script>
+
+</body>
+</html> 

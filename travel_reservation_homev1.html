@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commut - Choose Your Ride</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+  <div class="content-wrapper">
+    <h1 style="white-space: nowrap;margin: 10px 10px;">Choose Your Ride Option</h1>
+
+    <div class="ride-option">
+      <h2>🚐 Shared Ride</h2>
+      <p>Share with 3–4 passengers. Route and timing are confirmed the night before based on all stops and passengers confirmed.</p>
+      <button onclick="checkAuthAndRedirect('travel_reservation_v6.html')">Select Shared Ride</button>
+</div>
+
+    <div class="ride-option">
+      <h2>🚗 Personal Ride</h2>
+      <p>Pay for all seats. Ideal for airport trips and direct routes—no extra stops.</p>
+      <button onclick="checkAuthAndRedirect('personal_travel_reservation_v6.html')">Select Personal Ride</button>
+</div>
+
+    <hr>
+
+    <p class="payment">
+  This page is only for pre-confirmation purposes to ensure your information is accurate.
+  You are not required to make any payment or transfer money through this page.
+</p>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    function checkAuthAndRedirect(page) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        window.location.href = 'login.html';
+      } else {
+        window.location.href = page;
+      }
+    }
+
+    function checkUser() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userInfoElement = document.getElementById('userName');
+      const logoutBtn = document.querySelector('.logout-btn');
+      
+      if (user) {
+        userInfoElement.textContent = `Welcome, ${user.fullName}`;
+        logoutBtn.textContent = 'Logout';
+        logoutBtn.onclick = logout;
+      } else {
+        userInfoElement.textContent = '';
+        logoutBtn.textContent = 'Login';
+        logoutBtn.onclick = checkAuth;
+      }
+    }
+
+    function toggleMenu() {
+      const userInfo = document.querySelector('.user-info');
+      userInfo.classList.toggle('active');
+    }
+
+    function checkAuth() {
+      window.location.href = 'login.html';
+    }
+
+    function updateStatus(newStatus) {
+        const url = 'https://script.google.com/macros/s/AKfycbxJ6-dF6gMi_WO9pEXAoRddzZoIQ84s3kElBiitMG9KRkvSC5PXQmlurXOosRc5DOB4ww/exec';
+
+        const data = new URLSearchParams();
+        data.append("action", "updateLast");
+        data.append("status", newStatus);
+        data.append("email", JSON.parse(localStorage.getItem('user')).email);
+
+        console.log('Sending status update:', {
+            action: 'updateLast',
+            status: newStatus,
+            email: JSON.parse(localStorage.getItem('user')).email
+        });
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: data
+        })
+        .then(response => response.text())
+        .then(result => {
+            console.log('Status update response:', result);
+            const status = newStatus.toLowerCase();
+            const redirectUrl = status === "pre-confirmado"
+                ? "Thank_you_Pre_Confirmation.html"
+                : "Thank_you_see_u.html";
+            window.location.href = redirectUrl;
+        })
+        .catch(error => {
+            console.error('Error updating status:', error);
+            alert('An error occurred while updating the status. Please try again.');
+        });
+    }
+
+    window.onload = function() {
+      checkUser();
+      initMap();
+    };
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const userInfo = document.querySelector('.user-info');
+      if (!userInfo.contains(event.target)) {
+        userInfo.classList.remove('active');
+      }
+    });
+  </script>
+  <script src="loadNav.js"></script>
+</body>
+</html>
+

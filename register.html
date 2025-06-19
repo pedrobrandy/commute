@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Commut</title>
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+    <div class="content-wrapper">
+        <form id="registerForm">
+            <h2>Register</h2>
+            <div class="form-fields">
+                <div class="input-group">
+                    <label for="fullName">Full Name:</label>
+                    <input type="text" id="fullName" required>
+                    <div class="error-message" id="fullNameError"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone" required>
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" required>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <button type="submit">Register</button>
+            </div>
+
+            <div class="login-link">
+                Already have an account? <a href="login.html">Login here</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        async function registerUser(event) {
+            event.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+            // Validaciones
+            if (!fullName || !email || !phone || !password || !confirmPassword) {
+                alert('Por favor, complete todos los campos');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Por favor, ingrese un email válido');
+                return;
+            }
+
+            // Validar formato de teléfono (solo números)
+            const phoneRegex = /^\d+$/;
+            if (!phoneRegex.test(phone)) {
+                alert('El teléfono debe contener solo números');
+                return;
+            }
+
+            try {
+                console.log('Enviando solicitud de registro...');
+                
+                // Crear el objeto de datos
+                const formData = new URLSearchParams();
+                formData.append('action', 'register');
+                formData.append('fullName', fullName);
+                formData.append('email', email);
+                formData.append('phone', phone);
+                formData.append('password', password);
+
+                // URL del script de Google
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbxJ6-dF6gMi_WO9pEXAoRddzZoIQ84s3kElBiitMG9KRkvSC5PXQmlurXOosRc5DOB4ww/exec';
+                
+                // Usar el proxy CORS
+                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(scriptUrl);
+
+                console.log('Enviando solicitud a:', proxyUrl);
+                console.log('Datos a enviar:', formData.toString());
+
+                const response = await fetch(proxyUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
+
+                console.log('Respuesta recibida:', response);
+                const result = await response.text();
+                console.log('Datos de respuesta:', result);
+
+                if (result.includes('success')) {
+                    console.log('Registro exitoso, guardando datos del usuario...');
+                    // Guardar datos del usuario en localStorage
+                    localStorage.setItem('user', JSON.stringify({
+                        fullName: fullName,
+                        email: email,
+                        phone: phone
+                    }));
+                    
+                    alert('Registro exitoso');
+                    console.log('Redirigiendo a la página principal...');
+                    window.location.href = 'travel_reservation_homev1.html';
+                } else {
+                    console.log('Error en el registro:', result);
+                    alert('Error al registrar usuario. Por favor, intente nuevamente.');
+                }
+
+            } catch (error) {
+                console.error('Error durante el registro:', error);
+                alert('Error al registrar usuario. Por favor, intente nuevamente.');
+            }
+        }
+
+        // Agregar event listener al formulario
+        document.getElementById('registerForm').addEventListener('submit', registerUser);
+
+        function checkUser() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const userInfoElement = document.getElementById('userName');
+            const logoutBtn = document.querySelector('.logout-btn');
+            
+            if (user) {
+                userInfoElement.textContent = `Welcome, ${user.fullName}`;
+                logoutBtn.textContent = 'Logout';
+                logoutBtn.onclick = logout;
+            } else {
+                userInfoElement.textContent = '';
+                logoutBtn.textContent = 'Login';
+                logoutBtn.onclick = checkAuth;
+            }
+        }
+
+        function checkAuth() {
+            window.location.href = 'login.html';
+        }
+
+        window.onload = checkUser;
+    </script>
+    <script src="loadNav.js"></script>
+</body>
+</html> 

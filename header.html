@@ -1,0 +1,73 @@
+<!-- Common Header Component -->
+<header class="common-header">
+  <div class="header-content">
+    <div class="logo-container">
+      <!-- Si el logo de Imgur no funciona, puedes:
+           1. Usar una URL directa de tu logo
+           2. Guardar el logo en tu proyecto y usar: src="./images/logo.png"
+           3. Usar un logo temporal mientras consigues la URL correcta -->
+      <img src="https://i.imgur.com/9nP0X0y.jpeg" alt="Commute Digital Logo" class="header-logo" 
+           onerror="console.log('Logo failed to load, trying PNG...'); this.src='https://i.imgur.com/9nP0X0y.png'; this.onerror=function(){console.log('PNG also failed, using placeholder'); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjRGN0Y5Ii8+Cjx0ZXh0IHg9IjI1IiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MT0dPPC90ZXh0Pgo8L3N2Zz4K';}" />
+    </div>
+    <div class="header-title">
+      <h1>Commute Digital</h1>
+    </div>
+  </div>
+</header>
+
+<style>
+  .common-header {
+    background-color: #0D1B2A;
+    width: 100%;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    position: relative;
+    z-index: 50;
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+  }
+  
+  .header-title h1 {
+    color: #E0E1DD;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+  }
+  
+  @media (max-width: 600px) {
+    .common-header {
+      padding: 10px 15px;
+    }
+    
+    .header-content {
+      gap: 10px;
+    }
+    
+    .header-logo {
+      height: 40px;
+    }
+    
+    .header-title h1 {
+      font-size: 1.4rem;
+    }
+  }
+</style> 
