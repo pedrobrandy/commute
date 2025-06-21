@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Shared Ride Direction Logic</title>
+    <style>
+        body {
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Shared Ride Direction Logic</h1>
+    
+    <div class="test-section">
+        <h2>Manual Test</h2>
+        <div class="test-case">
+            <label for="pickup">Pickup Location:</label>
+            <input type="text" id="pickup" placeholder="e.g., Kitchener, University of Waterloo">
+            
+            <label for="dropoff">Dropoff Location:</label>
+            <input type="text" id="dropoff" placeholder="e.g., Toronto, Mississauga">
+            
+            <button onclick="testDirection()">Test Direction</button>
+            
+            <div id="manualResult"></div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Automatic Tests</h2>
+        <button onclick="runAllTests()">Run All Tests</button>
+        <div id="testResults"></div>
+    </div>
+
+    <script>
+        // Function to determine if a location is in KWC area
+        function isKWCLocation(location) {
+            const kwcKeywords = [
+                'kitchener', 'waterloo', 'cambridge', 'guelph', 'guelp', 'kwc', 'kw',
+                'conestoga', 'university of waterloo', 'wilfrid laurier',
+                'fairview park', 'boardwalk', 'laurier', 'uwaterloo',
+                'prospect avenue', 'prospect ave', 'prospect av', 'prospect',
+                'kitchener ontario', 'waterloo ontario', 'cambridge ontario', 'guelph ontario',
+                'imperial road', 'imperial rd', 'imperial'
+            ];
+            
+            const locationLower = location.toLowerCase();
+            return kwcKeywords.some(keyword => locationLower.includes(keyword));
+        }
+
+        // Function to determine if a location is in Toronto/Mississauga area
+        function isTorontoMississaugaLocation(location) {
+            const torontoKeywords = [
+                'toronto', 'mississauga', 'pearson', 'airport', 'downtown toronto',
+                'scarborough', 'etobicoke', 'north york', 'york', 'east york',
+                'brampton', 'oakville', 'burlington', 'milton', 'vaughan',
+                'markham', 'richmond hill', 'aurora', 'newmarket',
+                'union station', 'front street', 'front st', 'front',
+                'toronto ontario', 'mississauga ontario', 'pearson airport', 'yyz',
+                'cibc square', 'cibc', 'bay street', 'bay st', 'bay',
+                'silver dart drive', 'silver dart'
+            ];
+            
+            const locationLower = location.toLowerCase();
+            return torontoKeywords.some(keyword => locationLower.includes(keyword));
+        }
+
+        // Function to determine trip direction based on pickup and dropoff
+        function determineTripDirection(pickup, dropoff) {
+            const pickupIsKWC = isKWCLocation(pickup);
+            const dropoffIsKWC = isKWCLocation(dropoff);
+            const pickupIsToronto = isTorontoMississaugaLocation(pickup);
+            const dropoffIsToronto = isTorontoMississaugaLocation(dropoff);
+
+            if (pickupIsKWC && dropoffIsToronto) {
+                return {
+                    direction: 'kwc-t',
+                    directionText: 'KWC → Mississauga / Toronto',
+                    availableTimes: [
+                        { value: "530am", label: "5:30 AM" },
+                        { value: "1pm", label: "1:00 PM" },
+                        { value: "9pm", label: "9:00 PM" }
+                    ]
+                };
+            } else if (pickupIsToronto && dropoffIsKWC) {
+                return {
+                    direction: 't-kwc',
+                    directionText: 'Mississauga / Toronto → KWC',
+                    availableTimes: [
+                        { value: "10am", label: "10:00 AM" },
+                        { value: "4pm", label: "4:00 PM" },
+                        { value: "11pm", label: "11:00 PM" }
+                    ]
+                };
+            } else {
+                return null; // Invalid route
+            }
+        }
+
+        function testDirection() {
+            const pickup = document.getElementById('pickup').value.trim();
+            const dropoff = document.getElementById('dropoff').value.trim();
+            const resultDiv = document.getElementById('manualResult');
+
+            if (!pickup || !dropoff) {
+                resultDiv.innerHTML = '<div class="result error">Please enter both pickup and dropoff locations</div>';
+                return;
+            }
+
+            const direction = determineTripDirection(pickup, dropoff);
+            
+            if (direction) {
+                let timesHtml = direction.availableTimes.map(time => 
+                    `<li>${time.label} (${time.value})</li>`
+                ).join('');
+                
+                resultDiv.innerHTML = `
+                    <div class="result success">
+                        <h4>✅ Valid Route Detected</h4>
+                        <p><strong>Direction:</strong> ${direction.directionText}</p>
+                        <p><strong>Available Times:</strong></p>
+                        <ul>${timesHtml}</ul>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h4>❌ Invalid Route</h4>
+                        <p>This route is not supported. Please ensure:</p>
+                        <ul>
+                            <li>One location is in KWC area (Kitchener, Waterloo, Cambridge)</li>
+                            <li>One location is in Toronto/Mississauga area</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        function runAllTests() {
+            const testCases = [
+                {
+                    name: "KWC to Toronto",
+                    pickup: "University of Waterloo",
+                    dropoff: "Downtown Toronto",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Toronto to KWC",
+                    pickup: "Mississauga Airport",
+                    dropoff: "Kitchener",
+                    expected: "t-kwc"
+                },
+                {
+                    name: "KWC to Mississauga",
+                    pickup: "Cambridge",
+                    dropoff: "Mississauga",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Guelph to Toronto",
+                    pickup: "Guelph",
+                    dropoff: "Toronto",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Guelph Imperial Road to Toronto Union Station",
+                    pickup: "344 Imperial Road South Guelp",
+                    dropoff: "Union Station Toronto, Front Street West, Toronto, ON, Canada",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Kitchener Prospect to Toronto Union Station",
+                    pickup: "374 Prospect av, kitchener , Ontario",
+                    dropoff: "Union Station Toronto, Front Street West, Toronto, ON, Canada",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Kitchener Prospect to CIBC Square",
+                    pickup: "374 Prospect av, kitchener , Ontario",
+                    dropoff: "CIBC SQUARE, Bay Street, Toronto, ON, Canada",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Guelph Imperial to CIBC Square (Working)",
+                    pickup: "344 Imperial Road South, Guelph, ON, Canada",
+                    dropoff: "CIBC SQUARE, Bay Street, Toronto, ON, Canada",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "CIBC Square to Pearson Airport (Working)",
+                    pickup: "CIBC SQUARE, Bay Street, Toronto, ON, Canada",
+                    dropoff: "Toronto Pearson International Airport (YYZ), Silver Dart Drive, Mississauga, ON, Canada",
+                    expected: "t-kwc"
+                },
+                {
+                    name: "Invalid Route - Both KWC",
+                    pickup: "Kitchener",
+                    dropoff: "Waterloo",
+                    expected: null
+                },
+                {
+                    name: "Invalid Route - Both Toronto",
+                    pickup: "Toronto",
+                    dropoff: "Mississauga",
+                    expected: null
+                },
+                {
+                    name: "Invalid Route - Unrelated cities",
+                    pickup: "London, ON",
+                    dropoff: "Ottawa",
+                    expected: null
+                }
+            ];
+
+            const resultsDiv = document.getElementById('testResults');
+            let resultsHtml = '<h3>Test Results:</h3>';
+
+            testCases.forEach(testCase => {
+                const result = determineTripDirection(testCase.pickup, testCase.dropoff);
+                const passed = testCase.expected === null ? 
+                    result === null : 
+                    (result && result.direction === testCase.expected);
+
+                const statusClass = passed ? 'success' : 'error';
+                const statusIcon = passed ? '✅' : '❌';
+
+                resultsHtml += `
+                    <div class="test-case">
+                        <h4>${statusIcon} ${testCase.name}</h4>
+                        <p><strong>Pickup:</strong> ${testCase.pickup}</p>
+                        <p><strong>Dropoff:</strong> ${testCase.dropoff}</p>
+                        <p><strong>Expected:</strong> ${testCase.expected || 'null (invalid route)'}</p>
+                        <p><strong>Result:</strong> ${result ? result.direction : 'null'}</p>
+                        <div class="result ${statusClass}">
+                            ${passed ? 'PASSED' : 'FAILED'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = resultsHtml;
+        }
+    </script>
+</body>
+</html> 

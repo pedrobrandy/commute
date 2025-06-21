@@ -8,170 +8,31 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+  <!-- Load Header and Navigation Components -->
+  <script src="loadHeader.js"></script>
+  <script src="loadNav.js"></script>
+  <script src="loadCarousel.js"></script>
+
   <style>
       body {
-        font-family: 'Segoe UI', Arial, sans-serif;
+        font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
         margin: 0;
-        background-color: #0D1B2A;
+        background-color: white;
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding-top: 220px; /* Space for fixed header */
+        padding-bottom: 150px; /* Space for bottom nav */
       }
 
-      nav {
-        background-color: #fff;
-        width: 100%;
-        padding: 10px 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .menu {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-        list-style: none;
-        margin: 0;
-        padding: 20;
-      }
-
-      .menu-item {
-        position: relative;
-      }
-
-      nav a {
-        text-decoration: none;
-        color: #0078D4;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .submenu {
-        display: none;
-        position: absolute;
-        background: white;
-        top: 100%;
-        left: 0;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        border-radius: 8px;
-        padding: 10px;
-        z-index: 1000;
-      }
-
-      .menu-item:hover .submenu {
-        display: block;
-      }
-
-      .submenu a {
-        display: block;
-        padding: 5px 10px;
-        color: #0078D4;
-      }
-
-      .submenu a:hover {
-        background-color: #f0f0f0;
-      }
-
-      .content-wrapper {
-        max-width: 80%;
-        width: 100%;
-        margin: 20px auto;
-        padding: 0 20px;
-      }
-
-      @media (max-width: 600px) {
-        nav {
-          padding: 10px;
-        }
-
-        .menu {
-          gap: 5px;
-          padding: 10px;
-        }
-
-        .user-info span {
-          display: none;
-        }
-
-        .user-icon {
-          display: block;
-          font-size: 1.2rem;
-          color: #0078D4;
-          cursor: pointer;
-          padding: 5px;
-          border-radius: 50%;
-          transition: background-color 0.3s;
-        }
-
-        .user-icon:hover {
-          background-color: #f0f0f0;
-        }
-
-        .logout-btn {
-          display: none;
-        }
-
-        .user-info.mobile-active .logout-btn {
-          display: flex;
-          position: absolute;
-          top: 100%;
-          right: 0;
-          background: white;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-          border-radius: 4px;
-          padding: 10px;
-          z-index: 1000;
-          white-space: nowrap;
-          margin-top: 5px;
-        }
-
-        .user-info.mobile-active .logout-btn i {
-          margin-right: 5px;
-        }
-
-        .content-wrapper {
-          margin: 10px auto;
-          padding: 0 10px;
-        }
-
-      }
-
-    .user-info {
+    /* Wrapper del carrusel que contiene los botones fijos */
+    .carousel-wrapper {
+      position: relative;
+      max-width: 90%;
+      margin: 40px auto 0 auto;
       display: flex;
       align-items: center;
       gap: 10px;
-      position: relative;
-    }
-
-    .user-info span {
-      color: #333;
-    }
-
-    .logout-btn {
-      background: none;
-      border: none;
-      color: #0078D4;
-      cursor: pointer;
-      font-weight: 600;
-      padding: 5px 10px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .logout-btn:hover {
-      background-color: #f0f0f0;
-    }
-
-    h2 {
-      text-align: center;
-      color: #778DA9;
     }
 
     /* Estilos para el carrusel de tarjetas en desktop */
@@ -181,9 +42,12 @@
       gap: 20px;
       padding: 20px;
       scroll-behavior: smooth;
-      max-width: 100%;
-      margin: 0 auto;
+      flex: 1;
       position: relative;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+      min-height: 400px;
+      box-sizing: border-box;
     }
 
     .carousel-container::-webkit-scrollbar {
@@ -191,17 +55,17 @@
     }
 
     .carousel-container::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: #E0E1DD;
       border-radius: 4px;
     }
 
     .carousel-container::-webkit-scrollbar-thumb {
-      background: #0078D4;
+      background: #E0E1DD;
       border-radius: 4px;
     }
 
     .carousel-container::-webkit-scrollbar-thumb:hover {
-      background: #005a9e;
+      background: #1B263B;
     }
 
     .trip-card, .responsive-card {
@@ -213,13 +77,19 @@
     .trip-card {
       min-width: 300px;
       max-width: 350px;
-      background: white;
+      height: 438px; /* Fixed height for all cards */
+      background: whitesmoke;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      padding: 20px;
-      margin: 10px 0;
+      padding: 19px;
+      margin: 21px 0;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      flex-shrink: 0;
+      flex-shrink: 0; /* Prevent cards from shrinking */
+      flex-grow: 0; /* Prevent cards from growing */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; /* Distribute content evenly */
+      box-sizing: border-box;
     }
 
     .trip-card:hover {
@@ -228,16 +98,15 @@
     }
 
     .trip-card h3 {
-      margin: 0 0 15px 0;
-      color: #778DA9;
-      font-size: 1.2rem;
-      border-bottom: 2px solid #E0E1DD;
-      padding-bottom: 10px;
-      padding-right: 80px;
+      margin: 0 0 -7px 0;
+      color: #415A77;
+      font-size: 0.9rem;
+      padding-bottom: 2px;
     }
 
     .trip-info {
       margin-bottom: 15px;
+      flex: 1; /* Take available space */
     }
 
     .trip-info p {
@@ -255,16 +124,13 @@
     }
 
     .trip-info .value {
-      color: #415A77;
+      color: #0D1B2A;
       text-align: right;
       flex: 1;
       margin-left: 10px;
     }
 
     .status-label {
-      position: static;
-      margin-left: 8px;
-      align-self: flex-end;
       font-size: 0.8rem;
       padding: 4px 10px;
       border-radius: 12px;
@@ -275,7 +141,7 @@
       text-align: center;
       max-width: 120px;
       z-index: 10;
-      margin-bottom: 4px;
+      margin-top: 4px;
     }
     
     /* Status label colors */
@@ -304,6 +170,11 @@
       color: #ffffff !important;
     }
 
+      .status-label[data-status="No Aceptado"] {
+      background-color: #355070 !important;
+      color: #ffffff !important;
+    }
+
     @media (min-width: 601px) {
       .status-label {
         margin-top: -18px;
@@ -323,7 +194,8 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-top: 15px;
+      margin-top: -110px;
+      flex-shrink: 0; /* Prevent shrinking */
     }
 
     .confirm-button {
@@ -486,17 +358,22 @@
       font-size: 0.9rem;
       color: #777;
       text-align: center;
-      margin-top: 20px;
+      margin-top: -35px;
     }
 
     /* Responsive para móvil */
     @media (max-width: 768px) {
       .carousel-container {
-        display: none;
+        display: none; /* Hide carousel on mobile */
       }
 
       .carousel-controls {
         display: none;
+      }
+
+      /* Hide carousel navigation buttons on mobile */
+      .carousel-btn {
+        display: none !important;
       }
 
       .table-container {
@@ -506,6 +383,7 @@
       /* Mostrar tarjetas responsive solo en móvil */
       #cardContainer {
         display: block;
+        margin-top: 20px; /* Added top margin for mobile */
       }
 
       .responsive-card {
@@ -514,15 +392,65 @@
         gap: 10px;
         margin: 10px;
         padding: 15px;
-        background: white;
+        background: whitesmoke;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         position: relative;
+        height: 400px; /* Fixed height for mobile cards - same as desktop */
+        justify-content: space-between; /* Distribute content evenly */
+        box-sizing: border-box;
       }
 
-      .responsive-card p {
+      .responsive-card .card-header {
+        margin-bottom: 10px;
+        gap: 15px;
+      }
+
+      .responsive-card .left-column {
+        gap: 10px;
+        min-width: 80px;
+      }
+
+      .responsive-card .right-column {
+        gap: 6px;
+      }
+
+      .responsive-card .ride-type-icon {
+        width: 100px !important;
+        height: 100px !important;
+      }
+
+      .responsive-card .ride-type-title {
+        font-size: 1.1rem;
+      }
+
+      .responsive-card .date-time-info {
+        gap: 4px;
+      }
+
+      .responsive-card .date-row,
+      .responsive-card .time-row {
+        height: 25px;
+      }
+
+      .responsive-card .date-text {
+        font-size: 0.8rem;
+      }
+
+      .responsive-card .date-icon,
+      .responsive-card .time-icon {
+        height: 20px;
+        width: 20px;
+      }
+
+      .responsive-card .price-section {
+        padding: 6px 10px;
+        margin-top: 2px;
+      }
+
+      .responsive-card .trip-price {
+        font-size: 18px;
         margin: 0;
-        font-size: 0.95rem;
       }
 
       .status-label {
@@ -539,6 +467,26 @@
       .van-img {
         height: 22px;
       }
+
+      .responsive-card .route-image {
+        height: 74px;
+        width: auto;
+      }
+
+      .responsive-card .address-value {
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Desktop styles - ensure carousel is visible */
+    @media (min-width: 769px) {
+      .carousel-container {
+        display: flex !important; /* Force display on desktop */
+      }
+      
+      .carousel-btn {
+        display: flex !important; /* Force display on desktop */
+      }
     }
 
     /* Controles del carrusel */
@@ -547,11 +495,8 @@
     }
 
     .carousel-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 120, 212, 0.9);
-      color: white;
+      background: #E0E1DD;
+      color: #0D1B2A;
       border: none;
       width: 40px;
       height: 40px;
@@ -564,25 +509,25 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      pointer-events: auto;
+      flex-shrink: 0; /* Prevent buttons from shrinking */
     }
 
     .carousel-btn:hover {
-      background: rgba(0, 90, 158, 1);
-      transform: translateY(-50%) scale(1.1);
+      background: #778DA9;
+      transform: scale(1.1);
     }
 
     .carousel-btn:disabled {
       background: rgba(204, 204, 204, 0.5);
       cursor: not-allowed;
-      transform: translateY(-50%) scale(1);
+      transform: scale(1);
     }
 
-    .carousel-btn.prev {
-      left: 10px;
-    }
-
-    .carousel-btn.next {
-      right: 10px;
+    /* Ensure buttons are visible and clickable */
+    .carousel-btn i {
+      color: #0D1B2A;
+      font-size: 16px;
     }
 
     .van-img-wrapper {
@@ -599,6 +544,74 @@
     }
 
     /* Fila superior de la tarjeta: fecha, imagen y status label */
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 15px;
+      width: 100%;
+      flex-shrink: 0; /* Prevent shrinking */
+    }
+    
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      min-width: 100px;
+      flex-shrink: 0;
+    }
+    
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+    
+    .ride-type-title {
+      margin: 0;
+      color: #415A77;
+      font-size: 1.3rem;
+      font-weight: 600;
+      background: #E0E1DD;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    .date-time-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .price-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 120px;
+      flex-shrink: 0;
+      background: #E0E1DD;
+      border-radius: 12px;
+      padding: 4px 6px;
+      margin-top: 4px;
+    }
+    
+    .trip-price {
+      color: #415A77;
+      text-align: left;
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      width: auto;
+      display: block;
+      z-index: 2;
+      white-space: nowrap;
+    }
+
     .card-top-row {
       display: flex;
       align-items: flex-start;
@@ -606,7 +619,9 @@
       gap: 10px;
       margin-top: 8px;
       width: 100%;
+      flex-shrink: 0; /* Prevent shrinking */
     }
+    
     .card-date {
       display: flex;
       flex-direction: column;
@@ -614,79 +629,72 @@
       flex: 1 1 0;
       min-width: 0;
     }
+    
     .right-info-col {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       gap: 2px;
       min-width: 110px;
+      flex-shrink: 0; /* Prevent shrinking */
     }
+    
     .date-row, .time-row {
       display: flex;
       align-items: center;
       gap: 4px;
+      height: 30px;
+      color:#415A77
     }
+    
+    .date-text {
+      font-size: 0.85rem;
+      color: #415A77;
+      white-space: nowrap;
+    }
+    
     .date-icon, .time-icon {
-      height: 16px;
-      width: 16px;
+      height: 26px;
+      width: 26px;
       display: inline-block;
-      filter: invert(13%) sepia(18%) saturate(2097%) hue-rotate(169deg) brightness(97%) contrast(98%);
+      filter: invert(30%) sepia(11%) saturate(1360%) hue-rotate(175deg) brightness(93%) contrast(91%);
+      color:#415A77
+
+      
     }
+    
     .card-time {
       font-size: 0.85em;
       color: #415A77;
       margin-top: 0;
       font-weight: 400;
     }
+    
     .van-img {
       margin: 0 auto;
       height: 32px;
       z-index: 1;
       display: block;
     }
-    @media (max-width: 768px) {
-      .card-top-row {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 6px;
-      }
-      .right-info-col {
-        min-width: 80px;
-      }
-      .trip-price {
-        font-size: 20px;
-      }
-      .status-label {
-        font-size: 0.75rem;
-        padding: 3px 8px;
-        max-width: 90vw;
-      }
-    }
-
-    .icon-trip {
-      width: 20px;
-      height: 20px;
-      margin-right: 6px;
-      vertical-align: middle;
-      fill: #0D1B2A;
-      display: inline-block;
-    }
 
     .trip-address-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      margin: 10px 0 14px 0;
+      gap: 6px;
+      margin: -113px 0 14px 0;
+      flex: 1; /* Take available space */
     }
+    
     .address-block {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 2px;
       min-width: 0;
     }
+    
     .address-value {
-      font-size: 0.92em;
+      font-size: 0.9rem;
       color: #415A77;
       font-weight: 400;
       max-width: 140px;
@@ -694,23 +702,13 @@
       word-break: break-word;
       white-space: normal;
     }
-    .dotted-divider {
-      border-left: 2px dashed #bfc9d1;
-      height: 32px;
-      margin: 0 10px;
-    }
-
-    .trip-price {
-      color: rgb(0, 0, 0);
-      text-align: right;
-      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      margin: 0 0 0 0;
+    
+    .route-image {
+      height: 106px;
       width: auto;
       display: block;
-      z-index: 2;
-      white-space: nowrap;
+      filter: invert(19%) sepia(17%) saturate(1380%) hue-rotate(202deg) brightness(92%) contrast(92%);
+
     }
 
     /* Agrega este CSS para el detalle expandido */
@@ -857,27 +855,67 @@
     .bottom-menu li:last-child .nav-icon {
       filter: brightness(0) saturate(100%) invert(89%) sepia(6%) saturate(247%) hue-rotate(202deg) brightness(94%) contrast(90%);
     }
+
+    /* Additional spacing for mobile to prevent nav overlap */
+    @media (max-width: 600px) {
+      #cardContainer {
+        margin-bottom: 50px; /* Reduced space for bottom navigation */
+      }
+      
+      .notice {
+        margin-bottom: 50px; /* Reduced space for bottom navigation */
+      }
+      
+      .table-container {
+        margin-bottom: 50px; /* Space for bottom navigation */
+      }
+      
+      .carousel-container {
+        margin-bottom: 50px; /* Space for bottom navigation */
+      }
+    }
+
+    @media (max-width: 768px) {
+      .card-top-row {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .right-info-col {
+        min-width: 80px;
+      }
+      .trip-price {
+        font-size: 20px;
+      }
+      .status-label {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        max-width: 90vw;
+      }
+    }
   </style>
-  <script src="loadNav.js"></script>
-  <script src="loadHeader.js"></script>
 </head>
 <body>
   
+  <!-- Header will be loaded here by loadHeader.js -->
   <!-- Navigation will be loaded here by loadNav.js -->
   
   <!-- Carrusel de tarjetas para desktop -->
-  <div class="carousel-container" id="carouselContainer">
+  <div class="carousel-wrapper" id="carouselWrapper">
     <!-- Botón Previous -->
     <button class="carousel-btn prev" onclick="scrollCarousel('left')" id="leftBtn">
       <i class="fas fa-chevron-left"></i>
     </button>
     
+    <!-- Contenedor del carrusel (scrollable) -->
+    <div class="carousel-container" id="carouselContainer">
+      <!-- Las tarjetas se generarán dinámicamente -->
+    </div>
+    
     <!-- Botón Next -->
     <button class="carousel-btn next" onclick="scrollCarousel('right')" id="rightBtn">
       <i class="fas fa-chevron-right"></i>
     </button>
-    
-    <!-- Las tarjetas se generarán dinámicamente -->
   </div>
 
   <!-- Tabla para móvil -->
@@ -902,6 +940,9 @@
   <div id="cardContainer"></div>
 
   <p class="notice">Only upcoming or active trips are listed here.</p>
+  
+  <!-- Carrusel de sugerencias -->
+  <div id="carousel-container"></div>
 
 <script>
   function toggleUserMenu() {
@@ -925,6 +966,16 @@
   function formatDate(dateStr) {
     const date = new Date(dateStr);
     return date.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  // Function to get ride type image
+  function getRideTypeImage(tripType) {
+    if (tripType === 'Shared Ride') {
+      return 'https://pedrobrandy.github.io/commute/image/ShareRideIcon.png';
+    } else if (tripType === 'Personal Ride') {
+      return 'https://pedrobrandy.github.io/commute/image/PersonalRideIcon.png';
+    }
+    return ''; // Return empty string if no match
   }
 
   // Fixed function to generate action buttons
@@ -980,7 +1031,7 @@
         <div class="card-top-row">
           <span class="card-date">
             <span class="date-row">
-              <img src="https://icons.veryicon.com/png/o/miscellaneous/esgcc-basic-icon-library/date-71.png" class="date-icon" alt="date" />
+              <img src="https://www.svgrepo.com/show/438428/date-round.svg" class="date-icon" alt="date" />
               ${formatDate(trip.startDate)}
             </span>
             <span class="time-row">
@@ -995,12 +1046,10 @@
         </div>
         <div class="trip-address-row">
           <span class="address-block">
-            <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm5-2a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z" fill="currentColor"></path></svg>
             <span class="address-value">${trip.origin}</span>
           </span>
-          <span class="dotted-divider"></span>
+          <img src="https://pedrobrandy.github.io/commute/image/Ruta.png" class="route-image" alt="route" />
           <span class="address-block">
-            <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 10h-4v4h4v-4ZM7 7v10h10V7H7Z" fill="currentColor"></path></svg>
             <span class="address-value">${trip.destination}</span>
           </span>
         </div>
@@ -1014,20 +1063,56 @@
 
   // Función para hacer scroll del carrusel
   function scrollCarousel(direction) {
+    console.log('scrollCarousel called with direction:', direction);
     const container = document.getElementById('carouselContainer');
-    const scrollAmount = 350; // Ancho de una tarjeta + gap
+    
+    if (!container) {
+      console.error('Carousel container not found!');
+      return;
+    }
+    
+    console.log('Container found:', container);
+    console.log('Container scrollLeft:', container.scrollLeft);
+    console.log('Container scrollWidth:', container.scrollWidth);
+    console.log('Container clientWidth:', container.clientWidth);
+    console.log('Container children count:', container.children.length);
+    
+    // Check if there are cards to scroll
+    const cards = container.querySelectorAll('.trip-card');
+    console.log('Number of trip cards found:', cards.length);
+    
+    if (cards.length === 0) {
+      console.log('No cards found to scroll');
+      return;
+    }
+    
+    // Calculate scroll amount based on card width + gap
+    const cardWidth = cards[0].offsetWidth;
+    const gap = 20; // This should match the gap in CSS
+    const scrollAmount = cardWidth + gap;
+    
+    console.log('Card width:', cardWidth);
+    console.log('Scroll amount:', scrollAmount);
     
     if (direction === 'left') {
+      console.log('Scrolling left by:', scrollAmount);
       container.scrollBy({
         left: -scrollAmount,
         behavior: 'smooth'
       });
     } else {
+      console.log('Scrolling right by:', scrollAmount);
       container.scrollBy({
         left: scrollAmount,
         behavior: 'smooth'
       });
     }
+    
+    // Log the new scroll position after a short delay
+    setTimeout(() => {
+      console.log('New scroll position:', container.scrollLeft);
+      console.log('Max scroll position:', container.scrollWidth - container.clientWidth);
+    }, 100);
   }
 
   (async () => {
@@ -1066,11 +1151,16 @@
       
       tbody.innerHTML = '';
       cardContainer.innerHTML = '';
+      
+      // Clear only the carousel container content (not the wrapper)
       carouselContainer.innerHTML = '';
 
       if (trips.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">No upcoming trips found</td></tr>`;
-        carouselContainer.innerHTML = `<div style="text-align:center; color:#888; padding: 40px;">No upcoming trips found</div>`;
+        const noTripsDiv = document.createElement('div');
+        noTripsDiv.style.cssText = 'text-align:center; color:#888; padding: 40px; width: 100%;';
+        noTripsDiv.textContent = 'No upcoming trips found';
+        carouselContainer.appendChild(noTripsDiv);
         return;
       }
 
@@ -1098,37 +1188,48 @@
         tbody.appendChild(row);
 
         // Crear tarjeta para carrusel desktop
-        const cardHTML = createTripCard(trip);
-        carouselContainer.appendChild(renderTripCard(trip));
+        console.log('Creating trip card for carousel...');
+        const tripCard = renderTripCard(trip);
+        console.log('Trip card created:', tripCard);
+        carouselContainer.appendChild(tripCard);
+        console.log('Trip card added to carousel');
 
         // Crear tarjeta responsive para móvil
+        const rideTypeImage = getRideTypeImage(trip.type);
+        const rideTypeImageHtml = rideTypeImage ? `<img src="${rideTypeImage}" class="ride-type-icon" alt="ride type" style="width: 100px; height: 100px; transform: scaleX(-1);" />` : '';
+        const rideTypeTitle = trip.type === 'Shared Ride' ? 'Shared Ride' : 'Personal Ride';
+        
         const card = document.createElement("div");
         card.className = "responsive-card";
         card.innerHTML = `
-          <div class="card-top-row">
-            <span class="card-date">
-              <span class="date-row">
-                <img src="https://icons.veryicon.com/png/o/miscellaneous/esgcc-basic-icon-library/date-71.png" class="date-icon" alt="date" />
-                ${formatDate(trip.startDate)}
-              </span>
-              <span class="time-row">
-                <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" class="time-icon" alt="time" />
-                <span class="card-time">${trip.timeText || ''}</span>
-              </span>
-            </span>
-            <span class="right-info-col">
+          <div class="card-header">
+            <div class="left-column">
+              ${rideTypeImageHtml}
               <div class="status-label" id="statusLabel-${trip.id}" data-status="${trip.status}">${trip.status}</div>
-              <span class="trip-price">${trip.price} CAD</span>
-            </span>
+            </div>
+            <div class="right-column">
+              <h3 class="ride-type-title">${rideTypeTitle}</h3>
+              <div class="date-time-info">
+                <div class="date-row">
+                  <img src="https://www.svgrepo.com/show/438428/date-round.svg" class="date-icon" alt="date" />
+                  <span class="date-text">${formatDate(trip.startDate)}</span>
+                </div>
+                <div class="time-row">
+                  <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" class="time-icon" alt="time" />
+                  <span class="card-time">${trip.timeText || ''}</span>
+                </div>
+                <div class="price-section">
+                  <span class="trip-price">$${trip.price} CAD</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="trip-address-row">
             <span class="address-block">
-              <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm5-2a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z" fill="currentColor"></path></svg>
               <span class="address-value">${trip.origin}</span>
             </span>
-            <span class="dotted-divider"></span>
+            <img src="https://pedrobrandy.github.io/commute/image/Ruta.png" class="route-image" alt="route" />
             <span class="address-block">
-              <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 10h-4v4h4v-4ZM7 7v10h10V7H7Z" fill="currentColor"></path></svg>
               <span class="address-value">${trip.destination}</span>
             </span>
           </div>
@@ -1138,6 +1239,24 @@
         `;
         cardContainer.appendChild(card);
       });
+
+      // Log carousel info after loading
+      console.log('Carousel container children:', carouselContainer.children.length);
+      console.log('Carousel scrollWidth:', carouselContainer.scrollWidth);
+      console.log('Carousel clientWidth:', carouselContainer.clientWidth);
+      
+      // Check for trip cards specifically
+      const tripCards = carouselContainer.querySelectorAll('.trip-card');
+      console.log('Trip cards found in carousel:', tripCards.length);
+      
+      if (tripCards.length > 0) {
+        console.log('First trip card dimensions:', {
+          offsetWidth: tripCards[0].offsetWidth,
+          offsetHeight: tripCards[0].offsetHeight,
+          clientWidth: tripCards[0].clientWidth,
+          clientHeight: tripCards[0].clientHeight
+        });
+      }
 
     } catch (err) {
       console.error("Error cargando viajes:", err);
@@ -1223,33 +1342,41 @@ function createRouteDetailsTable(assignments) {
 }
 
 function renderTripCard(trip) {
+  const rideTypeImage = getRideTypeImage(trip.type);
+  const rideTypeImageHtml = rideTypeImage ? `<img src="${rideTypeImage}" class="ride-type-icon" alt="ride type" style="width: 100px; height: 100px; transform: scaleX(-1);" />` : '';
+  const rideTypeTitle = trip.type === 'Shared Ride' ? 'Shared Ride' : 'Personal Ride';
+  
   const wrapper = document.createElement('div');
   wrapper.className = 'trip-card';
   wrapper.innerHTML = `
-    <div class="card-top-row">
-      <span class="card-date">
-        <span class="date-row">
-          <img src="https://icons.veryicon.com/png/o/miscellaneous/esgcc-basic-icon-library/date-71.png" class="date-icon" alt="date" />
-          ${formatDate(trip.startDate)}
-        </span>
-        <span class="time-row">
-          <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" class="time-icon" alt="time" />
-          <span class="card-time">${trip.timeText || ''}</span>
-        </span>
-      </span>
-      <span class="right-info-col">
+    <div class="card-header">
+      <div class="left-column">
+        ${rideTypeImageHtml}
         <div class="status-label" id="statusLabel-${trip.id}" data-status="${trip.status}">${trip.status}</div>
-        <span class="trip-price">${trip.price} CAD</span>
-      </span>
+      </div>
+      <div class="right-column">
+        <h3 class="ride-type-title">${rideTypeTitle}</h3>
+        <div class="date-time-info">
+          <div class="date-row">
+            <img src="https://www.svgrepo.com/show/438428/date-round.svg" class="date-icon" alt="date" />
+            <span class="date-text">${formatDate(trip.startDate)}</span>
+          </div>
+          <div class="time-row">
+            <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" class="time-icon" alt="time" />
+            <span class="card-time">${trip.timeText || ''}</span>
+          </div>
+          <div class="price-section">
+            <span class="trip-price">$${trip.price} CAD</span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="trip-address-row">
       <span class="address-block">
-        <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm5-2a5 5 0 1 1-10 0 5 5 0 0 1 10 0Z" fill="currentColor"></path></svg>
         <span class="address-value">${trip.origin}</span>
       </span>
-      <span class="dotted-divider"></span>
+      <img src="https://pedrobrandy.github.io/commute/image/Ruta.png" class="route-image" alt="route" />
       <span class="address-block">
-        <svg class="icon-trip" width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 10h-4v4h4v-4ZM7 7v10h10V7H7Z" fill="currentColor"></path></svg>
         <span class="address-value">${trip.destination}</span>
       </span>
     </div>

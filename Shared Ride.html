@@ -5,13 +5,241 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shared Ride</title>
     <style>
+      @font-face {
+        font-family: 'UberMove';
+        src: url('https://assets.uber.com/fonts/v2/UberMove-Medium.woff2') format('woff2');
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'UberMoveText';
+        src: url('https://assets.uber.com/fonts/v2/UberMoveText-Regular.woff2') format('woff2');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
       body {
-        font-family: 'Segoe UI', Arial, sans-serif;
+        font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
         margin: 0;
-        background-color: #f4f4f4;
+        background-color: white;
         display: flex;
         flex-direction: column;
         align-items: center;
+        min-height: 100vh;
+      }
+
+      /* Main layout container */
+      .main-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        width: 100%;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Background image section (2 columns) */
+      .background-section {
+        background-image: url('https://pedrobrandy.github.io/commute/image/ShareRidesImage.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Form overlay on background image */
+      .form-overlay {
+        background: transparent;
+        backdrop-filter: none;
+        border-radius: 0;
+        padding: 20px;
+        box-shadow: none;
+        max-width: 200px;
+        width: 80%;
+        margin: 0;
+        position: absolute;
+        bottom: 30px;
+        left: 30px;
+        z-index: 10;
+      }
+
+      /* Benefits section (1 column) */
+      .benefits-section {
+        background: #f8f9fa;
+        padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      /* Benefits styling */
+      .benefits-container {
+        max-width: 350px;
+      }
+
+      .benefits-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1B263B;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .benefits-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .benefit-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 0;
+      }
+
+      .benefit-icon {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .benefit-content {
+        flex: 1;
+      }
+
+      .benefit-text {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #415A77;
+        margin: 0;
+      }
+
+      .terms-link {
+        display: inline-block;
+        margin-top: 30px;
+        color: #0078D4;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        text-align: center;
+        width: 100%;
+      }
+
+      .terms-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive design */
+      @media (max-width: 1024px) {
+        .main-layout {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto auto;
+        }
+        
+        .background-section {
+          min-height: 400px;
+          position: relative;
+        }
+        
+        .form-overlay {
+          position: absolute;
+          bottom: 25px;
+          left: 50%;
+          transform: translateX(-50%);
+          max-width: 220px;
+        }
+        
+        .benefits-section {
+          padding: 30px 20px;
+        }
+        
+        .benefits-container {
+          max-width: 100%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding-top: 2px;
+        }
+        
+        .main-layout {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        
+        .ride-selector-buttons {
+          position: static;
+          justify-content: center;
+          margin: 20px 0;
+          gap: 15px;
+          order: 1;
+        }
+        
+        .background-section {
+          min-height: 350px;
+          order: 2;
+          border-radius: 25px;
+        }
+        
+        .form-overlay {
+          max-width: 180px;
+          padding: 15px;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        
+        .benefits-section {
+          padding: 25px 15px;
+          order: 3;
+        }
+        
+        .form-fields {
+          gap: 10px;
+        }
+        
+        .input-group {
+          gap: 3px;
+        }
+        
+        .input-group label {
+          font-size: 11px;
+        }
+        
+        .input-group input,
+        .input-group select {
+          padding: 6px 6px 6px 25px;
+          font-size: 11px;
+        }
+        
+        .input-icon {
+          width: 14px;
+          height: 14px;
+          left: 6px;
+        }
+        
+        .benefits-title {
+          font-size: 20px;
+          margin-bottom: 20px;
+        }
+        
+        .benefits-list {
+          gap: 20px;
+        }
+        
+        .benefit-text {
+          font-size: 14px;
+        }
       }
 
       nav {
@@ -80,77 +308,130 @@
         padding: 0 20px;
       }
 
-      form {
-        background: white;
-        padding: 20px 30px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      .form-container {
+        max-width: 500px;
         width: 100%;
-        max-width: 80%;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
+        padding: 20px;
+        background: whitesmoke;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        margin: 20px;
       }
 
-      h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        color: #333;
-        font-size: clamp(1.2rem, 2vw, 1.6rem);
-      }
-
+      /* Adjust form elements for smaller size */
       .form-fields {
         display: flex;
         flex-direction: column;
+        gap: 8px;
       }
 
       .input-group {
-        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
       }
 
-      label {
-        margin-bottom: 6px;
-        font-weight: bold;
-        color: #444;
-        font-size: 0.95rem;
+      .input-group label {
+        font-weight: 600;
+        color: #1B263B;
+        font-size: 12px;
       }
 
-      input[type="text"],
-      input[type="tel"],
-      input[type="date"],
-      input[type="time"],
-      select {
-        width: 100%;
-        padding: 10px;
-        font-size: 0.95rem;
+      .input-with-icon {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 8px;
+        width: 16px;
+        height: 16px;
+        z-index: 2;
+        filter: brightness(0) saturate(100%) invert(15%) sepia(15%) saturate(1034%) hue-rotate(202deg) brightness(95%) contrast(96%);
+      }
+
+      .input-group input,
+      .input-group select {
+        padding: 8px 8px 8px 30px;
+        border: 2px solid #E0E1DD;
         border-radius: 6px;
-        border: 1px solid #ccc;
+        font-size: 12px;
+        transition: border-color 0.3s ease;
+        width: 100%;
         box-sizing: border-box;
-        transition: border-color 0.2s ease-in-out;
       }
 
-      input:focus,
-      select:focus {
-        border-color: #007bff;
+      .input-group input:focus,
+      .input-group select:focus {
         outline: none;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+        border-color: #6c757d;
+      }
+
+      .input-group input:invalid,
+      .input-group select:invalid {
+        outline: none;
+        border-color: #6c757d;
+      }
+
+      /* Loading state for time select */
+      .input-group select option[value=""] {
+        color: #6c757d;
+        outline: none;
+        font-style: italic;
+      }
+
+      /* Success state for time select */
+      .input-group select:not([value=""]) {
+        border-color: #13441e;
+        outline: none;
       }
 
       button[type="submit"] {
-        padding: 12px 0;
-        font-size: 1rem;
-        background-color: #0078D4;
+        background-color: #0D1B2A;
         color: white;
         border: none;
+        padding: 10px 20px;
         border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
         cursor: pointer;
-        width: 100%;
-        margin-top: 10px;
         transition: background-color 0.3s ease;
       }
 
       button[type="submit"]:hover {
-        background-color: #005A9E;
+        background-color: #E0E1DD;
+        color: black;
+      }
+
+      button[type="submit"]:disabled {
+        background-color: #E0E1DD;
+        cursor: not-allowed;
+      }
+
+      /* Error message styling */
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      /* Loading indicator */
+      .loading {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      /* Success indicator */
+      .success {
+        border-color: #28a745 !important;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
       }
 
       #summary,
@@ -165,6 +446,11 @@
         line-height: 1.4;
         width: 80%;
         max-width: 600px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10000;
       }
 
       #summaryContent {
@@ -244,13 +530,48 @@
           margin-right: 5px;
         }
 
-        .content-wrapper {
-          margin: 10px auto;
-          padding: 0 10px;
+        .main-layout {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto auto;
+        }
+        
+        .background-section {
+          min-height: 343px;
+          border-radius: 25px;
+        }
+        
+        .form-overlay {
+          margin: 2px;
+          padding: 20px;
+          max-width: 100%;
+        }
+        
+        .benefits-section {
+          padding: 20px 15px;
+        }
+        
+        .benefits-container {
+          max-width: 100%;
+        }
+        
+        .benefits-title {
+          font-size: 18px;
+          margin-bottom: 20px;
+        }
+        
+        .benefits-list {
+          gap: 15px;
+        }
+        
+        .benefit-text {
+          font-size: 14px;
         }
 
-        form {
-          padding: 15px 20px;
+        #summary,
+        #sorryMessage {
+          width: 95%;
+          margin: 10px;
+          padding: 15px;
         }
       }
       #preconfirmControls {
@@ -331,177 +652,455 @@
     .user-icon:hover {
       background-color: #f0f0f0;
     }
+
+    /* Calendar Styles */
+    .calendar-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #E0E1DD;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      display: none;
+      margin-top: 4px;
+      padding: 12px;
+      min-width: 220px;
+      max-width: 240px;
+      font-size: 11px;
+    }
+
+    .calendar-dropdown.show {
+      display: block;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .calendar-nav {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 4px;
+      color: #1B263B;
+      transition: background-color 0.2s;
+      font-size: 11px;
+    }
+
+    .calendar-nav:hover:not(:disabled) {
+      background-color: #f8f9fa;
+    }
+
+    .calendar-nav:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .calendar-title {
+      font-weight: 600;
+      color: #1B263B;
+      font-size: 12px;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+
+    .calendar-weekdays div {
+      text-align: center;
+      font-size: 10px;
+      color: #6c757d;
+      font-weight: 500;
+      padding: 6px 2px;
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #1B263B;
+      transition: all 0.2s;
+      border: none;
+      background: none;
+      padding: 3px;
+      min-height: 28px;
+    }
+
+    .calendar-day:hover:not(.disabled):not(.selected) {
+      background-color: #f8f9fa;
+    }
+
+    .calendar-day.disabled {
+      color: #adb5bd;
+      cursor: not-allowed;
+    }
+
+    .calendar-day.selected {
+      background-color: #1B263B;
+      color: white;
+    }
+
+    .calendar-day.today {
+      border: 2px solid #1B263B;
+    }
+
+    .calendar-day.other-month {
+      color: #adb5bd;
+    }
+
+    /* Responsive calendar styles */
+    @media (max-width: 768px) {
+      .calendar-dropdown {
+        min-width: 200px;
+        max-width: 220px;
+        padding: 8px;
+        margin-top: 2px;
+        font-size: 10px;
+      }
+
+      .calendar-header {
+        margin-bottom: 8px;
+      }
+
+      .calendar-nav {
+        padding: 4px;
+        font-size: 10px;
+      }
+
+      .calendar-title {
+        font-size: 11px;
+      }
+
+      .calendar-weekdays div {
+        font-size: 9px;
+        padding: 4px 1px;
+      }
+
+      .calendar-day {
+        font-size: 10px;
+        padding: 2px;
+        min-height: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .calendar-dropdown {
+        min-width: 180px;
+        max-width: 200px;
+        padding: 6px;
+        left: -10px;
+        right: -10px;
+        font-size: 9px;
+      }
+
+      .calendar-header {
+        margin-bottom: 6px;
+      }
+
+      .calendar-nav {
+        padding: 3px;
+        font-size: 9px;
+      }
+
+      .calendar-title {
+        font-size: 10px;
+      }
+
+      .calendar-weekdays div {
+        font-size: 8px;
+        padding: 3px 1px;
+      }
+
+      .calendar-day {
+        font-size: 9px;
+        padding: 1px;
+        min-height: 20px;
+      }
+    }
+
+    /* Ride selector buttons - Top Left */
+    .ride-selector-buttons {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      display: flex;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .ride-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid #E0E1DD;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .ride-option:hover {
+      background-color: #f8f9fa;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+
+    .ride-option span {
+      font-weight: 600;
+      color: #495057;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .ride-option.active {
+      background-color: #0D1B2A;
+      border-color: #0D1B2A;
+      box-shadow: 0 4px 12px rgba(13, 27, 42, 0.3);
+    }
+
+    .ride-option.active span {
+      color: white;
+    }
+
+    /* Responsive design for buttons */
+    @media (max-width: 768px) {
+      .ride-selector-buttons {
+        position: static;
+        justify-content: center;
+        margin: 20px 0;
+        gap: 15px;
+      }
+
+      .ride-option {
+        padding: 10px 20px;
+      }
+
+      .ride-option span {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .ride-selector-buttons {
+        margin: 15px 0;
+        gap: 12px;
+      }
+
+      .ride-option {
+        padding: 8px 16px;
+      }
+
+      .ride-option span {
+        font-size: 12px;
+      }
+    }
     </style>
 
 </head>
 <body>
-
-  <div class="content-wrapper">
-  </div>
-  <!-- Page 1: Form -->
- <form id="travelForm">
-  <h2>🚐 Shared Ride</h2>
-    <p style="text-align: center; font-size: 0.85rem; color: #555; margin-top: -0.9rem; margin-bottom: 1.5rem;">
-      Share with 3–4 passengers. Route and timing are confirmed the night before based on all stops and passengers confirmed.
-    </p>
-  <div class="form-fields">
-    <div class="input-group">
-      <label for="startDate">Date:</label>
-      <input type="date" id="startDate" required />
-    </div>
-
-    <div class="input-group">
-      <label for="direction">Trip Direction:</label>
-      <select id="direction" required>
-        <option value="">Select direction</option>
-        <option value="kwc-t">KWC → Mississauga / Toronto</option>
-        <option value="t-kwc">Mississauga / Toronto → KWC</option>
-      </select>
-    </div>
-
-    <div class="input-group">
-      <label for="time">Selected Time:</label>
-      <select id="time" required>
-        <option value="">Select time</option>
-      </select>
-    </div>
-
-    <div class="input-group">
-      <label for="pickup">Pickup Location:</label>
-      <input type="text" id="pickup" required />
-    </div>
-
-    <div class="input-group">
-      <label for="dropoff">Drop-off Location:</label>
-      <input type="text" id="dropoff" required />
-    </div>
-
-    <div class="input-group">
-      <label for="ETAY">What time should you be at your drop-off location?</label>
-      <input type="time" id="ETAY" required />
-    </div>
-
-    <button type="submit">Submit</button>
-  </div>
-</form>
-    <!-- Page 2: Summary -->
-    <div id="summary">
-        <h2>Reservation Summary</h2>
-        <div id="summaryContent"></div>
-
-        <div id="map"></div>
-
-        <div id="priceLabel" style="font-weight:bold; margin-bottom: 15px;"></div>
-
-        <div id="preconfirmControls">
-            <button 
-                class="confirm-button confirm"
-                title="Clicking confirms you accept and pre-confirm – please only click once."
-                onclick="updateStatus('Pre-Confirmado')">
-                Pre‑Confirm
-            </button>
-
-            <button 
-                class="confirm-button not-accept"
-                title="Someone from our team will be in touch with you shortly."
-                onclick="updateStatus('No Aceptado')">
-                Not Accept
-            </button>
-        </div>
-
-        <p class="payment" style="text-align: center; color: #777; font-size: 0.9rem; padding: 0 20px 40px;">
-            This page is only for pre-confirmation purposes to ensure your information is accurate.
-            You are not required to make any payment or transfer money through this page.
-        </p>
-    </div>
-
-    <script>
-    function updateStatus(newStatus) {
-        const url = 'https://script.google.com/macros/s/AKfycbxJ6-dF6gMi_WO9pEXAoRddzZoIQ84s3kElBiitMG9KRkvSC5PXQmlurXOosRc5DOB4ww/exec';
-
-        const data = new URLSearchParams();
-        data.append("action", "updateLast");
-        data.append("status", newStatus);
-        data.append("email", JSON.parse(localStorage.getItem('user')).email);
-
-        console.log('Sending status update:', {
-            action: 'updateLast',
-            status: newStatus,
-            email: JSON.parse(localStorage.getItem('user')).email
-        });
-
-        fetch(url, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-            },
-            body: data
-        })
-        .then(response => response.text())
-        .then(result => {
-            console.log('Status update response:', result);
-            const status = newStatus.toLowerCase();
-            const redirectUrl = status === "pre-confirmado"
-                ? "Thank_you_Pre_Confirmation.html"
-                : "Thank_you_see_u.html";
-            window.location.href = redirectUrl;
-        })
-        .catch(error => {
-            console.error('Error updating status:', error);
-            alert('An error occurred while updating the status. Please try again.');
-        });
-    }
-    </script>
-
+  <!-- Main 3-column layout -->
+  <div class="main-layout">
+    <!-- Ride selector buttons - Top Left (Desktop) / Centered (Mobile) -->
+    <div class="ride-selector-buttons">
+      <div class="ride-option active" id="sharedOption">
+        <span>Shared</span>
       </div>
-
-    </div>
-  <hr style="width: 90%; max-width: 500px; margin: 40px 0; border: none; border-top: 1px solid #ccc;" />
-
-  <p class="payment" style="text-align: center; color: #777; font-size: 0.9rem; padding: 0 20px 40px;">
-    This page is only for pre-confirmation purposes to ensure your information is accurate.
-    You are not required to make any payment or transfer money through this page.
-  </p>
-    <!-- Sorry message for short rides -->
-    <div id="sorryMessage">
-        Sorry, we don't do this ride, thank you.
+      <div class="ride-option" id="personalOption" onclick="window.location.href='Personal Ride.html'">
+        <span>Personal</span>
+      </div>
     </div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiNihq6gKtCRkqHXusjXXzAM7TCrreDdY&libraries=places"></script>
-    <script src="auth.js"></script>
-    <script>
-    let directionsService, directionsRenderer;
-    const additionalMinutes = 10;
+    <!-- Background image section (2 columns) -->
+    <div class="background-section">
+      <div class="form-overlay">
+        <form id="sharedRideForm" class="ride-form">
+          <div class="form-fields">
+            <div class="input-group">
+              <div class="input-with-icon">
+                <img src="https://www.svgrepo.com/show/438428/date-round.svg" alt="Date" class="input-icon">
+                <input type="text" id="startDate" placeholder="Date" readonly required />
+                <div class="calendar-dropdown" id="calendarDropdown">
+                  <div class="calendar-header">
+                    <button class="calendar-nav" id="prevMonth" disabled>
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9 12C9 12.2652 9.10536 12.5196 9.29289 12.7071L13.2929 16.7071C13.6834 17.0976 14.3166 17.0976 14.7071 16.7071C15.0976 16.3166 15.0976 15.6834 14.7071 15.2929L11.4142 12L14.7071 8.70711C15.0976 8.31658 15.0976 7.68342 14.7071 7.29289C14.3166 6.90237 13.6834 6.90237 13.2929 7.29289L9.29289 11.2929C9.10536 11.4804 9 11.7348 9 12Z"></path>
+                      </svg>
+                    </button>
+                    <div class="calendar-title">
+                      <span id="currentMonth">June</span>
+                      <span id="currentYear">2025</span>
+                    </div>
+                    <button class="calendar-nav" id="nextMonth">
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.29289 7.29289C8.90237 7.68342 8.90237 8.31658 9.29289 8.70711L12.5858 12L9.29289 15.2929C8.90237 15.6834 8.90237 16.3166 9.29289 16.7071C9.68342 17.0976 10.3166 17.0976 10.7071 16.7071L14.7071 12.7071C14.8946 12.5196 15 12.2652 15 12C15 11.7348 14.8946 11.4804 14.7071 11.2929L10.7071 7.29289C10.3166 6.90237 9.68342 6.90237 9.29289 7.29289Z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="calendar-weekdays">
+                    <div>Su</div>
+                    <div>Mo</div>
+                    <div>Tu</div>
+                    <div>We</div>
+                    <div>Th</div>
+                    <div>Fr</div>
+                    <div>Sa</div>
+                  </div>
+                  <div class="calendar-days" id="calendarDays"></div>
+                </div>
+              </div>
+            </div>
 
-    function initMap() {
-        directionsService = new google.maps.DirectionsService();
-        directionsRenderer = new google.maps.DirectionsRenderer();
+            <div class="input-group">
+              <div class="input-with-icon">
+                <img src="https://www.iconpacks.net/icons/2/free-location-icon-2955-thumb.png" alt="Location" class="input-icon">
+                <input type="text" id="pickup" placeholder="Pickup Location" required />
+              </div>
+            </div>
 
-        new google.maps.places.Autocomplete(document.getElementById("pickup"));
-        new google.maps.places.Autocomplete(document.getElementById("dropoff"));
-    }
+            <div class="input-group">
+              <div class="input-with-icon">
+                <img src="https://www.iconpacks.net/icons/2/free-location-icon-2955-thumb.png" alt="Location" class="input-icon">
+                <input type="text" id="dropoff" placeholder="Drop-off Location" required />
+              </div>
+            </div>
 
-    function drawRoute(origin, destination) {
-        const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 7,
-        center: { lat: 43.6532, lng: -79.3832 },
-        });
-        directionsRenderer.setMap(map);
+            <div class="input-group">
+              <div class="input-with-icon">
+                <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" alt="Time" class="input-icon">
+                <select id="time" required>
+                  <option value="">Selected Time</option>
+                </select>
+              </div>
+            </div>
 
-        directionsService.route(
-        {
-            origin: origin,
-            destination: destination,
-            travelMode: google.maps.TravelMode.DRIVING,
-        },
-        (response, status) => {
-            if (status === "OK") {
-            directionsRenderer.setDirections(response);
-            } else {
-            alert("Directions request failed due to " + status);
-            }
-        }
-        );
+            <div class="input-group">
+              <div class="input-with-icon">
+                <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" alt="Time" class="input-icon">
+                <input type="time" id="ETAY" placeholder="What time should you be at your drop-off location?" required />
+              </div>
+            </div>
+
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Benefits section (1 column) -->
+    <div class="benefits-section">
+      <div class="benefits-container">
+        <h3 class="benefits-title">Benefits</h3>
+        <ul class="benefits-list">
+          <li class="benefit-item" aria-label="Choose your exact pickup time up to 90 days in advance.">
+            <div class="benefit-icon">
+              <img alt="" src="https://www.uber-assets.com/image/upload/v1542247607/assets/e1/2eddee-f082-49f7-a5fc-22c17977de50/original/calendar-filled.svg" class="benefit-icon">
+            </div>
+            <div class="benefit-content">
+              <div>
+                <p class="benefit-text">Choose your exact pickup time up to 90 days in advance.</p>
+              </div>
+            </div>
+          </li>
+          <li class="benefit-item" aria-label="Extra wait time included to meet your ride.">
+            <div class="benefit-icon">
+              <img alt="" src="https://www.uber-assets.com/image/upload/v1535564184/assets/30/f5ecd4-8ccf-44d0-9976-2833f69df8a9/original/anytime.svg" class="benefit-icon">
+            </div>
+            <div class="benefit-content">
+              <div>
+                <p class="benefit-text">Extra wait time included to meet your ride.</p>
+              </div>
+            </div>
+          </li>
+          <li class="benefit-item" aria-label="Cancel at no charge up to 60 minutes in advance.">
+            <div class="benefit-icon">
+              <img alt="" src="https://www.uber-assets.com/image/upload/v1542248530/assets/45/ebda59-6a0d-41e3-a924-0dbbce078029/original/credit_card-filled.svg" class="benefit-icon">
+            </div>
+            <div class="benefit-content">
+              <div>
+                <p class="benefit-text">Cancel at no charge up to 60 minutes in advance.</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <a aria-label="" href="https://www.uber.com/ca/en/ride/how-it-works/reserve/#see-prices" target="_self" class="terms-link">See terms</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary and error messages -->
+  <div id="summary" style="display: none;">
+    <div id="summaryContent"></div>
+    <div id="map"></div>
+    <div id="preconfirmControls">
+      <button class="confirm-button confirm" onclick="confirmReservation()">Confirm</button>
+      <button class="confirm-button not-accept" onclick="notAcceptReservation()">Not Accept</button>
+    </div>
+  </div>
+
+  <div id="sorryMessage" style="display: none;">
+    <p>Sorry, this route is not available for shared rides. Please try a different route or contact us for assistance.</p>
+  </div>
+
+  <script src="google-maps-utils.js"></script>
+  <script src="auth.js"></script>
+  <script>
+  let directionsService, directionsRenderer;
+  const additionalMinutes = 10;
+  let googleMapsUtils;
+
+  async function initMap() {
+      console.log('Initializing Google Maps...');
+      
+      try {
+          // Initialize Google Maps utilities
+          googleMapsUtils = new GoogleMapsUtils('AIzaSyBiNihq6gKtCRkqHXusjXXzAM7TCrreDdY');
+          await googleMapsUtils.init();
+
+          // Initialize directions service
+          const directions = googleMapsUtils.initDirectionsService();
+          if (directions) {
+              directionsService = directions.directionsService;
+              directionsRenderer = directions.directionsRenderer;
+          }
+
+          // Initialize autocomplete for pickup and dropoff
+          const pickupInput = document.getElementById("pickup");
+          const dropoffInput = document.getElementById("dropoff");
+
+          if (pickupInput) {
+              googleMapsUtils.initAutocomplete(pickupInput);
+          }
+
+          if (dropoffInput) {
+              googleMapsUtils.initAutocomplete(dropoffInput);
+          }
+
+          console.log('Google Maps initialized successfully');
+      } catch (error) {
+          console.error('Error initializing Google Maps:', error);
+      }
     }
 
     function getRouteInfo(origin, destination, travelMode) {
@@ -558,7 +1157,97 @@
         return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
     }
 
-    document.getElementById("travelForm").addEventListener("submit", async function (e) {
+  // Function to determine if a location is in KWC area
+  function isKWCLocation(location) {
+      const kwcKeywords = [
+          'kitchener', 'waterloo', 'cambridge', 'guelph', 'guelp', 'kwc', 'kw',
+          'conestoga', 'university of waterloo', 'wilfrid laurier',
+          'fairview park', 'boardwalk', 'laurier', 'uwaterloo',
+          'prospect avenue', 'prospect ave', 'prospect av', 'prospect',
+          'kitchener ontario', 'waterloo ontario', 'cambridge ontario', 'guelph ontario',
+          'imperial road', 'imperial rd', 'imperial'
+      ];
+      
+      const locationLower = location.toLowerCase();
+      return kwcKeywords.some(keyword => locationLower.includes(keyword));
+  }
+
+  // Function to determine if a location is in Toronto/Mississauga area
+  function isTorontoMississaugaLocation(location) {
+      const torontoKeywords = [
+          'toronto', 'mississauga', 'pearson', 'airport', 'downtown toronto',
+          'scarborough', 'etobicoke', 'north york', 'york', 'east york',
+          'brampton', 'oakville', 'burlington', 'milton', 'vaughan',
+          'markham', 'richmond hill', 'aurora', 'newmarket',
+          'union station', 'front street', 'front st', 'front',
+          'toronto ontario', 'mississauga ontario', 'pearson airport', 'yyz',
+          'cibc square', 'cibc', 'bay street', 'bay st', 'bay',
+          'silver dart drive', 'silver dart'
+      ];
+      
+      const locationLower = location.toLowerCase();
+      return torontoKeywords.some(keyword => locationLower.includes(keyword));
+  }
+
+  // Function to determine trip direction based on pickup and dropoff
+  function determineTripDirection(pickup, dropoff) {
+      const pickupIsKWC = isKWCLocation(pickup);
+      const dropoffIsKWC = isKWCLocation(dropoff);
+      const pickupIsToronto = isTorontoMississaugaLocation(pickup);
+      const dropoffIsToronto = isTorontoMississaugaLocation(dropoff);
+
+      if (pickupIsKWC && dropoffIsToronto) {
+          return {
+              direction: 'kwc-t',
+              directionText: 'KWC → Mississauga / Toronto',
+              availableTimes: [
+                  { value: "530am", label: "5:30 AM" },
+                  { value: "1pm", label: "1:00 PM" },
+                  { value: "9pm", label: "9:00 PM" }
+              ]
+          };
+      } else if (pickupIsToronto && dropoffIsKWC) {
+          return {
+              direction: 't-kwc',
+              directionText: 'Mississauga / Toronto → KWC',
+              availableTimes: [
+                  { value: "10am", label: "10:00 AM" },
+                  { value: "4pm", label: "4:00 PM" },
+                  { value: "11pm", label: "11:00 PM" }
+              ]
+          };
+      } else {
+          return null; // Invalid route
+      }
+  }
+
+  // Function to update time selection based on direction
+  function updateTimeSelection(direction) {
+      const timeSelect = document.getElementById('time');
+      if (!timeSelect) return;
+
+      // Clear previous options
+      timeSelect.innerHTML = '<option value="">Select time</option>';
+
+      if (direction && direction.availableTimes) {
+          direction.availableTimes.forEach(time => {
+              const option = document.createElement('option');
+              option.value = time.value;
+              option.textContent = time.label;
+              timeSelect.appendChild(option);
+          });
+          
+          // Add visual feedback for successful detection
+          timeSelect.classList.add('success');
+          
+          // Remove success class after a delay
+          setTimeout(() => {
+              timeSelect.classList.remove('success');
+          }, 2000);
+      }
+    }
+
+    document.getElementById("sharedRideForm").addEventListener("submit", async function (e) {
       e.preventDefault();
 
       const user = JSON.parse(localStorage.getItem('user'));
@@ -569,6 +1258,20 @@
 
       const origin = document.getElementById("pickup").value;
       const destination = document.getElementById("dropoff").value;
+
+    // Determine trip direction automatically
+    const tripDirection = determineTripDirection(origin, destination);
+    if (!tripDirection) {
+      alert('Invalid route. Please ensure one location is in KWC area and the other is in Toronto/Mississauga area.');
+      return;
+    }
+
+    const timeSelect = document.getElementById("time");
+    const selectedTime = timeSelect.value;
+    if (!selectedTime) {
+      alert('Please select a time for your trip.');
+      return;
+    }
 
       try {
         const drivingInfo = await getRouteInfo(origin, destination, google.maps.TravelMode.DRIVING);
@@ -584,12 +1287,6 @@
           return;
         }
 
-        function formatDate(dateStr) {
-          if (!dateStr) return 'N/A';
-          const options = { year: 'numeric', month: 'long', day: 'numeric' };
-          return new Date(dateStr).toLocaleDateString('en-US', options);
-        }
-
         const adjustedDrivingSeconds = drivingInfo.durationValue + additionalMinutes * 60;
         const adjustedHours = Math.floor(adjustedDrivingSeconds / 3600);
         const adjustedMinutes = Math.round((adjustedDrivingSeconds % 3600) / 60);
@@ -597,35 +1294,32 @@
 
         const ETAY = document.getElementById("ETAY").value;
         const startDate = document.getElementById("startDate").value;
-        const direction = document.getElementById("direction").value;
-        const time = document.getElementById("time").value;
-        const timeValue = convertTimeToHHMMSS(time);
+      const timeValue = convertTimeToHHMMSS(selectedTime);
 
-        let summaryHTML = `
-          <p><strong>Name:</strong> ${user.fullName}</p>
-          <p><strong>Phone Number:</strong> ${user.phone}</p>
-          <p><strong>Pickup Location:</strong> ${origin}</p>
-          <p><strong>Drop-off Location:</strong> ${destination}</p>
-          <p><strong>Date:</strong> ${formatDate(startDate)}</p>
-          <p><strong>Direction:</strong> ${direction === 'kwc-t' ? 'KWC → Mississauga / Toronto' : 'Mississauga / Toronto → KWC'}</p>
-          <p><strong>Time:</strong> ${time}</p>
-          <hr>
-          <p><strong>Distance:</strong> ${drivingInfo.distanceText}</p>
-          <p><strong>Arrival time goal :</strong> ${ETAY}</p>
-          <p><strong>Estimated Sharing Ride Time:</strong> ${adjustedTimeFormatted}</p>
-          <p><strong>Estimated Public Transit Time:</strong> ${transitInfo.durationText}</p>
-        `;
+      // Prepare reservation data
+      const reservationData = {
+        type: "Shared Ride",
+        name: user.fullName,
+        phone: user.phone,
+        email: user.email,
+        origin: origin,
+        destination: destination,
+        directionText: tripDirection.directionText,
+        timeText: selectedTime,
+        timeValue: timeValue,
+        startDate: startDate,
+        endDate: "-",
+        distanceText: drivingInfo.distanceText,
+        ETAY: ETAY,
+        price: price,
+        adjustedDrivingMinutes: adjustedTimeFormatted,
+        adjustedDrivingDuration: adjustedTimeFormatted,
+        transitDurationText: transitInfo.durationText,
+        estimatedArrivalTime: "-"
+      };
 
-        document.getElementById("summaryContent").innerHTML = summaryHTML;
-        document.getElementById("priceLabel").innerText = `Price: ${price} CAD`;
-
-        this.style.display = "none";
-        document.getElementById("summary").style.display = "block";
-        document.getElementById("sorryMessage").style.display = "none";
-
-        drawRoute(origin, destination);
-
-        // Create FormData for Google Sheets
+      // Send to Google Sheets
+      try {
         const formData = new URLSearchParams();
         formData.append('action', 'saveReservation');
         formData.append('type', 'Shared Ride');
@@ -635,8 +1329,8 @@
         formData.append('email', user.email);
         formData.append('origin', origin);
         formData.append('destination', destination);
-        formData.append('directionText', direction === 'kwc-t' ? 'KWC → Mississauga / Toronto' : 'Mississauga / Toronto → KWC');
-        formData.append('timeText', time);
+          formData.append('directionText', tripDirection.directionText);
+          formData.append('timeText', selectedTime);
         formData.append('timeValue', timeValue);
         formData.append('startDate', startDate);
         formData.append('endDate', "-");
@@ -648,8 +1342,6 @@
         formData.append('transitDurationText', transitInfo.durationText);
         formData.append('estimatedArrivalTime', "-");
 
-        // Send to Google Sheets
-        try {
             const response = await fetch('https://script.google.com/macros/s/AKfycbxL_IXNVOIkMmk8nV9z_-rnVs2nhMHt_xcloyPrNw6SOoWqneONlUJd8YyFBQ0Js1MB0g/exec', {
                 method: 'POST',
                 mode: 'no-cors',
@@ -659,7 +1351,10 @@
                 body: formData.toString()
             });
 
-            // No mostrar mensaje de éxito aquí, esperar a la pre-confirmación
+          // Redirect to summary page with data
+          const encodedData = encodeURIComponent(JSON.stringify(reservationData));
+          window.location.href = `summary.html?data=${encodedData}`;
+
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred while submitting the reservation. Please try again.');
@@ -671,37 +1366,198 @@
     });
 
     // Initialize map on page load
-    window.onload = initMap;
+  document.addEventListener('DOMContentLoaded', function() {
+      initMap();
+  });
 
-    document.getElementById("direction").addEventListener("change", function () {
-      const timeSelect = document.getElementById("time");
-      const direction = this.value;
+  // Also initialize when window loads (fallback)
+  window.addEventListener('load', function() {
+      if (!googleMapsUtils) {
+          initMap();
+      }
+  });
 
-      // Clear previous options
-      timeSelect.innerHTML = '<option value="">Select time</option>';
+  // Add event listeners for pickup and dropoff changes
+  document.addEventListener('DOMContentLoaded', function() {
+      const pickupInput = document.getElementById('pickup');
+      const dropoffInput = document.getElementById('dropoff');
+      const timeSelect = document.getElementById('time');
+      const dateInput = document.getElementById('startDate');
+      const calendarDropdown = document.getElementById('calendarDropdown');
 
-      let times = [];
+      // Calendar functionality
+      let currentDate = new Date();
+      let selectedDate = null;
 
-      if (direction === "kwc-t") {
-        times = [
-          { value: "530am", label: "5:30 AM" },
-          { value: "1pm", label: "1:00 PM" },
-          { value: "9pm", label: "9:00 PM" }
-        ];
-      } else if (direction === "t-kwc") {
-        times = [
-          { value: "10am", label: "10:00 AM" },
-          { value: "4pm", label: "4:00 PM" },
-          { value: "11pm", label: "11:00 PM" }
-        ];
+      // Initialize calendar
+      function initCalendar() {
+          updateCalendar();
+          
+          // Show calendar when clicking on date input
+          dateInput.addEventListener('click', function() {
+              calendarDropdown.classList.toggle('show');
+          });
+
+          // Hide calendar when clicking outside
+          document.addEventListener('click', function(e) {
+              if (!dateInput.contains(e.target) && !calendarDropdown.contains(e.target)) {
+                  calendarDropdown.classList.remove('show');
+              }
+          });
+
+          // Navigation buttons
+          document.getElementById('prevMonth').addEventListener('click', function() {
+              currentDate.setMonth(currentDate.getMonth() - 1);
+              updateCalendar();
+          });
+
+          document.getElementById('nextMonth').addEventListener('click', function() {
+              currentDate.setMonth(currentDate.getMonth() + 1);
+              updateCalendar();
+          });
       }
 
-      times.forEach(t => {
-        const option = document.createElement("option");
-        option.value = t.value;
-        option.textContent = t.label;
-        timeSelect.appendChild(option);
-      });
+      function updateCalendar() {
+          const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                             'July', 'August', 'September', 'October', 'November', 'December'];
+          
+          document.getElementById('currentMonth').textContent = monthNames[currentDate.getMonth()];
+          document.getElementById('currentYear').textContent = currentDate.getFullYear();
+
+          const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+          const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+          const startDate = new Date(firstDay);
+          startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+          const calendarDays = document.getElementById('calendarDays');
+          calendarDays.innerHTML = '';
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          for (let i = 0; i < 42; i++) {
+              const date = new Date(startDate);
+              date.setDate(startDate.getDate() + i);
+
+              const dayButton = document.createElement('button');
+              dayButton.className = 'calendar-day';
+              dayButton.textContent = date.getDate();
+
+              // Check if date is from other month
+              if (date.getMonth() !== currentDate.getMonth()) {
+                  dayButton.classList.add('other-month');
+              }
+
+              // Check if date is today
+              if (date.getTime() === today.getTime()) {
+                  dayButton.classList.add('today');
+              }
+
+              // Check if date is selected
+              if (selectedDate && date.getTime() === selectedDate.getTime()) {
+                  dayButton.classList.add('selected');
+              }
+
+              // Disable past dates
+              if (date < today) {
+                  dayButton.classList.add('disabled');
+              } else {
+                  dayButton.addEventListener('click', function() {
+                      selectDate(date);
+                  });
+              }
+
+              calendarDays.appendChild(dayButton);
+          }
+
+          // Update navigation buttons
+          document.getElementById('prevMonth').disabled = false;
+          document.getElementById('nextMonth').disabled = false;
+      }
+
+      function selectDate(date) {
+          selectedDate = date;
+          const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          const formattedDate = `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+          dateInput.value = formattedDate;
+          calendarDropdown.classList.remove('show');
+          updateCalendar();
+      }
+
+      // Initialize calendar
+      initCalendar();
+
+      // Create time select element if it doesn't exist
+      if (!timeSelect) {
+          const timeGroup = document.createElement('div');
+          timeGroup.className = 'input-group';
+          timeGroup.innerHTML = `
+              <label for="time">Selected Time:</label>
+              <select id="time" required>
+                  <option value="">Enter pickup and dropoff locations</option>
+              </select>
+          `;
+          
+          // Insert before the ETAY field
+          const etayGroup = document.querySelector('label[for="ETAY"]').parentElement;
+          etayGroup.parentNode.insertBefore(timeGroup, etayGroup);
+      }
+
+      // Function to check and update direction when locations change
+      function checkAndUpdateDirection() {
+          const pickup = pickupInput.value.trim();
+          const dropoff = dropoffInput.value.trim();
+          const timeSelect = document.getElementById('time');
+
+          // Don't show loading if both fields are empty
+          if (!pickup && !dropoff) {
+              timeSelect.innerHTML = '<option value="">Enter pickup and dropoff locations</option>';
+              return;
+          }
+
+          // Show loading only if both fields have some content
+          if (pickup && dropoff) {
+              timeSelect.innerHTML = '<option value="">Analyzing route...</option>';
+              timeSelect.classList.add('loading');
+
+              // Add a small delay to avoid premature validation
+              setTimeout(() => {
+                  const direction = determineTripDirection(pickup, dropoff);
+                  
+                  if (direction) {
+                      updateTimeSelection(direction);
+                      timeSelect.classList.remove('loading');
+                      timeSelect.classList.add('success');
+                      console.log('Trip direction determined:', direction.directionText);
+                  } else {
+                      // Invalid route - show helpful message
+                      timeSelect.innerHTML = '<option value="">Invalid route - Please check locations</option>';
+                      timeSelect.classList.remove('loading');
+                      timeSelect.classList.remove('success');
+                      console.log('Invalid route detected');
+                  }
+              }, 500); // 500ms delay to avoid premature validation
+          } else {
+              // Reset to initial state if either field is empty
+              timeSelect.innerHTML = '<option value="">Enter pickup and dropoff locations</option>';
+              timeSelect.classList.remove('loading', 'success');
+          }
+      }
+
+      // Add event listeners for location changes with debouncing
+      let timeoutId;
+      function debouncedCheck() {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(checkAndUpdateDirection, 500); // 500ms debounce
+      }
+
+      pickupInput.addEventListener('input', debouncedCheck);
+      dropoffInput.addEventListener('input', debouncedCheck);
+      
+      // Also check on blur for immediate feedback
+      pickupInput.addEventListener('blur', checkAndUpdateDirection);
+      dropoffInput.addEventListener('blur', checkAndUpdateDirection);
     });
 
     function checkUser() {
@@ -745,8 +1601,6 @@
             userInfo.classList.remove('mobile-active');
         }
     });
-    </script>
-    <script src="loadNav.js"></script>
-    <script src="loadHeader.js"></script>
+  </script>
 </body>
 </html>

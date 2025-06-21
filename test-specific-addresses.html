@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Specific Addresses</title>
+    <style>
+        body {
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .debug-info {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Specific Addresses</h1>
+    
+    <div class="test-section">
+        <h2>Your Specific Test Cases</h2>
+        <button onclick="testUserCases()">Test Your Specific Cases</button>
+        <div id="userTestResults"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Test</h2>
+        <div class="test-case">
+            <label for="pickup">Pickup Location:</label>
+            <input type="text" id="pickup" placeholder="e.g., 374 prospect avenue, kitchener ontario, canada">
+            
+            <label for="dropoff">Dropoff Location:</label>
+            <input type="text" id="dropoff" placeholder="e.g., Union Station Toronto, Front Street West, Toronto, ON, Canada">
+            
+            <button onclick="testSpecificDirection()">Test Direction</button>
+            
+            <div id="specificResult"></div>
+        </div>
+    </div>
+
+    <script>
+        // Function to determine if a location is in KWC area
+        function isKWCLocation(location) {
+            const kwcKeywords = [
+                'kitchener', 'waterloo', 'cambridge', 'guelph', 'guelp', 'kwc', 'kw',
+                'conestoga', 'university of waterloo', 'wilfrid laurier',
+                'fairview park', 'boardwalk', 'laurier', 'uwaterloo',
+                'prospect avenue', 'prospect ave', 'prospect av', 'prospect',
+                'kitchener ontario', 'waterloo ontario', 'cambridge ontario', 'guelph ontario',
+                'imperial road', 'imperial rd', 'imperial'
+            ];
+            
+            const locationLower = location.toLowerCase();
+            const matches = kwcKeywords.filter(keyword => locationLower.includes(keyword));
+            
+            return {
+                isKWC: matches.length > 0,
+                matches: matches
+            };
+        }
+
+        // Function to determine if a location is in Toronto/Mississauga area
+        function isTorontoMississaugaLocation(location) {
+            const torontoKeywords = [
+                'toronto', 'mississauga', 'pearson', 'airport', 'downtown toronto',
+                'scarborough', 'etobicoke', 'north york', 'york', 'east york',
+                'brampton', 'oakville', 'burlington', 'milton', 'vaughan',
+                'markham', 'richmond hill', 'aurora', 'newmarket',
+                'union station', 'front street', 'front st', 'front',
+                'toronto ontario', 'mississauga ontario', 'pearson airport', 'yyz',
+                'cibc square', 'cibc', 'bay street', 'bay st', 'bay',
+                'silver dart drive', 'silver dart'
+            ];
+            
+            const locationLower = location.toLowerCase();
+            const matches = torontoKeywords.filter(keyword => locationLower.includes(keyword));
+            
+            return {
+                isToronto: matches.length > 0,
+                matches: matches
+            };
+        }
+
+        // Function to determine trip direction based on pickup and dropoff
+        function determineTripDirection(pickup, dropoff) {
+            const pickupResult = isKWCLocation(pickup);
+            const dropoffResult = isKWCLocation(dropoff);
+            const pickupTorontoResult = isTorontoMississaugaLocation(pickup);
+            const dropoffTorontoResult = isTorontoMississaugaLocation(dropoff);
+
+            const pickupIsKWC = pickupResult.isKWC;
+            const dropoffIsKWC = dropoffResult.isKWC;
+            const pickupIsToronto = pickupTorontoResult.isToronto;
+            const dropoffIsToronto = dropoffTorontoResult.isToronto;
+
+            if (pickupIsKWC && dropoffIsToronto) {
+                return {
+                    direction: 'kwc-t',
+                    directionText: 'KWC → Mississauga / Toronto',
+                    availableTimes: [
+                        { value: "530am", label: "5:30 AM" },
+                        { value: "1pm", label: "1:00 PM" },
+                        { value: "9pm", label: "9:00 PM" }
+                    ],
+                    debug: {
+                        pickup: pickupResult,
+                        dropoff: dropoffTorontoResult
+                    }
+                };
+            } else if (pickupIsToronto && dropoffIsKWC) {
+                return {
+                    direction: 't-kwc',
+                    directionText: 'Mississauga / Toronto → KWC',
+                    availableTimes: [
+                        { value: "10am", label: "10:00 AM" },
+                        { value: "4pm", label: "4:00 PM" },
+                        { value: "11pm", label: "11:00 PM" }
+                    ],
+                    debug: {
+                        pickup: pickupTorontoResult,
+                        dropoff: dropoffResult
+                    }
+                };
+            } else {
+                return {
+                    direction: null,
+                    debug: {
+                        pickup: pickupResult,
+                        dropoff: dropoffResult,
+                        pickupToronto: pickupTorontoResult,
+                        dropoffToronto: dropoffTorontoResult
+                    }
+                };
+            }
+        }
+
+        function testSpecificDirection() {
+            const pickup = document.getElementById('pickup').value.trim();
+            const dropoff = document.getElementById('dropoff').value.trim();
+            const resultDiv = document.getElementById('specificResult');
+
+            if (!pickup || !dropoff) {
+                resultDiv.innerHTML = '<div class="result error">Please enter both pickup and dropoff locations</div>';
+                return;
+            }
+
+            const direction = determineTripDirection(pickup, dropoff);
+            
+            let debugHtml = `
+                <div class="debug-info">
+                    <strong>Debug Info:</strong><br>
+                    <strong>Pickup Analysis:</strong><br>
+                    - KWC Keywords Found: ${direction.debug.pickup.matches.join(', ') || 'None'}<br>
+                    - Is KWC: ${direction.debug.pickup.isKWC}<br>
+                    - Toronto Keywords Found: ${direction.debug.pickupToronto ? direction.debug.pickupToronto.matches.join(', ') || 'None' : 'N/A'}<br>
+                    - Is Toronto: ${direction.debug.pickupToronto ? direction.debug.pickupToronto.isToronto : 'N/A'}<br>
+                    <br>
+                    <strong>Dropoff Analysis:</strong><br>
+                    - KWC Keywords Found: ${direction.debug.dropoff.matches.join(', ') || 'None'}<br>
+                    - Is KWC: ${direction.debug.dropoff.isKWC}<br>
+                    - Toronto Keywords Found: ${direction.debug.dropoffToronto ? direction.debug.dropoffToronto.matches.join(', ') || 'None' : 'N/A'}<br>
+                    - Is Toronto: ${direction.debug.dropoffToronto ? direction.debug.dropoffToronto.isToronto : 'N/A'}<br>
+                </div>
+            `;
+            
+            if (direction.direction) {
+                let timesHtml = direction.availableTimes.map(time => 
+                    `<li>${time.label} (${time.value})</li>`
+                ).join('');
+                
+                resultDiv.innerHTML = `
+                    <div class="result success">
+                        <h4>✅ Valid Route Detected</h4>
+                        <p><strong>Direction:</strong> ${direction.directionText}</p>
+                        <p><strong>Available Times:</strong></p>
+                        <ul>${timesHtml}</ul>
+                    </div>
+                    ${debugHtml}
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h4>❌ Invalid Route</h4>
+                        <p>This route is not supported. Please ensure:</p>
+                        <ul>
+                            <li>One location is in KWC area (Kitchener, Waterloo, Cambridge, Guelph)</li>
+                            <li>One location is in Toronto/Mississauga area</li>
+                        </ul>
+                    </div>
+                    ${debugHtml}
+                `;
+            }
+        }
+
+        function testUserCases() {
+            const testCases = [
+                {
+                    name: "Guelph Imperial Road to Toronto Union Station",
+                    pickup: "344 Imperial Road South Guelp",
+                    dropoff: "Union Station Toronto, Front Street West, Toronto, ON, Canada",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Kitchener Prospect to Toronto Union Station",
+                    pickup: "374 Prospect av, kitchener , Ontario",
+                    dropoff: "Union Station Toronto, Front Street West, Toronto, ON, Canada",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Kitchener Prospect to CIBC Square",
+                    pickup: "374 Prospect av, kitchener , Ontario",
+                    dropoff: "CIBC SQUARE, Bay Street, Toronto, ON, Canada",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "Guelph Imperial to CIBC Square (Working)",
+                    pickup: "344 Imperial Road South, Guelph, ON, Canada",
+                    dropoff: "CIBC SQUARE, Bay Street, Toronto, ON, Canada",
+                    expected: "kwc-t"
+                },
+                {
+                    name: "CIBC Square to Pearson Airport (Working)",
+                    pickup: "CIBC SQUARE, Bay Street, Toronto, ON, Canada",
+                    dropoff: "Toronto Pearson International Airport (YYZ), Silver Dart Drive, Mississauga, ON, Canada",
+                    expected: "t-kwc"
+                },
+                {
+                    name: "Toronto Union Station to Kitchener",
+                    pickup: "Union Station Toronto, Front Street West, Toronto, ON, Canada",
+                    dropoff: "374 Prospect av, kitchener , Ontario",
+                    expected: "t-kwc"
+                }
+            ];
+
+            const resultsDiv = document.getElementById('userTestResults');
+            let resultsHtml = '<h3>Your Specific Test Results:</h3>';
+
+            testCases.forEach(testCase => {
+                const result = determineTripDirection(testCase.pickup, testCase.dropoff);
+                const passed = result.direction === testCase.expected;
+
+                const statusClass = passed ? 'success' : 'error';
+                const statusIcon = passed ? '✅' : '❌';
+
+                resultsHtml += `
+                    <div class="test-case">
+                        <h4>${statusIcon} ${testCase.name}</h4>
+                        <p><strong>Pickup:</strong> ${testCase.pickup}</p>
+                        <p><strong>Dropoff:</strong> ${testCase.dropoff}</p>
+                        <p><strong>Expected:</strong> ${testCase.expected}</p>
+                        <p><strong>Result:</strong> ${result.direction || 'null'}</p>
+                        <div class="result ${statusClass}">
+                            ${passed ? 'PASSED' : 'FAILED'}
+                        </div>
+                        <div class="debug-info">
+                            <strong>Debug:</strong><br>
+                            Pickup KWC: ${result.debug.pickup.isKWC} (${result.debug.pickup.matches.join(', ') || 'None'})<br>
+                            Pickup Toronto: ${result.debug.pickupToronto ? result.debug.pickupToronto.isToronto : 'N/A'} (${result.debug.pickupToronto ? result.debug.pickupToronto.matches.join(', ') || 'None' : 'N/A'})<br>
+                            Dropoff KWC: ${result.debug.dropoff.isKWC} (${result.debug.dropoff.matches.join(', ') || 'None'})<br>
+                            Dropoff Toronto: ${result.debug.dropoffToronto ? result.debug.dropoffToronto.isToronto : 'N/A'} (${result.debug.dropoffToronto ? result.debug.dropoffToronto.matches.join(', ') || 'None' : 'N/A'})
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = resultsHtml;
+        }
+    </script>
+</body>
+</html> 

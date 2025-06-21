@@ -2,7 +2,7 @@
 function checkAuth() {
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) {
-        window.location.href = 'login.html';
+        window.location.href = 'Login.html';
         return null;
     }
     return user;
@@ -10,7 +10,7 @@ function checkAuth() {
 
 function logout() {
     localStorage.removeItem('user');
-    window.location.href = 'travel_reservation_homev1.html';
+    window.location.href = 'index.html';
 }
 
 // Add user info to navigation if element exists

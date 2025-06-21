@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Map Functionality</title>
+  <style>
+    body {
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+      background-color: whitesmoke;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: whitesmoke;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    h1 {
+      color: #415A77;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .map-container {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    #testMap {
+      width: 100%;
+      height: 400px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #E0E1DD;
+      color: #0D1B2A;
+      margin: 5px;
+    }
+    button:hover {
+      background: #415A77;
+      color: white;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    .status.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .status.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .status.info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Test Map Functionality</h1>
+    
+    <div class="test-section">
+      <h3>Google Maps API Status</h3>
+      <div id="apiStatus" class="status info">Checking Google Maps API...</div>
+      <button onclick="testMapInitialization()">Test Map Initialization</button>
+    </div>
+    
+    <div class="test-section">
+      <h3>Route Drawing Test</h3>
+      <p>Test drawing routes between different locations:</p>
+      <button onclick="testRoute('Toronto Pearson International Airport', 'Kitchener, ON')">
+        Toronto Airport → Kitchener
+      </button>
+      <button onclick="testRoute('Kitchener, ON', 'Toronto, ON')">
+        Kitchener → Toronto
+      </button>
+      <button onclick="testRoute('Mississauga, ON', 'Waterloo, ON')">
+        Mississauga → Waterloo
+      </button>
+    </div>
+    
+    <div class="map-container">
+      <h3>Test Map</h3>
+      <div id="testMap"></div>
+    </div>
+    
+    <div class="test-section">
+      <h3>Console Log</h3>
+      <div id="consoleLog" style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto;">
+        Console output will appear here...
+      </div>
+      <button onclick="clearLog()">Clear Log</button>
+    </div>
+  </div>
+
+  <script src="google-maps-utils.js"></script>
+  <script>
+    let googleMapsUtils;
+    let directionsService, directionsRenderer;
+
+    // Override console.log to capture output
+    const originalLog = console.log;
+    const originalError = console.error;
+    
+    function log(message, type = 'log') {
+      const logDiv = document.getElementById('consoleLog');
+      const timestamp = new Date().toLocaleTimeString();
+      const logEntry = document.createElement('div');
+      logEntry.style.color = type === 'error' ? '#dc3545' : '#28a745';
+      logEntry.textContent = `[${timestamp}] ${message}`;
+      logDiv.appendChild(logEntry);
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+    
+    console.log = function(...args) {
+      originalLog.apply(console, args);
+      log(args.join(' '));
+    };
+    
+    console.error = function(...args) {
+      originalError.apply(console, args);
+      log(args.join(' '), 'error');
+    };
+
+    async function initializeMaps() {
+      try {
+        const statusDiv = document.getElementById('apiStatus');
+        statusDiv.textContent = 'Initializing Google Maps...';
+        statusDiv.className = 'status info';
+        
+        googleMapsUtils = new GoogleMapsUtils('AIzaSyBiNihq6gKtCRkqHXusjXXzAM7TCrreDdY');
+        await googleMapsUtils.init();
+        
+        const directions = googleMapsUtils.initDirectionsService();
+        if (directions) {
+          directionsService = directions.directionsService;
+          directionsRenderer = directions.directionsRenderer;
+        }
+        
+        statusDiv.textContent = 'Google Maps API loaded successfully!';
+        statusDiv.className = 'status success';
+        
+        console.log('Google Maps initialized successfully');
+        
+      } catch (error) {
+        const statusDiv = document.getElementById('apiStatus');
+        statusDiv.textContent = 'Error loading Google Maps: ' + error.message;
+        statusDiv.className = 'status error';
+        console.error('Error initializing Google Maps:', error);
+      }
+    }
+
+    function testMapInitialization() {
+      console.log('Testing map initialization...');
+      if (googleMapsUtils && googleMapsUtils.isLoaded) {
+        console.log('Google Maps is loaded and ready');
+      } else {
+        console.error('Google Maps is not loaded');
+      }
+    }
+
+    function testRoute(origin, destination) {
+      console.log(`Testing route from "${origin}" to "${destination}"`);
+      
+      if (!googleMapsUtils || !googleMapsUtils.isLoaded) {
+        console.error('Google Maps not initialized');
+        return;
+      }
+      
+      try {
+        googleMapsUtils.drawRoute(document.getElementById('testMap'), origin, destination, directionsRenderer);
+        console.log('Route drawing initiated');
+      } catch (error) {
+        console.error('Error drawing route:', error);
+      }
+    }
+
+    function clearLog() {
+      document.getElementById('consoleLog').innerHTML = 'Console output cleared...';
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', initializeMaps);
+  </script>
+</body>
+</html> 

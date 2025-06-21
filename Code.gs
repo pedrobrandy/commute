@@ -64,108 +64,147 @@ function initializeSheets() {
   }
 }
 
-// Handle POST requests
+// Nuevo do post
 function doPost(e) {
-  console.log('Received POST request');
-  console.log('Parameters:', e.parameter);
-  
-  if (!e.parameter.action) {
-    console.log('No action specified');
+  try {
+    const action = e.parameter.action;
+    if (!action) {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        message: 'El parámetro action es requerido'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'login') {
+      return ContentService.createTextOutput(JSON.stringify(login(e)))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'register') {
+      return ContentService.createTextOutput(JSON.stringify(register(e.parameter)))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'saveReservation') {
+      return ContentService.createTextOutput(JSON.stringify(saveReservation(e.parameter)))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'getUserByEmail') {
+      return ContentService.createTextOutput(JSON.stringify(getUserByEmail(e.parameter)))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'updateLast') {
+      return ContentService.createTextOutput(JSON.stringify(updateLast(e.parameter)))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'googleLogin') {
+      return ContentService.createTextOutput(JSON.stringify(googleLogin(e.parameter)))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'updateUserPhone') {
+      return ContentService.createTextOutput(JSON.stringify(updateUserPhone(e.parameter)))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'test') {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        message: 'Google Apps Script is working!',
+        timestamp: new Date().toISOString(),
+        actions: ['login', 'register', 'saveReservation', 'getUserByEmail', 'updateLast', 'googleLogin', 'updateUserPhone']
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'actualizar_estado') {
+      const id = e.parameter.id;
+      const status = e.parameter.status;
+
+      if (!id || !status) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          message: 'ID y estado son requeridos'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(RESERVATIONS_SHEET);
+      const data = sheet.getDataRange().getValues();
+
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][0].toString() === id.toString()) {
+          sheet.getRange(i + 1, 3).setValue(status); // Columna 3 es "status"
+          return ContentService.createTextOutput(JSON.stringify({
+            success: true,
+            message: 'Your reservation was changed successfully'
+          }))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+
+      return ContentService.createTextOutput(JSON.stringify({
+        success: false,
+        message: 'ID no encontrado'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     return ContentService.createTextOutput(JSON.stringify({
       success: false,
-      message: 'No action specified'
+      message: 'Acción no reconocida'
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    console.error('Error en doPost:', error);
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: 'Error interno: ' + error.message
     })).setMimeType(ContentService.MimeType.JSON);
   }
-
-  let response;
-  switch(e.parameter.action) {
-    case 'login':
-      console.log('Processing login request');
-      response = login(e);
-      break;
-    case 'register':
-      console.log('Processing register request');
-      response = register(e.parameter);
-      break;
-    case 'getUserByEmail':
-      console.log('Processing getUserByEmail request');
-      response = getUserByEmail(e.parameter);
-      break;
-    case 'saveReservation':
-      console.log('Processing saveReservation request');
-      response = saveReservation(e.parameter);
-      break;
-    case 'updateLast':
-      console.log('Processing updateLast request');
-      response = updateLast(e.parameter);
-      break;
-    default:
-      console.log('Unknown action:', e.parameter.action);
-      response = {
-        success: false,
-        message: 'Unknown action'
-      };
-  }
-
-  console.log('Sending response:', response);
-  return ContentService.createTextOutput(JSON.stringify(response)).setMimeType(ContentService.MimeType.JSON);
 }
+
 
 // Handle OPTIONS requests for CORS
 function doOptions(e) {
   return ContentService.createTextOutput('')
     .setMimeType(ContentService.MimeType.TEXT);
 }
+//Prueba
+function doGet(e) {
+  let response;
+  try {
+    if (!e || !e.parameter) throw new Error("Parámetros inválidos");
+
+    const action = (e.parameter.action || "").trim();
+    const route = (e.parameter.route || "").trim();
+
+    if (route === "registro" && action === "ver_todos") {
+      response = obtenerRegistrosSinFiltro();
+    } else {
+      response = { success: false, message: 'Acción inválida' };
+    }
+  } catch (error) {
+    response = { success: false, message: error.message };
+  }
+
+  const callback = e.parameter.callback;
+  const json = JSON.stringify(response);
+  let output;
+
+  if (callback) {
+    output = ContentService.createTextOutput(`${callback}(${json});`);
+    output.setMimeType(ContentService.MimeType.JAVASCRIPT);
+  } else {
+    output = ContentService.createTextOutput(json);
+    output.setMimeType(ContentService.MimeType.JSON);
+  }
+  return output;
+}
 
 // Handle GET requests
-function doGet(e) {
-  try {
-    console.log('Received GET request:', e);
-    console.log('Parameters:', e.parameter);
-    
-    if (!e || !e.parameter) {
-      throw new Error("Parámetros de solicitud inválidos");
-    }
 
-    const action = e.parameter.action;
-    console.log('Action:', action);
-    
-    if (!action) {
-      return ContentService.createTextOutput(JSON.stringify({
-        success: false,
-        message: "No action specified"
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
-    }
 
-    let response;
-    switch (action) {
-      case 'getReservations':
-        response = getReservations(e);
-        break;
-      case 'getAvailableDates':
-        response = getAvailableDates();
-        break;
-      case 'getUsers':
-        response = getUsers();
-        break;
-      default:
-        response = { success: false, message: 'Acción inválida: ' + action };
-    }
-
-    console.log('Response:', response);
-    return ContentService.createTextOutput(JSON.stringify(response))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch (error) {
-    console.error('Error in doGet:', error);
-    return ContentService.createTextOutput(JSON.stringify({
-      success: false,
-      message: 'Error: ' + error.message
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
-  }
-}
 
 // User login
 function login(e) {
@@ -201,6 +240,7 @@ function login(e) {
     const passwordIndex = headers.indexOf('password');
     const fullNameIndex = headers.indexOf('fullName');
     const isActiveIndex = headers.indexOf('isActive');
+    const phoneIndex = headers.indexOf('phone');
     
     if (emailIndex === -1 || passwordIndex === -1) {
       console.log('Required columns not found');
@@ -219,7 +259,8 @@ function login(e) {
           email: row[emailIndex],
           password: row[passwordIndex],
           fullName: fullNameIndex !== -1 ? row[fullNameIndex] : '',
-          isActive: isActiveIndex !== -1 ? row[isActiveIndex] : true
+          isActive: isActiveIndex !== -1 ? row[isActiveIndex] : true,
+          phone: phoneIndex !== -1 ? row[phoneIndex] : ''
         };
         break;
       }
@@ -274,7 +315,8 @@ function login(e) {
       success: true,
       message: 'Login exitoso',
       fullName: user.fullName,
-      email: user.email
+      email: user.email,
+      phone: user.phone
     };
 
   } catch (error) {
@@ -446,6 +488,29 @@ function saveReservation(data) {
       reservationsSheet.setFrozenRows(1);
     }
 
+    // Ensure phone number is available
+    let phoneNumber = data.phone;
+    if (!phoneNumber || phoneNumber === "-" || phoneNumber === "") {
+      // Try to get phone from user database
+      const usersSheet = ss.getSheetByName("Users");
+      if (usersSheet && data.email) {
+        const userRows = usersSheet.getDataRange().getValues();
+        for (let i = 1; i < userRows.length; i++) {
+          if (userRows[i][1] === data.email) { // email is column 1
+            phoneNumber = userRows[i][2]; // phone is column 2
+            console.log('Found phone number from user database:', phoneNumber);
+            break;
+          }
+        }
+      }
+    }
+
+    // If still no phone, use a placeholder
+    if (!phoneNumber || phoneNumber === "-" || phoneNumber === "") {
+      phoneNumber = "No proporcionado";
+      console.log('No phone number found, using placeholder');
+    }
+
     // Generar ID único
     const id = Utilities.getUuid();
     const now = new Date().toISOString();
@@ -456,7 +521,7 @@ function saveReservation(data) {
       data.type || "-",            // type
       data.status || "Negociación", // status
       data.name || "-",            // name
-      data.phone || "-",           // phone
+      phoneNumber,                  // phone (ensured to have value)
       data.email || "-",           // email
       data.origin || "-",          // origin
       data.destination || "-",     // destination
@@ -493,43 +558,8 @@ function saveReservation(data) {
 }
 
 // Update reservation status
-function updateStatus(e) {
-  try {
-    if (!e.parameter.id || !e.parameter.status) {
-      return {
-        success: false,
-        message: 'ID y estado son requeridos'
-      };
-    }
 
-    const id = parseInt(e.parameter.id, 10);
-    const newStatus = e.parameter.status;
 
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = ss.getSheetByName(RESERVATIONS_SHEET);
-    const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).getValues();
-
-    for (let i = 0; i < data.length; i++) {
-      if (parseInt(data[i][0], 10) === id) {
-        sheet.getRange(i + 2, 3).setValue(newStatus);
-        return {
-          success: true
-        };
-      }
-    }
-
-    return {
-      success: false,
-      message: 'ID no encontrado'
-    };
-  } catch (error) {
-    console.error('Error updating status:', error);
-    return {
-      success: false,
-      message: 'Error al actualizar el estado: ' + error.message
-    };
-  }
-}
 
 // Get all reservations
 function getReservations(e) {
@@ -652,3 +682,268 @@ function updateLast(data) {
     return { success: false, message: "Error updating status: " + error.toString() };
   }
 } 
+
+function register(params) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(USERS_SHEET);
+  
+  const { fullName, email, phone, password } = params;
+
+  if (!email || !password) {
+    return {
+      success: false,
+      message: 'Missing email or password'
+    };
+  }
+
+  const rows = sheet.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][1] === email) {
+      return {
+        success: false,
+        message: 'Email already exists'
+      };
+    }
+  }
+
+  sheet.appendRow([
+    fullName,
+    email,
+    phone,
+    password,
+    true,
+    new Date().toISOString(),
+    new Date().toISOString()
+  ]);
+
+  return {
+    success: true,
+    message: 'User registered successfully'
+  };
+}
+//prueba
+function obtenerRegistrosSinFiltro() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName("reservations");
+  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).getValues();
+
+  const results = data.map(row => ({
+    id: row[0],
+    type: row[1],
+    status: row[2],
+    name: row[3],
+    phone: row[4],
+    email: row[5],
+    origin: row[6],
+    destination: row[7],
+    directionText: row[8],
+    timeText: row[9],
+    timeValue: row[10],
+    startDate: row[11],
+    endDate: row[12],
+    distanceText: row[13],
+    ETAY: row[14],
+    price: row[15],
+    adjustedDrivingMinutes: row[16],
+    adjustedDriving: row[17],
+    Duration: row[18],
+    transitDurationText: row[19],
+    estimatedArrivalTime: row[20],
+    createdAt: row[21]
+  }));
+
+  return { success: true, results };
+}
+//lo deje pa ve
+
+// Google Sign-In user registration
+function googleLogin(params) {
+  try {
+    console.log('=== GOOGLE LOGIN DEBUG START ===');
+    console.log('Google login function called');
+    console.log('Received parameters:', params);
+    console.log('Parameter keys:', Object.keys(params));
+    
+    const { fullName, email, googleId, picture, phone } = params;
+    
+    console.log('Extracted values:');
+    console.log('- fullName:', fullName);
+    console.log('- email:', email);
+    console.log('- googleId:', googleId);
+    console.log('- picture:', picture);
+    console.log('- phone:', phone);
+    
+    if (!email || !fullName) {
+      console.log('❌ Missing email or fullName');
+      console.log('- email present:', !!email);
+      console.log('- fullName present:', !!fullName);
+      return {
+        success: false,
+        message: 'Email y nombre son requeridos'
+      };
+    }
+    
+    console.log('✅ Email and fullName validation passed');
+    
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    console.log('📊 Spreadsheet opened, ID:', SPREADSHEET_ID);
+    
+    const sheet = ss.getSheetByName(USERS_SHEET);
+    console.log('📋 Users sheet found:', !!sheet);
+    
+    if (!sheet) {
+      console.log('❌ Users sheet not found');
+      return {
+        success: false,
+        message: 'Hoja de usuarios no encontrada'
+      };
+    }
+    
+    // Check if user already exists
+    const rows = sheet.getDataRange().getValues();
+    console.log('📊 Total rows in users sheet:', rows.length);
+    console.log('📊 Headers:', rows[0]);
+    
+    let userExists = false;
+    let existingUserRow = -1;
+    
+    for (let i = 1; i < rows.length; i++) {
+      const rowEmail = rows[i][1]; // email is in column 1
+      console.log(`Checking row ${i}: ${rowEmail} vs ${email}`);
+      if (rowEmail === email) {
+        userExists = true;
+        existingUserRow = i + 1; // +1 because sheet rows are 1-indexed
+        console.log('✅ User found at row:', existingUserRow);
+        break;
+      }
+    }
+    
+    if (userExists) {
+      // Update last login for existing user
+      console.log('🔄 User exists, updating last login');
+      sheet.getRange(existingUserRow, 6).setValue(new Date().toISOString()); // lastLogin is column 6
+      
+      // Update phone number if provided and user doesn't have one
+      const existingPhone = sheet.getRange(existingUserRow, 3).getValue(); // phone is column 3
+      console.log('📱 Existing phone:', existingPhone);
+      
+      if ((!existingPhone || existingPhone === '') && phone) {
+        sheet.getRange(existingUserRow, 3).setValue(phone);
+        console.log('📱 Updated phone number for existing user:', phone);
+      }
+      
+      const result = {
+        success: true,
+        message: 'Login exitoso',
+        fullName: fullName,
+        email: email,
+        phone: phone || existingPhone || '',
+        isNewUser: false,
+        needsPhone: !existingPhone && !phone
+      };
+      
+      console.log('✅ Returning result for existing user:', result);
+      console.log('=== GOOGLE LOGIN DEBUG END ===');
+      return result;
+      
+    } else {
+      // Create new user
+      console.log('🆕 Creating new user');
+      const userPhone = phone || '';
+      
+      const newUserData = [
+        fullName,           // fullName
+        email,              // email
+        userPhone,          // phone
+        '',                 // password (empty for Google users)
+        true,               // isActive
+        new Date().toISOString(), // lastLogin
+        new Date().toISOString()  // createdAt
+      ];
+      
+      console.log('📝 New user data to append:', newUserData);
+      sheet.appendRow(newUserData);
+      console.log('✅ New user row appended successfully');
+      
+      const result = {
+        success: true,
+        message: 'Usuario registrado exitosamente',
+        fullName: fullName,
+        email: email,
+        phone: userPhone,
+        isNewUser: true,
+        needsPhone: !userPhone
+      };
+      
+      console.log('✅ Returning result for new user:', result);
+      console.log('=== GOOGLE LOGIN DEBUG END ===');
+      return result;
+    }
+    
+  } catch (error) {
+    console.error('❌ Error in googleLogin:', error);
+    console.error('Error stack:', error.stack);
+    console.log('=== GOOGLE LOGIN DEBUG END WITH ERROR ===');
+    return {
+      success: false,
+      message: 'Error en el login de Google: ' + error.message
+    };
+  }
+}
+
+// Update user phone number
+function updateUserPhone(params) {
+  try {
+    console.log('Update user phone function called');
+    console.log('Received parameters:', params);
+    
+    const { email, phone } = params;
+    
+    if (!email || !phone) {
+      console.log('Missing email or phone');
+      return {
+        success: false,
+        message: 'Email y teléfono son requeridos'
+      };
+    }
+    
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(USERS_SHEET);
+    
+    // Find user by email
+    const rows = sheet.getDataRange().getValues();
+    let userRow = -1;
+    
+    for (let i = 1; i < rows.length; i++) {
+      if (rows[i][1] === email) { // email is in column 1
+        userRow = i + 1; // +1 because sheet rows are 1-indexed
+        break;
+      }
+    }
+    
+    if (userRow === -1) {
+      return {
+        success: false,
+        message: 'Usuario no encontrado'
+      };
+    }
+    
+    // Update phone number
+    sheet.getRange(userRow, 3).setValue(phone); // phone is column 3
+    console.log('Phone number updated successfully');
+    
+    return {
+      success: true,
+      message: 'Número de teléfono actualizado exitosamente',
+      phone: phone
+    };
+    
+  } catch (error) {
+    console.error('Error in updateUserPhone:', error);
+    return {
+      success: false,
+      message: 'Error al actualizar el número de teléfono: ' + error.message
+    };
+  }
+}
+

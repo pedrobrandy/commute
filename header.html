@@ -1,73 +1,309 @@
 <!-- Common Header Component -->
 <header class="common-header">
-  <div class="header-content">
-    <div class="logo-container">
-      <!-- Si el logo de Imgur no funciona, puedes:
-           1. Usar una URL directa de tu logo
-           2. Guardar el logo en tu proyecto y usar: src="./images/logo.png"
-           3. Usar un logo temporal mientras consigues la URL correcta -->
-      <img src="https://i.imgur.com/9nP0X0y.jpeg" alt="Commute Digital Logo" class="header-logo" 
-           onerror="console.log('Logo failed to load, trying PNG...'); this.src='https://i.imgur.com/9nP0X0y.png'; this.onerror=function(){console.log('PNG also failed, using placeholder'); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjRGN0Y5Ii8+Cjx0ZXh0IHg9IjI1IiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MT0dPPC90ZXh0Pgo8L3N2Zz4K';}" />
+    <div class="header-content">
+      <!-- Empty div for balance -->
+      <div class="header-spacer"></div>
+      
+      <!-- Logo - Center -->
+      <div class="logo-container">
+        <!-- Logo desde GitHub Pages -->
+        <img src="https://pedrobrandy.github.io/commute/image/commute-logo.png" alt="Commute Digital Logo" class="header-logo" 
+             onload="console.log('Logo cargado exitosamente')"
+             onerror="console.log('Error cargando logo desde:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <!-- Fallback logo 
+        <div class="fallback-logo" style="display: none; background: #E0E1DD; color: #1B263B; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+          COMMUTE DIGITAL
+        </div>-->
+      </div>
+      
+      <!-- User Menu - Right Side -->
+      <div class="user-menu">
+        <div class="user-menu-trigger">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png" alt="User Menu" class="user-menu-icon" />
+        </div>
+        <div class="user-menu-dropdown">
+          <a href="#" class="user-menu-item" onclick="logout()">
+            <img src="https://cdn1.iconfinder.com/data/icons/heroicons-ui/24/logout-512.png" alt="Logout" class="menu-item-icon" />
+            <span>Login/Logout</span>
+          </a>
+          <a href="My Rides.html" class="user-menu-item">
+            <img src="https://static.thenounproject.com/png/210781-200.png" alt="My Rides" class="menu-item-icon" />
+            <span>My Rides</span>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="header-title">
-      <h1>Commute Digital</h1>
-    </div>
-  </div>
-</header>
-
-<style>
-  .common-header {
-    background-color: #0D1B2A;
-    width: 100%;
-    padding: 15px 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    position: relative;
-    z-index: 50;
-  }
+  </header>
   
-  .header-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .logo-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .header-logo {
-    height: 50px;
-    width: auto;
-    object-fit: contain;
-  }
-  
-  .header-title h1 {
-    color: #E0E1DD;
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin: 0;
-    text-align: center;
-  }
-  
-  @media (max-width: 600px) {
+  <style>
+    /* Force header to be visible and properly positioned */
     .common-header {
-      padding: 10px 15px;
+      background-color: #1B263B !important;
+      width: 100vw !important;
+      padding: 8px 10px !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 9999 !important;
+      display: block !important;
+      visibility: visible !important;
+      box-sizing: border-box !important;
+      overflow: visible !important;
+      transform: none !important;
     }
     
     .header-content {
-      gap: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
     }
     
     .header-logo {
-      height: 40px;
+      height: 85px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      visibility: visible;
+      opacity: 1;
     }
     
-    .header-title h1 {
-      font-size: 1.4rem;
+    .header-spacer {
+      width: 60px; /* Same width as user menu for balance */
     }
-  }
-</style> 
+    
+    /* User Menu Styles */
+    .user-menu {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 60px;
+    }
+    
+    .user-menu-trigger {
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .user-menu-trigger:hover {
+      background-color: #1B263B;
+    }
+    
+    .user-menu-icon {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) saturate(100%) invert(93%) sepia(4%) saturate(360%) hue-rotate(161deg) brightness(97%) contrast(95%);
+    }
+    
+    .user-menu-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: #E0E1DD;
+      border: 1px solid #1B263B;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      min-width: 180px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      z-index: 1001;
+      margin-top: 8px;
+    }
+    
+    .user-menu:hover .user-menu-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .user-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: #0D1B2A;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      border-bottom: 1px solid #E0E1DD
+    }
+    
+    .user-menu-item:last-child {
+      border-bottom: none;
+    }
+    
+    .user-menu-item:hover {
+      background-color: rgba(119, 141, 169, 0.1);
+      color: #0D1B2A;
+    }
+    
+    .menu-item-icon {
+      width: 30px;
+      height: 30px;
+      filter: brightness(0) saturate(100%) invert(47%) sepia(1%) saturate(1234%) hue-rotate(202deg) brightness(94%) contrast(89%);
+    }
+    
+    .user-menu-item span {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .fallback-logo {
+      background: #E0E1DD;
+      color: #1B263B;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+      display: none;
+    }
+    
+    @media (max-width: 600px) {
+      .common-header {
+        padding: 5px 10px;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100vw !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: none !important;
+      }
+      
+      .header-content {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 5px;
+      }
+      
+      .logo-container {
+        flex: 1;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+      }
+      
+      .header-logo {
+        height: 70px;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        max-width: 100%;
+      }
+      
+      .header-spacer {
+        width: 50px;
+        display: block !important;
+      }
+      
+      .user-menu {
+        width: 50px;
+        display: flex !important;
+        visibility: visible !important;
+        position: relative !important;
+        right: 0 !important;
+      }
+      
+      .user-menu-icon {
+        width: 28px;
+        height: 28px;
+        display: block !important;
+        visibility: visible !important;
+      }
+      
+      .user-menu-dropdown {
+        min-width: 160px;
+        right: -10px;
+      }
+      
+      .user-menu-item {
+        padding: 10px 14px;
+      }
+      
+      .menu-item-icon {
+        width: 18px;
+        height: 18px;
+      }
+      
+      .user-menu-item span {
+        font-size: 13px;
+      }
+      
+      .fallback-logo {
+        font-size: 14px;
+        padding: 8px;
+        display: block !important;
+        visibility: visible !important;
+      }
+    }
+  </style>
+  
+  <script>
+    function logout() {
+      localStorage.clear();
+      window.location.href = "login.html";
+    }
+    
+    // Debug function to check header visibility
+    function checkHeaderVisibility() {
+      const header = document.querySelector('.common-header');
+      const logo = document.querySelector('.header-logo');
+      const userMenu = document.querySelector('.user-menu');
+      
+      console.log('Header element:', header);
+      console.log('Logo element:', logo);
+      console.log('User menu element:', userMenu);
+      
+      if (header) {
+        console.log('Header styles:', {
+          display: getComputedStyle(header).display,
+          visibility: getComputedStyle(header).visibility,
+          position: getComputedStyle(header).position,
+          top: getComputedStyle(header).top,
+          left: getComputedStyle(header).left,
+          width: getComputedStyle(header).width,
+          zIndex: getComputedStyle(header).zIndex
+        });
+      }
+    }
+    
+    // Check header visibility after page loads
+    window.addEventListener('load', function() {
+      setTimeout(checkHeaderVisibility, 1000);
+    });
+    
+    // Force header visibility if needed
+    document.addEventListener('DOMContentLoaded', function() {
+      const header = document.querySelector('.common-header');
+      if (header) {
+        header.style.display = 'block';
+        header.style.visibility = 'visible';
+        header.style.opacity = '1';
+        header.style.position = 'fixed';
+        header.style.top = '0';
+        header.style.left = '0';
+        header.style.right = '0';
+        header.style.width = '100vw';
+        header.style.zIndex = '9999';
+      }
+    });
+  </script> 

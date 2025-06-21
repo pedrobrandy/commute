@@ -2,7 +2,7 @@
 <nav class="bottom-nav">
   <ul class="bottom-menu">
     <li>
-      <a href="travel_reservation_homev1.html">
+      <a href="index.html">
         <img src="https://static.thenounproject.com/png/210781-200.png" alt="Rides" class="nav-icon" />
         <span class="nav-label">Rides</span>
       </a>
@@ -15,21 +15,18 @@
     </li>
     <li>
       <a href="sms:+15194896746">
-        <img src="https://www.freeiconspng.com/thumbs/contact-icon-png/contact-phone-icon-4.png" alt="Contact" class="nav-icon" />
+        <img src="https://www.iconpacks.net/icons/2/free-contact-icon-3018-thumb.png" alt="Contact" class="nav-icon" />
         <span class="nav-label">Contact</span>
       </a>
     </li>
   </ul>
-  <div class="user-info">
-    <span id="userName"></span>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
 </nav>
 
 <style>
   .bottom-nav {
     position: fixed;
-    top: 80px; /* Position below header */
+    top: auto; /* Position below fixed header - adjusted for body padding-top */
+    bottom: 0;
     left: 0;
     width: 100vw;
     background: #1B263B;
@@ -37,7 +34,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 999;
     padding: 0;
     min-height: 68px;
   }
@@ -87,33 +84,9 @@
     font-weight: 500;
     letter-spacing: 0.01em;
   }
-  .user-info {
-    position: absolute;
-    right: 18px;
-    top: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .logout-btn {
-    background: #E0E1DD;
-    color: #1B263B;
-    border: none;
-    border-radius: 4px;
-    padding: 4px 12px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-left: 4px;
-    transition: background 0.2s;
-  }
-  .logout-btn:hover {
-    background: #778DA9;
-    color: #fff;
-  }
   @media (max-width: 600px) {
     .bottom-nav {
-      top: auto;
+      top: auto; /* Position below header on mobile - adjusted for body padding-top */
       bottom: 0;
       border-top: 1.5px solid #E0E1DD;
       border-bottom: none;
@@ -129,13 +102,6 @@
     }
     .nav-label {
       font-size: 10px;
-    }
-    .user-info {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      left: auto;
-      z-index: 101;
     }
   }
   

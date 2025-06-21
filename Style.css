@@ -1,5 +1,19 @@
+@font-face {
+  font-family: 'UberMove';
+  src: url('https://assets.uber.com/fonts/v2/UberMove-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'UberMoveText';
+  src: url('https://assets.uber.com/fonts/v2/UberMoveText-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: 0;
   background-color: #f4f4f4;
   display: flex;

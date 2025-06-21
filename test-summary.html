@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Summary</title>
+  <style>
+    body {
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+      background-color: whitesmoke;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: whitesmoke;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    h1 {
+      color: #415A77;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .description {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .test-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    button {
+      padding: 15px 25px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #E0E1DD;
+      color: #0D1B2A;
+    }
+    button:hover {
+      background: #415A77;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .instructions {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+    .instructions h3 {
+      color: #415A77;
+      margin-top: 0;
+    }
+    .instructions ol {
+      padding-left: 20px;
+    }
+    .instructions li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Test Summary Page</h1>
+    
+    <div class="description">
+      <p>This page allows you to test the summary functionality with sample data. The summary page now has a card-based design with a whitesmoke background and should display the route map correctly.</p>
+    </div>
+    
+    <div class="test-buttons">
+      <button onclick="testPersonalRide()">
+        🚗 Test Personal Ride Summary
+      </button>
+      <button onclick="testSharedRide()">
+        🚌 Test Shared Ride Summary
+      </button>
+    </div>
+    
+    <div class="instructions">
+      <h3>How it works:</h3>
+      <ol>
+        <li>Click one of the test buttons above</li>
+        <li>You'll be redirected to the summary page with sample data</li>
+        <li>The summary page will display the reservation details in a card format</li>
+        <li>The route map should show the path between pickup and destination</li>
+        <li>You can test the Pre-Confirm and Not Accept buttons</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    function testPersonalRide() {
+      const sampleData = {
+        type: "Personal Ride",
+        name: "John Doe",
+        phone: "+1 (555) 123-4567",
+        email: "john.doe@example.com",
+        origin: "Toronto Pearson International Airport",
+        destination: "Kitchener, ON",
+        directionText: "-",
+        timeText: "-",
+        timeValue: "-",
+        startDate: "2024-01-15",
+        endDate: "-",
+        distanceText: "85.2 km",
+        ETAY: "14:30",
+        price: 80,
+        adjustedDrivingMinutes: "1hour(s) 15min",
+        adjustedDrivingDuration: "1hour(s) 15min",
+        transitDurationText: "2 hours 45 mins",
+        estimatedArrivalTime: "-"
+      };
+      
+      const encodedData = encodeURIComponent(JSON.stringify(sampleData));
+      window.open(`summary.html?data=${encodedData}`, '_blank');
+    }
+
+    function testSharedRide() {
+      const sampleData = {
+        type: "Shared Ride",
+        name: "Jane Smith",
+        phone: "+1 (555) 987-6543",
+        email: "jane.smith@example.com",
+        origin: "Kitchener, ON",
+        destination: "Toronto, ON",
+        directionText: "KWC → Mississauga / Toronto",
+        timeText: "5:30 AM",
+        timeValue: "05:30:00",
+        startDate: "2024-01-15",
+        endDate: "-",
+        distanceText: "95.8 km",
+        ETAY: "07:00",
+        price: 20,
+        adjustedDrivingMinutes: "1hour(s) 25min",
+        adjustedDrivingDuration: "1hour(s) 25min",
+        transitDurationText: "2 hours 30 mins",
+        estimatedArrivalTime: "-"
+      };
+      
+      const encodedData = encodeURIComponent(JSON.stringify(sampleData));
+      window.open(`summary.html?data=${encodedData}`, '_blank');
+    }
+  </script>
+</body>
+</html> 
