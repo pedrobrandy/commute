@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Google Apps Script Deployment</title>
+    <script src="config.production.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover { background: #0056b3; }
+        
+        .url-display {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Google Apps Script Deployment Verification</h1>
+        
+        <div class="status info">
+            <strong>Current Script URL:</strong>
+            <div class="url-display" id="scriptUrl"></div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 Deployment Instructions</h3>
+            <ol>
+                <li>Go to <a href="https://script.google.com/" target="_blank">Google Apps Script</a></li>
+                <li>Open your project (or create a new one)</li>
+                <li>Copy the Code.gs content into the editor</li>
+                <li>Click "Deploy" → "New deployment"</li>
+                <li>Set "Execute as": <strong>Me</strong></li>
+                <li>Set "Who has access": <strong>Anyone</strong></li>
+                <li>Click "Deploy"</li>
+                <li>Copy the new URL and update <code>config.production.js</code></li>
+            </ol>
+        </div>
+        
+        <div>
+            <button onclick="testCurrentUrl()">Test Current URL</button>
+            <button onclick="openScriptEditor()">Open Google Apps Script</button>
+            <button onclick="showCodeTemplate()">Show Code Template</button>
+        </div>
+        
+        <div id="testResult"></div>
+        <div id="codeTemplate" style="display: none;"></div>
+    </div>
+
+    <script>
+        const scriptUrl = CONFIG.GOOGLE_APPS_SCRIPT.MAIN;
+        document.getElementById('scriptUrl').textContent = scriptUrl;
+
+        async function testCurrentUrl() {
+            const resultDiv = document.getElementById('testResult');
+            resultDiv.innerHTML = '<div class="status info">Testing current URL...</div>';
+            
+            try {
+                // Test with different methods
+                const methods = [
+                    { name: 'Direct fetch', options: {} },
+                    { name: 'With CORS mode', options: { mode: 'cors' } },
+                    { name: 'With no-cors mode', options: { mode: 'no-cors' } }
+                ];
+                
+                let results = [];
+                
+                for (const method of methods) {
+            try {
+                        console.log(`Testing ${method.name}...`);
+                        const response = await fetch(`${scriptUrl}?action=test`, method.options);
+                        
+                        if (response.type === 'opaque') {
+                            results.push(`❌ ${method.name}: CORS blocked (opaque response)`);
+                        } else if (response.ok) {
+                            const text = await response.text();
+                            results.push(`✅ ${method.name}: Success (${response.status}) - ${text.substring(0, 100)}`);
+                        } else {
+                            results.push(`❌ ${method.name}: HTTP ${response.status}`);
+                        }
+                    } catch (error) {
+                        results.push(`❌ ${method.name}: ${error.message}`);
+                    }
+                }
+                
+                const resultHtml = results.map(result => `<div>${result}</div>`).join('');
+                resultDiv.innerHTML = `<div class="status info"><strong>Test Results:</strong><br>${resultHtml}</div>`;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="status error">Test failed: ${error.message}</div>`;
+            }
+        }
+
+        function openScriptEditor() {
+            window.open('https://script.google.com/', '_blank');
+        }
+
+        function showCodeTemplate() {
+            const templateDiv = document.getElementById('codeTemplate');
+            templateDiv.style.display = 'block';
+            templateDiv.innerHTML = `
+                <div class="status warning">
+                    <h3>📝 Code Template for Google Apps Script</h3>
+                    <p>Copy this code into your Google Apps Script project:</p>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; max-height: 400px; overflow-y: auto;">
+// Constants
+const SPREADSHEET_ID = '1KMWf6u5zZxThVMzmNtcKWyjXtNne4UqfViiy3dDMj5I';
+const USERS_SHEET = 'Users';
+const RESERVATIONS_SHEET = 'Reservations';
+
+// Test function
+function doGet(e) {
+  try {
+    const action = e.parameter.action;
+    
+    if (action === 'test') {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        message: 'Google Apps Script is working!',
+        timestamp: new Date().toISOString()
+      }))
+        .setMimeType(ContentService.MimeType.JSON)
+        .setHeader('Access-Control-Allow-Origin', '*')
+        .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        .setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: 'Action not recognized'
+    }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*')
+      .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+      .setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      
+                } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      message: 'Error: ' + error.message
+    }))
+      .setMimeType(ContentService.MimeType.JSON)
+      .setHeader('Access-Control-Allow-Origin', '*')
+      .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+      .setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  }
+}
+
+// Handle OPTIONS requests for CORS
+function doOptions(e) {
+  return ContentService.createTextOutput('')
+    .setMimeType(ContentService.MimeType.TEXT)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    .setHeader('Access-Control-Max-Age', '86400');
+}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Auto-test on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testCurrentUrl();
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

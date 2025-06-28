@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Commut</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="Style.css">
+    <style>
+        body {
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            padding-top: 140px;
+            padding-bottom: 120px;
+        }
+
+        .register-container {
+            background-color: whitesmoke;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .register-title {
+            color: #1B263B;
+            font-weight: 600;
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 0 0 25px 0;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #1B263B;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0D1B2A;
+            box-shadow: 0 0 0 3px rgba(13, 27, 42, 0.1);
+        }
+
+        .phone-input-container {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .phone-prefix {
+            background-color: #f8f9fa;
+            padding: 12px 14px;
+            color: #6c757d;
+            font-weight: 500;
+            border-right: 2px solid #e0e0e0;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .phone-input {
+            border: none;
+            flex: 1;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .phone-input:focus {
+            outline: none;
+        }
+
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #e0e0e0;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            background-color: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            color: #6c757d;
+            font-size: 2rem;
+        }
+
+        .avatar-upload-btn {
+            background: none;
+            border: 2px dashed #0D1B2A;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #0D1B2A;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .avatar-upload-btn:hover {
+            background-color: #0D1B2A;
+            color: white;
+        }
+
+        .register-button {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            outline: none;
+            box-shadow: none;
+            text-decoration: none;
+            appearance: none;
+            transition-property: background, transform;
+            transition-duration: 200ms;
+            transition-timing-function: cubic-bezier(0, 0, 1, 1);
+            cursor: pointer;
+            margin: 15px 0;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 20px;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #E0E1DD !important;
+            background-color: #0D1B2A !important;
+            min-width: 130px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .register-button:hover {
+            background-color: #1B263B !important;
+            color: #E0E1DD !important;
+            transform: translateY(-1px);
+        }
+
+        .register-button:active {
+            transform: translateY(0);
+        }
+
+        .register-button:disabled {
+            background-color: #6c757d !important;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-footer a {
+            color: #0D1B2A;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2 class="register-title">Registro Directo</h2>
+        
+        <form id="registerForm">
+            <div class="avatar-section">
+                <div class="avatar-preview" id="avatarPreview">
+                    <div class="avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <button type="button" class="avatar-upload-btn" id="avatarUploadBtn">
+                    <i class="fas fa-camera"></i> Subir Foto de Perfil
+                </button>
+                <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+            </div>
+            
+            <div class="form-group">
+                <label for="fullName">Nombre Completo</label>
+                <input type="text" id="fullName" required placeholder="Ingresa tu nombre completo">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" required placeholder="Ingresa tu correo electrónico">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Número de Teléfono</label>
+                <div class="phone-input-container">
+                    <span class="phone-prefix">+1</span>
+                    <input type="tel" id="phone" class="phone-input" required placeholder="(555) 123-4567" maxlength="10">
+                </div>
+            </div>
+            
+            <div id="error-message" class="error-message"></div>
+            <div id="success-message" class="success-message"></div>
+            
+            <button type="submit" class="register-button" id="registerBtn">
+                <i class="fas fa-user-plus"></i> Completar Registro
+            </button>
+        </form>
+
+        <div class="form-footer">
+            ¿Ya tienes una cuenta? <a href="Login.html">Inicia sesión aquí</a>
+        </div>
+    </div>
+
+    <script src="config.production.js"></script>
+    <script src="api-utils.js"></script>
+    <script>
+        let selectedAvatar = null;
+
+        // Format phone number as user types
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length >= 6) {
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 3) {
+                value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
+            }
+            
+            e.target.value = value;
+        });
+
+        // Handle avatar upload
+        document.getElementById('avatarUploadBtn').addEventListener('click', function() {
+            document.getElementById('avatarInput').click();
+        });
+
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    alert('La imagen debe ser menor a 5MB');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarPreview = document.getElementById('avatarPreview');
+                    avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Avatar preview">`;
+                    selectedAvatar = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = '+1' + document.getElementById('phone').value.replace(/\D/g, '');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            const registerBtn = document.getElementById('registerBtn');
+            
+            // Clear previous messages
+            errorMessage.textContent = '';
+            successMessage.textContent = '';
+            
+            // Validations
+            if (!fullName || !email || !phone) {
+                errorMessage.textContent = 'Por favor, complete todos los campos requeridos';
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorMessage.textContent = 'Por favor, ingrese un correo electrónico válido';
+                return;
+            }
+
+            // Validate phone format
+            if (phone.length !== 12) { // +1 + 10 digits
+                errorMessage.textContent = 'Por favor, ingrese un número de teléfono válido';
+                return;
+            }
+            
+            // Debug logging
+            console.log('📝 Form data to send:');
+            console.log('Full Name:', fullName);
+            console.log('Email:', email);
+            console.log('Phone:', phone);
+            console.log('Avatar:', selectedAvatar ? 'Present' : 'Not present');
+            
+            try {
+                registerBtn.disabled = true;
+                registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
+                
+                const result = await registerSmsUser({
+                    name: fullName,
+                    email: email,
+                    phone: phone,
+                    avatar: selectedAvatar || null
+                });
+                
+                if (result.success) {
+                    successMessage.textContent = 'Registro completado exitosamente';
+                    
+                    // Save user data to localStorage
+                    localStorage.setItem('user', JSON.stringify({
+                        fullName: fullName,
+                        email: email,
+                        phone: phone,
+                        avatar: selectedAvatar || null
+                    }));
+                    
+                    // Redirect to main page after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    errorMessage.textContent = result.message || 'Error al completar el registro. Por favor, intente nuevamente.';
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                errorMessage.textContent = 'Error al completar el registro. Por favor, intente nuevamente.';
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Completar Registro';
+            }
+        });
+    </script>
+</body>
+</html> 

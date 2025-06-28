@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commute - Choose Your Ride</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="Style.css">
+  <style>
+    body {
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 140px;
+      padding-bottom: 120px;
+      min-height: 100vh;
+      margin-top: 22px;
+    }
+
+    .main-layout {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 100px);
+      width: 100%;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 10px 20px 20px 20px;
+      box-sizing: border-box;
+      margin-top: 20px;
+    }
+
+    .iframe-container {
+      width: 90%;
+      max-width: 1200px;
+      height: calc(100vh - 140px);
+      max-height: 1500px;
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 20px;
+    }
+
+    .status-indicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      display: none;
+    }
+
+    .api-status {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      z-index: 1000;
+      display: none;
+    }
+
+    .api-status.success {
+      background-color: #28a745;
+    }
+
+    .api-status.error {
+      background-color: #dc3545;
+    }
+
+    /* Splash tipo telón */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0d1b2a;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 1s ease-in-out;
+    }
+
+    #splash-screen.slide-up {
+      transform: translateY(-100%);
+    }
+
+
+    .curtain {
+      position: absolute;
+      top: 0; width: 50%; height: 100%;
+      background-color: #0d1b2a;
+      z-index: 2;
+      animation: openCurtain 1.2s ease forwards;
+    }
+
+    .curtain.left {
+      left: 0;
+      transform-origin: left center;
+      animation-delay: 0.6s;
+    }
+
+    .curtain.right {
+      right: 0;
+      transform-origin: right center;
+      animation-delay: 0.6s;
+    }
+
+    .splash-logo img {
+      height: 85px;
+      width: auto;
+    }
+
+
+    .splash-logo.move-to-header {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%) scale(1);
+      transition: transform 0.6s ease;
+    }
+
+
+
+    .splash-logo img {
+      height: 85px;
+      width: auto;
+    }
+
+    @keyframes openCurtain {
+      to {
+        transform: scaleX(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body, .main-layout, .iframe-container {
+        padding: 0;
+        margin-top: 0;
+        height: 100vh;
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        border: none;
+      }
+      .iframe-container iframe {
+        border-radius: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .main-layout {
+        max-width: 900px;
+      }
+    }
+
+    @media (min-width: 1025px) {
+      .main-layout {
+        max-width: 1400px;
+      }
+    }
+  </style>
+
+  <script src="loadHeader.js"></script>
+  <script src="loadNav.js"></script>
+  <script src="loadCarousel.js"></script>
+  <script src="config.production.js"></script>
+</head>
+<body>
+
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <div class="curtain left"></div>
+    <div class="curtain right"></div>
+    <div class="splash-logo">
+      <img src="https://pedrobrandy.github.io/commute/image/commute-logo.png" alt="Commute Logo" />
+    </div>
+  </div>
+
+  <!-- Status indicators -->
+  <div class="status-indicator" id="statusIndicator">
+    <div id="statusMessage">Processing...</div>
+  </div>
+  <div class="api-status" id="apiStatus"></div>
+
+  <!-- Main content -->
+  <div class="main-layout">
+    <div class="iframe-container">
+      <iframe id="contentFrame" src="Shared Ride.html" frameborder="0"></iframe>
+    </div>
+  </div>
+  <div id="carousel-container"></div>
+
+  <!-- Splash animation logic -->
+<script>
+  window.addEventListener('load', () => {
+    const splash = document.getElementById('splash-screen');
+
+    // Quitar cortinas después de que se abran
+    setTimeout(() => {
+      splash.querySelector('.curtain.left').style.display = 'none';
+      splash.querySelector('.curtain.right').style.display = 'none';
+    }, 1000);
+
+    // Subir el splash completo
+    setTimeout(() => {
+      splash.classList.add('slide-up');
+    }, 1200);
+
+    // Eliminarlo completamente del DOM después de animar
+    setTimeout(() => {
+      splash.remove();
+    }, 2200);
+  });
+</script>
+  <!-- Existing logic -->
+  <script>
+    const API_CONFIG = {
+      googleSheets: {
+        personalRide: CONFIG.GOOGLE_APPS_SCRIPT.MAIN,
+        sharedRide: CONFIG.GOOGLE_APPS_SCRIPT.SHARED_RIDE,
+        updateStatus: CONFIG.GOOGLE_APPS_SCRIPT.SUMMARY
+      },
+      googleMaps: {
+        apiKey: CONFIG.GOOGLE_MAPS_API_KEY
+      }
+    };
+
+    window.addEventListener('message', function(event) {
+      if (event.origin !== window.location.origin) return;
+
+      const { type, data, success, message } = event.data;
+      switch (type) {
+        case 'API_REQUEST':
+          handleApiRequest(data);
+          break;
+        case 'API_RESPONSE':
+          handleApiResponse(success, data, message);
+          break;
+        case 'FORM_SUBMITTED':
+          console.log('Form submitted:', data);
+          break;
+        case 'LOAD_SUMMARY':
+          document.getElementById('contentFrame').src = `summary.html?data=${data}`;
+          break;
+      }
+    });
+
+    function handleApiRequest(data) {
+      const { endpoint, method, body, requestId } = data;
+
+      fetch(endpoint, {
+        method: method || 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body
+      })
+      .then(res => res.text())
+      .then(result => {
+        document.getElementById('contentFrame').contentWindow.postMessage({
+          type: 'API_RESPONSE',
+          requestId,
+          success: true,
+          data: result
+        }, window.location.origin);
+      })
+      .catch(error => {
+        document.getElementById('contentFrame').contentWindow.postMessage({
+          type: 'API_RESPONSE',
+          requestId,
+          success: false,
+          message: error.message
+        }, window.location.origin);
+      });
+    }
+
+    function handleApiResponse(success, data, message) {
+      if (success) {
+        console.log('API Success:', data);
+      } else {
+        console.error('API Error:', message);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const contentFrame = document.getElementById('contentFrame');
+      const urlParams = new URLSearchParams(window.location.search);
+      const page = urlParams.get('page');
+      if (page === 'shared') contentFrame.src = 'Shared Ride.html';
+      else if (page === 'personal') contentFrame.src = 'Personal Ride.html';
+    });
+
+    window.addEventListener('load', function() {
+      if (typeof loadHeader === 'function') loadHeader();
+      if (typeof loadNavigation === 'function') loadNavigation();
+    });
+
+    window.testLoadPersonal = function() {
+      document.getElementById('contentFrame').src = 'Personal Ride.html';
+    };
+  </script>
+</body>
+</html>

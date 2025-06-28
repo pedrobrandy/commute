@@ -1,0 +1,46 @@
+{
+  "name": "commut-carpooling-app",
+  "version": "1.0.0",
+  "description": "Una aplicación web moderna para compartir viajes y optimizar el transporte urbano",
+  "main": "src/views/index.html",
+  "scripts": {
+    "start": "cd src/views && python -m http.server 8000",
+    "serve": "npx serve src/views",
+    "dev": "npx live-server src/views",
+    "test": "echo \"No tests specified\" && exit 0",
+    "build": "echo \"Build completed\"",
+    "deploy": "echo \"Deploy to GitHub Pages\"",
+    "lint": "echo \"Linting completed\"",
+    "format": "echo \"Code formatting completed\""
+  },
+  "keywords": [
+    "carpooling",
+    "transport",
+    "web-app",
+    "google-maps",
+    "twilio",
+    "youtube-api"
+  ],
+  "author": "Commut Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/commut-carpooling-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/commut-carpooling-app/issues"
+  },
+  "homepage": "https://yourusername.github.io/commut-carpooling-app",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+} 

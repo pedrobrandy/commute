@@ -1,0 +1,245 @@
+@font-face {
+  font-family: 'UberMove';
+  src: url('https://assets.uber.com/fonts/v2/UberMove-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'UberMoveText';
+  src: url('https://assets.uber.com/fonts/v2/UberMoveText-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+body {
+  font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content-wrapper {
+  max-width: 80%;
+  width: 100%;
+  margin: 10px auto;
+  padding: 0 10px;
+}
+
+form {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-width: 100%;
+}
+
+label {
+  font-weight: 600;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+input {
+  padding: 7px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #0078D4;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+}
+
+button[type="submit"] {
+  background-color: #0078D4;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+  background-color: #005A9E;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.login-link a {
+  color: #0078D4;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.ride-option {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ride-option:hover {
+  transform: translateY(-5px);
+}
+
+.ride-option h2 {
+  color: #0078D4;
+  margin-top: 0;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+
+.ride-option p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.ride-option button {
+  background-color: #0078D4;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.ride-option button:hover {
+  background-color: #005A9E;
+}
+
+hr {
+  width: 90%;
+  max-width: 500px;
+  margin: 40px auto;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+.payment {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+}
+
+.form-footer a {
+  color: #0078D4;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 600px) {
+  .content-wrapper {
+    margin: 10px 20px;
+    padding: 0 10px;
+  }
+
+  .ride-option {
+    padding: 20px;
+  }
+
+  .ride-option button {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  form {
+    padding: 20px;
+  }
+}

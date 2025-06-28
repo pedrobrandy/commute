@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Diagnostic Tool</title>
+  <script src="config.production.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-result {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+    .info {
+      background-color: #d1ecf1;
+      border: 1px solid #bee5eb;
+      color: #0c5460;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .loading {
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+    <h1>🔧 Network Diagnostic Tool</h1>
+  <p>This tool will help diagnose why the My Rides cards are not loading.</p>
+
+  <div class="test-section">
+    <h2>1. Configuration Check</h2>
+    <button onclick="checkConfig()">Check Configuration</button>
+    <div id="config-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>2. Basic API Connectivity</h2>
+    <button onclick="testBasicConnectivity()">Test Basic Connectivity</button>
+    <div id="basic-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>3. Spreadsheet Access Test</h2>
+    <button onclick="testSpreadsheetAccess()">Test Spreadsheet Access</button>
+    <div id="spreadsheet-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>4. Reservations Data Test</h2>
+    <button onclick="testReservationsData()">Test Reservations Data</button>
+    <div id="reservations-result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>5. Run All Tests</h2>
+    <button onclick="runAllTests()">Run All Tests</button>
+    <div id="all-results"></div>
+    </div>
+    
+    <div class="test-section">
+    <h2>6. Direct URL Test</h2>
+    <p>Click the link below to test the Google Apps Script URL directly in your browser:</p>
+    <a href="" id="direct-test-link" target="_blank" style="color: #007bff; text-decoration: underline;">
+      Test Google Apps Script URL Directly
+    </a>
+    <div id="direct-test-result"></div>
+    </div>
+    
+    <div class="test-section">
+    <h2>7. CORS Test</h2>
+    <button onclick="testCorsMethods()">Test Different CORS Methods</button>
+    <div id="cors-result"></div>
+    </div>
+    
+    <div class="test-section">
+    <h2>8. Quick Fixes</h2>
+    <p>If all tests are failing, try these quick fixes:</p>
+    <a href="verify-deployment.html" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; margin: 5px;">
+      🔧 Verify Deployment
+    </a>
+    <button onclick="showQuickFixes()" style="padding: 10px 20px; background: #ffc107; color: #212529; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">
+      💡 Show Quick Fixes
+    </button>
+    <div id="quick-fixes"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>9. Direct URL Test</h2>
+    <p>Click the button below to test the Google Apps Script URL directly in a new tab:</p>
+    <button onclick="testDirectUrl()" style="padding: 10px 20px; background: #17a2b8; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      🔗 Test URL in New Tab
+    </button>
+    <div id="direct-url-result"></div>
+    </div>
+
+  <div class="test-section">
+    <h2>10. Direct URL Test</h2>
+    <p>Click the button below to test the Google Apps Script URL directly in a new tab:</p>
+    <button onclick="testDirectUrl()" style="padding: 10px 20px; background: #17a2b8; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      🔗 Test URL in New Tab
+    </button>
+    <div id="direct-url-result"></div>
+  </div>
+
+  <script>
+    const scriptUrl = CONFIG.GOOGLE_APPS_SCRIPT.MAIN;
+    
+    function logResult(elementId, content, type = 'info') {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `<div class="test-result ${type}">${content}</div>`;
+    }
+
+    async function checkConfig() {
+      logResult('config-result', 'Checking configuration...', 'info');
+      
+      try {
+        const config = {
+          scriptUrl: scriptUrl,
+          googleMapsApiKey: CONFIG.GOOGLE_MAPS_API_KEY ? 'Present' : 'Missing',
+          youtubeApiKey: CONFIG.YOUTUBE_API_KEY ? 'Present' : 'Missing',
+          environment: CONFIG.ENVIRONMENT,
+          features: CONFIG.FEATURES
+        };
+        
+        logResult('config-result', `Configuration loaded successfully:\n\n${JSON.stringify(config, null, 2)}`, 'success');
+      } catch (error) {
+        logResult('config-result', `Configuration error: ${error.message}`, 'error');
+      }
+    }
+
+    async function testBasicConnectivity() {
+      logResult('basic-result', 'Testing basic connectivity...', 'info');
+      
+      try {
+        const testUrl = `${scriptUrl}?action=test`;
+        console.log('Testing URL:', testUrl);
+        
+        const response = await fetch(testUrl);
+        const text = await response.text();
+        
+        console.log('Response status:', response.status);
+        console.log('Response text:', text);
+        
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          throw new Error(`Invalid JSON response: ${text.substring(0, 200)}`);
+        }
+        
+        logResult('basic-result', `Basic connectivity test successful:\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`, 'success');
+      } catch (error) {
+        logResult('basic-result', `Basic connectivity test failed: ${error.message}`, 'error');
+      }
+    }
+
+    async function testSpreadsheetAccess() {
+      logResult('spreadsheet-result', 'Testing spreadsheet access...', 'info');
+      
+      try {
+        const testUrl = `${scriptUrl}?action=test_spreadsheet`;
+        console.log('Testing spreadsheet URL:', testUrl);
+        
+        const response = await fetch(testUrl);
+        const text = await response.text();
+        
+        console.log('Spreadsheet response status:', response.status);
+        console.log('Spreadsheet response text:', text);
+        
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          throw new Error(`Invalid JSON response: ${text.substring(0, 200)}`);
+        }
+        
+        logResult('spreadsheet-result', `Spreadsheet access test completed:\n\n${JSON.stringify(data, null, 2)}`, data.success ? 'success' : 'error');
+      } catch (error) {
+        logResult('spreadsheet-result', `Spreadsheet access test failed: ${error.message}`, 'error');
+      }
+    }
+
+    async function testReservationsData() {
+      logResult('reservations-result', 'Testing reservations data...', 'info');
+      
+      try {
+        const testUrl = `${scriptUrl}?route=registro&action=ver_todos&status=all`;
+        console.log('Testing reservations URL:', testUrl);
+        
+        const response = await fetch(testUrl);
+        const text = await response.text();
+        
+        console.log('Reservations response status:', response.status);
+        console.log('Reservations response text (first 500 chars):', text.substring(0, 500));
+        
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (parseError) {
+          throw new Error(`Invalid JSON response: ${text.substring(0, 200)}`);
+        }
+        
+        const summary = {
+          success: data.success,
+          message: data.message,
+          resultsCount: data.results ? data.results.length : 0,
+          sampleResults: data.results ? data.results.slice(0, 3) : []
+        };
+        
+        logResult('reservations-result', `Reservations data test completed:\n\n${JSON.stringify(summary, null, 2)}`, data.success ? 'success' : 'error');
+      } catch (error) {
+        logResult('reservations-result', `Reservations data test failed: ${error.message}`, 'error');
+      }
+    }
+
+    async function runAllTests() {
+      logResult('all-results', 'Running all tests...', 'info');
+      
+      const results = [];
+      
+      // Test 1: Configuration
+      try {
+        const config = {
+          scriptUrl: scriptUrl,
+          googleMapsApiKey: CONFIG.GOOGLE_MAPS_API_KEY ? 'Present' : 'Missing',
+          youtubeApiKey: CONFIG.YOUTUBE_API_KEY ? 'Present' : 'Missing',
+          environment: CONFIG.ENVIRONMENT
+        };
+        results.push({ test: 'Configuration', status: 'PASS', data: config });
+      } catch (error) {
+        results.push({ test: 'Configuration', status: 'FAIL', error: error.message });
+      }
+      
+      // Test 2: Basic Connectivity
+      try {
+        const response = await fetch(`${scriptUrl}?action=test`);
+        const text = await response.text();
+        const data = JSON.parse(text);
+        results.push({ test: 'Basic Connectivity', status: 'PASS', data: data });
+      } catch (error) {
+        results.push({ test: 'Basic Connectivity', status: 'FAIL', error: error.message });
+      }
+      
+      // Test 3: Spreadsheet Access
+      try {
+        const response = await fetch(`${scriptUrl}?action=test_spreadsheet`);
+        const text = await response.text();
+        const data = JSON.parse(text);
+        results.push({ test: 'Spreadsheet Access', status: data.success ? 'PASS' : 'FAIL', data: data });
+      } catch (error) {
+        results.push({ test: 'Spreadsheet Access', status: 'FAIL', error: error.message });
+      }
+      
+      // Test 4: Reservations Data
+      try {
+        const response = await fetch(`${scriptUrl}?route=registro&action=ver_todos&status=all`);
+        const text = await response.text();
+        const data = JSON.parse(text);
+        results.push({ test: 'Reservations Data', status: data.success ? 'PASS' : 'FAIL', data: { success: data.success, message: data.message, count: data.results ? data.results.length : 0 } });
+      } catch (error) {
+        results.push({ test: 'Reservations Data', status: 'FAIL', error: error.message });
+      }
+      
+      // Summary
+      const passedTests = results.filter(r => r.status === 'PASS').length;
+      const totalTests = results.length;
+      
+      const summary = {
+        totalTests: totalTests,
+        passedTests: passedTests,
+        failedTests: totalTests - passedTests,
+        results: results
+      };
+      
+      logResult('all-results', `All tests completed:\n\n${JSON.stringify(summary, null, 2)}`, passedTests === totalTests ? 'success' : 'error');
+    }
+
+    // Call the test function when page loads
+    addTestButton();
+
+    // Set up direct test link
+    document.getElementById('direct-test-link').href = `${scriptUrl}?action=test`;
+
+    async function testCorsMethods() {
+      logResult('cors-result', 'Testing different CORS methods...', 'info');
+      
+      const methods = [
+        { name: 'Direct fetch', options: {} },
+        { name: 'With CORS mode', options: { mode: 'cors' } },
+        { name: 'With no-cors mode', options: { mode: 'no-cors' } },
+        { name: 'With credentials', options: { credentials: 'include' } },
+        { name: 'With custom headers', options: { headers: { 'Content-Type': 'application/json' } } }
+      ];
+      
+      const results = [];
+      
+      for (const method of methods) {
+        try {
+          console.log(`Testing ${method.name}...`);
+          const response = await fetch(`${scriptUrl}?action=test`, method.options);
+          console.log(`${method.name} response:`, response);
+          
+          if (response.type === 'opaque') {
+            results.push({ method: method.name, status: 'OPAQUE', message: 'Response is opaque (CORS blocked)' });
+          } else if (response.ok) {
+            const text = await response.text();
+            results.push({ method: method.name, status: 'SUCCESS', message: `Status: ${response.status}, Response: ${text.substring(0, 100)}` });
+          } else {
+            results.push({ method: method.name, status: 'ERROR', message: `Status: ${response.status}` });
+          }
+        } catch (error) {
+          results.push({ method: method.name, status: 'FAILED', message: error.message });
+        }
+      }
+      
+      logResult('cors-result', `CORS test results:\n\n${JSON.stringify(results, null, 2)}`, 'info');
+    }
+
+    function showQuickFixes() {
+      const fixesDiv = document.getElementById('quick-fixes');
+      fixesDiv.innerHTML = `
+        <div class="test-result info">
+          <h4>🔧 Quick Fixes for Network Errors:</h4>
+          <ol>
+            <li><strong>Check Google Apps Script Deployment:</strong>
+              <ul>
+                <li>Go to <a href="https://script.google.com/" target="_blank">Google Apps Script</a></li>
+                <li>Open your project</li>
+                <li>Click "Deploy" → "New deployment"</li>
+                <li>Set "Execute as": <strong>Me</strong></li>
+                <li>Set "Who has access": <strong>Anyone</strong></li>
+                <li>Deploy and copy the new URL</li>
+              </ul>
+            </li>
+            <li><strong>Update Configuration:</strong>
+              <ul>
+                <li>Open <code>config.production.js</code></li>
+                <li>Replace the MAIN URL with the new deployment URL</li>
+                <li>Save and refresh the page</li>
+              </ul>
+            </li>
+            <li><strong>Check Browser Console:</strong>
+              <ul>
+                <li>Press F12 to open developer tools</li>
+                <li>Go to Console tab</li>
+                <li>Look for CORS or network errors</li>
+              </ul>
+            </li>
+            <li><strong>Try Different Browser:</strong>
+              <ul>
+                <li>Test in Chrome, Firefox, or Safari</li>
+                <li>Some browsers handle CORS differently</li>
+              </ul>
+            </li>
+            <li><strong>Check Network Connection:</strong>
+              <ul>
+                <li>Ensure you have a stable internet connection</li>
+                <li>Try disabling VPN if you're using one</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      `;
+    }
+
+    function testDirectUrl() {
+      const resultDiv = document.getElementById('direct-url-result');
+      resultDiv.innerHTML = '<div class="test-result info">Opening Google Apps Script URL in new tab...</div>';
+      
+      // Open the URL in a new tab
+      const testUrl = `${scriptUrl}?action=test`;
+      window.open(testUrl, '_blank');
+      
+      resultDiv.innerHTML = `
+        <div class="test-result info">
+          <strong>URL opened in new tab:</strong><br>
+          <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; word-break: break-all; margin: 10px 0;">
+            ${testUrl}
+          </div>
+          <p><strong>What to look for:</strong></p>
+          <ul>
+            <li>✅ <strong>Success:</strong> You should see JSON response like: <code>{"success":true,"message":"Google Apps Script is working!"}</code></li>
+            <li>❌ <strong>Error:</strong> If you see "This app isn't verified" or "Access denied" - the script needs to be redeployed</li>
+            <li>❌ <strong>Not Found:</strong> If you see "404 Not Found" - the URL is incorrect</li>
+            <li>❌ <strong>Script Error:</strong> If you see "TypeError" or other errors - there's a code issue</li>
+          </ul>
+          <p><strong>Please tell me what you see in the new tab!</strong></p>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html> 

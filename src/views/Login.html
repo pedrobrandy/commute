@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Commut</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="Style.css">
+    <style>
+        body {
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            padding-top: 140px;
+            padding-bottom: 120px;
+        }
+
+        .login-container {
+            background-color: whitesmoke;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .login-title {
+            color: #1B263B;
+            font-weight: 600;
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 0 0 25px 0;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #1B263B;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0D1B2A;
+            box-shadow: 0 0 0 3px rgba(13, 27, 42, 0.1);
+        }
+
+        .login-button {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            outline: none;
+            box-shadow: none;
+            text-decoration: none;
+            appearance: none;
+            transition-property: background, transform;
+            transition-duration: 200ms;
+            transition-timing-function: cubic-bezier(0, 0, 1, 1);
+            cursor: pointer;
+            margin: 15px 0;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 20px;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #E0E1DD !important;
+            background-color: #0D1B2A !important;
+            min-width: 130px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .login-button:hover {
+            background-color: #1B263B !important;
+            color: #E0E1DD !important;
+            transform: translateY(-1px);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button:disabled {
+            background-color: #6c757d !important;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .verification-container {
+            display: none;
+        }
+
+        .verification-container.show {
+            display: block;
+        }
+
+        .code-input {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .code-input input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .code-input input:focus {
+            border-color: #0D1B2A;
+            box-shadow: 0 0 0 3px rgba(13, 27, 42, 0.1);
+        }
+
+        .resend-button {
+            background: none;
+            border: none;
+            color: #0D1B2A;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .resend-button:hover {
+            color: #1B263B;
+        }
+
+        .resend-button:disabled {
+            color: #6c757d;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .form-footer a {
+            color: #0D1B2A;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .phone-input-container {
+            position: relative;
+        }
+
+        .phone-prefix {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .phone-input {
+            padding-left: 35px !important;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+                padding-top: 100px;
+                padding-bottom: 80px;
+            }
+
+            .login-container {
+                padding: 30px 20px;
+                border-radius: 15px;
+                margin: 0 10px;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+            }
+
+            .code-input {
+                gap: 8px;
+            }
+
+            .code-input input {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+                padding-top: 80px;
+                padding-bottom: 60px;
+            }
+
+            .login-container {
+                max-width: 380px;
+                padding: 40px;
+            }
+
+            .login-title {
+                font-size: 2rem;
+            }
+
+            .form-group input {
+                padding: 12px 14px;
+            }
+
+            .login-button {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+
+            .code-input input {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Desktop optimization */
+        @media (min-width: 1024px) {
+            .login-container {
+                max-width: 380px;
+                padding: 40px;
+            }
+
+            .login-title {
+                font-size: 2rem;
+            }
+        }
+
+        .test-section {
+          margin: 20px 0;
+          padding: 15px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          background-color: #f9f9f9;
+        }
+        
+        .test-result {
+          margin-top: 10px;
+        }
+        
+        .test-details {
+          margin-top: 10px;
+          font-size: 14px;
+        }
+        
+        .test-details ul {
+          margin: 5px 0;
+          padding-left: 20px;
+        }
+        
+        .test-details li {
+          margin: 2px 0;
+        }
+        
+        .setup-links {
+          margin-top: 15px;
+          text-align: center;
+        }
+        
+        .setup-link {
+          color: #007bff;
+          text-decoration: none;
+          font-size: 14px;
+        }
+        
+        .setup-link:hover {
+          text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        
+        <!-- Phone Input Form -->
+        <form id="phoneForm">
+            <div class="form-group">
+                <label for="phone">What is your Phone Number?:</label>
+                <div class="phone-input-container">
+                    <span class="phone-prefix">+1</span>
+                    <input type="tel" id="phone" class="phone-input" required placeholder="(555) 123-4567" maxlength="10">
+            </div>
+            </div>
+            
+            <div id="error-message" class="error-message"></div>
+            <div id="success-message" class="success-message"></div>
+            
+            <button type="submit" class="login-button" id="sendCodeBtn">
+                Send Code
+            </button>
+        </form>
+
+        <!-- Verification Form -->
+        <div id="verificationContainer" class="verification-container">
+            <p style="text-align: center; margin-bottom: 20px; color: #6c757d;">
+                Enter the 6-digit code sent to your phone
+            </p>
+            
+            <div class="code-input">
+                <input type="text" maxlength="1" class="code-digit" data-index="0">
+                <input type="text" maxlength="1" class="code-digit" data-index="1">
+                <input type="text" maxlength="1" class="code-digit" data-index="2">
+                <input type="text" maxlength="1" class="code-digit" data-index="3">
+                <input type="text" maxlength="1" class="code-digit" data-index="4">
+                <input type="text" maxlength="1" class="code-digit" data-index="5">
+            </div>
+            
+            <button type="button" class="login-button" id="verifyCodeBtn">
+                Verify Code
+            </button>
+            
+            <button type="button" class="resend-button" id="resendBtn">
+                Resend code
+            </button>
+        </div>
+    </div>
+
+    <script src="config.production.js"></script>
+    <script src="api-utils.js"></script>
+    <script>
+        let currentPhone = '';
+        let resendTimer = null;
+        let resendCountdown = 60;
+
+        // Format phone number as user types
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length >= 6) {
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 3) {
+                value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
+            }
+            
+            e.target.value = value;
+        });
+
+        // Handle phone form submission
+        document.getElementById('phoneForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const phoneInput = document.getElementById('phone');
+            const phone = phoneInput.value.replace(/\D/g, '');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            const sendCodeBtn = document.getElementById('sendCodeBtn');
+            
+            // Clear previous messages
+            errorMessage.textContent = '';
+            successMessage.textContent = '';
+            
+            if (phone.length !== 10) {
+                errorMessage.textContent = 'Please enter a valid phone number (10 digits)';
+                return;
+            }
+            
+            try {
+                sendCodeBtn.disabled = true;
+                sendCodeBtn.innerHTML = 'Sending...';
+                
+                const result = await sendSmsCode('+1' + phone, true);
+                
+                if (result.success) {
+                    currentPhone = '+1' + phone;
+                    successMessage.textContent = 'Code sent successfully to your phone';
+                    
+                    // Show verification form
+                    document.getElementById('phoneForm').style.display = 'none';
+                    document.getElementById('verificationContainer').classList.add('show');
+                    
+                    // Start resend timer
+                    startResendTimer();
+                    
+                    // Focus first code input
+                    setTimeout(() => {
+                        document.querySelector('.code-digit[data-index="0"]').focus();
+                    }, 100);
+                } else {
+                    errorMessage.textContent = result.message || 'Error sending code. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error sending SMS code:', error);
+                errorMessage.textContent = 'Error sending code. Please try again.';
+            } finally {
+                sendCodeBtn.disabled = false;
+                sendCodeBtn.innerHTML = 'Send Code';
+            }
+        });
+
+        // Handle code input navigation
+        document.querySelectorAll('.code-digit').forEach(input => {
+            input.addEventListener('input', function(e) {
+                const value = e.target.value;
+                const index = parseInt(this.dataset.index);
+                
+                if (value && index < 5) {
+                    document.querySelector(`.code-digit[data-index="${index + 1}"]`).focus();
+                }
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                const index = parseInt(this.dataset.index);
+                
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    document.querySelector(`.code-digit[data-index="${index - 1}"]`).focus();
+                }
+            });
+        });
+
+        // Handle verification
+        document.getElementById('verifyCodeBtn').addEventListener('click', async function() {
+            const codeInputs = document.querySelectorAll('.code-digit');
+            const code = Array.from(codeInputs).map(input => input.value).join('');
+            const errorMessage = document.getElementById('error-message');
+            const verifyBtn = document.getElementById('verifyCodeBtn');
+            
+            errorMessage.textContent = '';
+
+            if (code.length !== 6) {
+                errorMessage.textContent = 'Please enter the complete 6-digit code';
+                return;
+            }
+
+            try {
+                verifyBtn.disabled = true;
+                verifyBtn.innerHTML = 'Verifying...';
+                
+                const result = await verifySmsCode(currentPhone, code);
+                
+                console.log('📱 Frontend received result:', result);
+                console.log('📱 currentPhone:', currentPhone);
+                console.log('📱 result.userExists:', result.userExists);
+
+                if (result.success) {
+                    if (result.userExists) {
+                        // User exists, log them in
+                        localStorage.setItem('user', JSON.stringify({
+                            fullName: result.fullName,
+                            email: result.email,
+                            phone: currentPhone,
+                            avatar: result.avatar
+                        }));
+                        
+                        window.location.href = 'index.html';
+                    } else {
+                        // User doesn't exist, redirect to registration
+                        localStorage.setItem('tempPhone', currentPhone);
+                        window.location.href = 'register.html';
+                    }
+                } else {
+                    errorMessage.textContent = result.message || 'Invalid code. Please try again.';
+                    // Clear code inputs
+                    codeInputs.forEach(input => input.value = '');
+                    document.querySelector('.code-digit[data-index="0"]').focus();
+                }
+            } catch (error) {
+                console.error('Error verifying code:', error);
+                errorMessage.textContent = 'Error verifying code. Please try again.';
+            } finally {
+                verifyBtn.disabled = false;
+                verifyBtn.innerHTML = 'Verify Code';
+            }
+        });
+
+        // Handle resend
+        document.getElementById('resendBtn').addEventListener('click', async function() {
+            const resendBtn = document.getElementById('resendBtn');
+            const errorMessage = document.getElementById('error-message');
+            
+            try {
+                resendBtn.disabled = true;
+                
+                const result = await sendSmsCode(currentPhone, true);
+                
+                if (result.success) {
+                    errorMessage.textContent = '';
+                    startResendTimer();
+                } else {
+                    errorMessage.textContent = result.message || 'Error resending code.';
+                }
+            } catch (error) {
+                console.error('Error resending code:', error);
+                errorMessage.textContent = 'Error resending code.';
+            }
+        });
+
+        function startResendTimer() {
+            const resendBtn = document.getElementById('resendBtn');
+            resendCountdown = 60;
+            
+            resendBtn.disabled = true;
+            resendBtn.textContent = `Resend code (${resendCountdown}s)`;
+            
+            resendTimer = setInterval(() => {
+                resendCountdown--;
+                resendBtn.textContent = `Resend code (${resendCountdown}s)`;
+                
+                if (resendCountdown <= 0) {
+                    clearInterval(resendTimer);
+                    resendBtn.disabled = false;
+                    resendBtn.textContent = 'Resend code';
+                }
+            }, 1000);
+        }
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            // Temporarily comment out auto-redirect for testing
+            // if (user) {
+            //     window.location.href = 'index.html';
+            // }
+        });
+    </script>
+    <script src="loadNav.js"></script> 
+    <script src="loadHeader.js"></script>
+</body>
+</html>

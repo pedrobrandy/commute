@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .debug-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .user-item {
+            background: #f9f9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        .phone-test {
+            background: #e7f3ff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #155724;
+            background: #d4edda;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug Users Database</h1>
+        
+        <div class="debug-section">
+            <h2>📊 List All Users</h2>
+            <button onclick="listUsers()">List All Users</button>
+            <div id="usersResult"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>📱 Test Phone Validation</h2>
+            <div class="phone-test">
+                <label for="testPhone">Phone to test:</label>
+                <input type="tel" id="testPhone" value="+15194896746" style="padding: 5px; margin: 5px;">
+                <button onclick="testPhoneLogin()">Test Login</button>
+                <button onclick="testPhoneRegister()">Test Register</button>
+            </div>
+            <div id="phoneTestResult"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h2>🧪 Quick Tests</h2>
+            <button onclick="testRegistration()">Test Registration</button>
+            <button onclick="testLogin()">Test Login</button>
+            <div id="quickTestResult"></div>
+        </div>
+    </div>
+
+    <script src="config.production.js"></script>
+    <script src="api-utils.js"></script>
+    <script>
+        async function listUsers() {
+            const resultDiv = document.getElementById('usersResult');
+            resultDiv.innerHTML = '🔄 Loading users...';
+            
+            try {
+                const result = await listAllUsers();
+                
+                if (result.success) {
+                    let html = `<div class="success">✅ ${result.message}</div>`;
+                    html += `<h3>Users in database (${result.totalUsers}):</h3>`;
+                    
+                    if (result.users && result.users.length > 0) {
+                        result.users.forEach(user => {
+                            html += `
+                                <div class="user-item">
+                                    <strong>Row ${user.row}:</strong><br>
+                                    📱 Phone: "${user.phone}" (length: ${user.phone ? user.phone.length : 0})<br>
+                                    👤 Name: ${user.fullName}<br>
+                                    📧 Email: ${user.email}<br>
+                                    🖼️ Avatar: ${user.avatar || 'None'}
+                                </div>
+                            `;
+                        });
+                    } else {
+                        html += '<p>No users found in database.</p>';
+                    }
+                    
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ ${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error listing users:', error);
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testPhoneLogin() {
+            const phone = document.getElementById('testPhone').value.trim();
+            const resultDiv = document.getElementById('phoneTestResult');
+            
+            resultDiv.innerHTML = `🔄 Testing login for phone: ${phone}`;
+            
+            try {
+                const result = await sendSmsCode(phone, true);
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `<div class="success">✅ Login test successful: ${result.message}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Login test failed: ${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error testing phone login:', error);
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testPhoneRegister() {
+            const phone = document.getElementById('testPhone').value.trim();
+            const resultDiv = document.getElementById('phoneTestResult');
+            
+            resultDiv.innerHTML = `🔄 Testing registration for phone: ${phone}`;
+            
+            try {
+                const result = await sendSmsCode(phone, false);
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `<div class="success">✅ Registration test successful: ${result.message}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Registration test failed: ${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error testing phone registration:', error);
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testRegistration() {
+            const resultDiv = document.getElementById('quickTestResult');
+            resultDiv.innerHTML = '🔄 Testing registration...';
+            
+            try {
+                const result = await registerSmsUser({
+                    name: 'Debug Test User',
+                    email: 'debug@test.com',
+                    phone: '+15194896746',
+                    avatar: null
+                });
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `<div class="success">✅ Registration test successful: ${result.message}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Registration test failed: ${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error testing registration:', error);
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function testLogin() {
+            const resultDiv = document.getElementById('quickTestResult');
+            resultDiv.innerHTML = '🔄 Testing login...';
+            
+            try {
+                const result = await sendSmsCode('+15194896746', true);
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `<div class="success">✅ Login test successful: ${result.message}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Login test failed: ${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error testing login:', error);
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-load users when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            listUsers();
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservation Summary</title>
+  <style>
+    body {
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .summary-header {
+      background: linear-gradient(135deg, #0D1B2A 0%, #1B263B 100%);
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      margin: 0;
+      width: 100%;
+    }
+
+    .summary-header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+
+    .summary-container {
+      width: 100%;
+      height: calc(100vh - 60px);
+      position: relative;
+      background: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 15px;
+      padding: 15px;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
+      overflow-y: auto;
+    }
+
+    .card h3 {
+      color: #0D1B2A;
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #E0E1DD;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #666;
+      font-weight: 500;
+      font-size: 0.8rem;
+    }
+
+    .info-value {
+      color: #0D1B2A;
+      font-weight: 600;
+      text-align: right;
+      max-width: 60%;
+      font-size: 0.85rem;
+    }
+
+    .map-card {
+      grid-column: 3;
+      grid-row: 1 / 3;
+      padding: 10px;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .price-card {
+      grid-column: 2;
+      grid-row: 2;
+      background: linear-gradient(135deg, #E0E1DD 0%, #f8f9fa 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .trip-price {
+      color: #0D1B2A;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .price-label {
+      color: #666;
+      font-size: 0.75rem;
+      margin: 3px 0 0 0;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .action-buttons {
+      grid-column: 2;
+      grid-row: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .confirm-button {
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    .confirm {
+      background-color: #0D1B2A;
+      color: #E0E1DD;
+    }
+
+    .confirm:hover {
+      background-color: #1B263B;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(13, 27, 42, 0.3);
+    }
+
+    .not-accept {
+      background-color: #E0E1DD;
+      color: #0D1B2A;
+    }
+
+    .not-accept:hover {
+      background-color: #c82333;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(200, 35, 51, 0.3);
+    }
+
+    .loading {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+    }
+
+    .error {
+      background: #ffe6e6;
+      color: #cc0000;
+      text-align: center;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 0;
+        padding-bottom: 120px; /* Add bottom padding for navigation menu */
+      }
+
+      .summary-header {
+        padding: 12px 0;
+      }
+
+      .summary-container {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 15px;
+        height: auto;
+        padding-bottom: 20px; /* Extra padding at bottom */
+      }
+
+      .map-card {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .price-card {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .action-buttons {
+        grid-column: 1;
+        grid-row: auto;
+        order: 999; /* Push buttons to the end */
+        margin-bottom: 20px; /* Extra margin for buttons */
+      }
+
+      .card {
+        padding: 15px;
+      }
+
+      .summary-header h2 {
+        font-size: 1.3rem;
+      }
+
+      .trip-price {
+        font-size: 1.8rem;
+      }
+
+      #map {
+        height: 250px;
+      }
+
+      .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .info-value {
+        text-align: left;
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding-bottom: 140px; /* More padding for smaller screens */
+      }
+
+      .summary-grid {
+        padding: 12px;
+        gap: 10px;
+        padding-bottom: 30px; /* Extra padding for very small screens */
+      }
+
+      .card {
+        padding: 12px;
+      }
+
+      .summary-header {
+        padding: 10px 0;
+      }
+
+      .summary-header h2 {
+        font-size: 1.2rem;
+      }
+
+      .confirm-button {
+        padding: 12px 18px;
+        font-size: 13px;
+      }
+
+      .action-buttons {
+        margin-bottom: 30px; /* More margin for very small screens */
+      }
+    }
+
+    /* Tablet responsive design */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .summary-container {
+        max-width: 900px;
+      }
+    }
+
+    /* Large screen optimization */
+    @media (min-width: 1025px) {
+      .summary-container {
+        max-width: 1400px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="summary-header">
+    <h2>Reservation Summary</h2>
+  </div>
+  
+  <div id="loadingMessage" class="loading">
+    Loading reservation details...
+  </div>
+  
+  <div id="summaryContent" class="summary-container" style="display: none;">
+    <div class="summary-grid">
+      <!-- Trip Details Card -->
+      <div class="card">
+        <h3>Trip Details</h3>
+        <div id="tripDetails">
+          <!-- Trip details will be populated here -->
+        </div>
+      </div>
+      
+      <!-- Trip Info Card -->
+      <div class="card">
+        <h3>Trip Information</h3>
+        <div id="tripInfo">
+          <!-- Trip info will be populated here -->
+        </div>
+      </div>
+      
+      <!-- Map Card -->
+      <div class="card map-card">
+        <h3>Route Map</h3>
+        <div id="map"></div>
+      </div>
+      
+      <!-- Price Card -->
+      <div id="priceSection" class="card price-card" style="display: none;">
+        <span class="trip-price" id="tripPrice"></span>
+        <div class="price-label">Total Price</div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div id="actionButtons" class="action-buttons" style="display: none;">
+        <button 
+          class="confirm-button confirm"
+          title="Clicking confirms you accept and pre-confirm – please only click once."
+          onclick="updateStatus('Pre-Confirmado')">
+          Pre‑Confirm
+        </button>
+        
+        <button 
+          class="confirm-button not-accept"
+          title="Someone from our team will be in touch with you shortly."
+          onclick="updateStatus('No Aceptado')">
+          Not Accept
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="errorMessage" class="error" style="display: none;">
+    <!-- Error messages will be shown here -->
+  </div>
+
+  <script src="google-maps-utils.js"></script>
+  <script src="auth.js"></script>
+  <script src="config.production.js"></script>
+  <script>
+    let googleMapsUtils;
+    let reservationData = null;
+    let directionsService, directionsRenderer;
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', async function() {
+      try {
+        // Initialize Google Maps
+        googleMapsUtils = new GoogleMapsUtils(CONFIG.GOOGLE_MAPS_API_KEY);
+        await googleMapsUtils.init();
+
+        // Initialize directions service
+        const directions = googleMapsUtils.initDirectionsService();
+        if (directions) {
+          directionsService = directions.directionsService;
+          directionsRenderer = directions.directionsRenderer;
+        }
+        
+        // Get reservation data from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const encodedData = urlParams.get('data');
+        
+        if (encodedData) {
+          reservationData = JSON.parse(decodeURIComponent(encodedData));
+          displaySummary(reservationData);
+        } else {
+          showError('No reservation data found');
+        }
+      } catch (error) {
+        console.error('Error initializing summary page:', error);
+        showError('Error loading reservation details');
+      }
+    });
+
+    function displaySummary(data) {
+      const loadingMessage = document.getElementById('loadingMessage');
+      const summaryContent = document.getElementById('summaryContent');
+      const priceSection = document.getElementById('priceSection');
+      const actionButtons = document.getElementById('actionButtons');
+      
+      loadingMessage.style.display = 'none';
+      
+      // Format date
+      function formatDate(dateStr) {
+        if (!dateStr) return 'N/A';
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateStr).toLocaleDateString('en-US', options);
+      }
+
+      // Build trip details HTML
+      let tripDetailsHTML = `
+        <div class="info-item">
+          <span class="info-label">Name</span>
+          <span class="info-value">${data.name}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Pickup Location</span>
+          <span class="info-value">${data.origin}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Drop-off Location</span>
+          <span class="info-value">${data.destination}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Date</span>
+          <span class="info-value">${formatDate(data.startDate)}</span>
+        </div>
+      `;
+
+      // Add time for Shared Ride
+      if (data.type === 'Shared Ride') {
+        tripDetailsHTML += `
+          <div class="info-item">
+            <span class="info-label">Time</span>
+            <span class="info-value">${data.timeText}</span>
+          </div>
+        `;
+      }
+
+      // Build trip info HTML
+      let tripInfoHTML = `
+        <div class="info-item">
+          <span class="info-label">Distance</span>
+          <span class="info-value">${data.distanceText}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Arrival Goal</span>
+          <span class="info-value">${data.ETAY}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Estimated Ride Time</span>
+          <span class="info-value">${data.adjustedDrivingDuration}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Public Transit Time</span>
+          <span class="info-value">${data.transitDurationText}</span>
+        </div>
+      `;
+
+      // Populate the cards
+      document.getElementById('tripDetails').innerHTML = tripDetailsHTML;
+      document.getElementById('tripInfo').innerHTML = tripInfoHTML;
+
+      summaryContent.style.display = 'grid';
+
+      // Display price
+      document.getElementById('tripPrice').textContent = `$${data.price} CAD`;
+      priceSection.style.display = 'block';
+
+      // Show action buttons
+      actionButtons.style.display = 'flex';
+
+      // Draw route on map
+      if (data.origin && data.destination) {
+        googleMapsUtils.drawRoute(document.getElementById('map'), data.origin, data.destination, directionsRenderer);
+      }
+    }
+
+    function showError(message) {
+      const loadingMessage = document.getElementById('loadingMessage');
+      const errorMessage = document.getElementById('errorMessage');
+      
+      loadingMessage.style.display = 'none';
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+    }
+
+    async function updateStatus(newStatus) {
+      if (!reservationData) {
+        alert('No reservation data available');
+        return;
+      }
+
+      let confirmMessage = "Are you sure?";
+      
+      if (newStatus === 'No Aceptado') {
+        confirmMessage = "Are you sure you don't want to accept this trip?";
+      } else if (newStatus === 'Pre-Confirmado') {
+        confirmMessage = "Are you sure you want to pre-confirm this trip?";
+      }
+      
+      if (!confirm(confirmMessage)) return;
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append("action", "updateLast");
+        formData.append("status", newStatus);
+        formData.append("email", reservationData.email);
+
+        const response = await fetch(CONFIG.GOOGLE_APPS_SCRIPT.SUMMARY, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          },
+          body: formData
+        });
+
+        const result = await response.text();
+        console.log('Status update response:', result);
+        
+        // Redirect to main page outside the iframe
+        window.parent.location.href = 'http://127.0.0.1:5500/My%20Rides.html';
+
+      } catch (error) {
+        console.error('Error updating status:', error);
+        alert('An error occurred while updating the status. Please try again.');
+      }
+    }
+  </script>
+</body>
+</html> 
