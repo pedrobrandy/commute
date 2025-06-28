@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Commute - Choose Your Ride</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="Style.css">
+  <link rel="stylesheet" href="../styles/Style.css">
   <style>
     body {
       font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -40,7 +41,7 @@
       position: relative;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       border: 1px solid #e0e0e0;
     }
 
@@ -106,7 +107,9 @@
 
     .curtain {
       position: absolute;
-      top: 0; width: 50%; height: 100%;
+      top: 0;
+      width: 50%;
+      height: 100%;
       background-color: #0d1b2a;
       z-index: 2;
       animation: openCurtain 1.2s ease forwards;
@@ -152,7 +155,10 @@
     }
 
     @media (max-width: 768px) {
-      body, .main-layout, .iframe-container {
+
+      body,
+      .main-layout,
+      .iframe-container {
         padding: 0;
         margin-top: 0;
         height: 100vh;
@@ -161,6 +167,7 @@
         box-shadow: none;
         border: none;
       }
+
       .iframe-container iframe {
         border-radius: 0;
         width: 100%;
@@ -181,11 +188,12 @@
     }
   </style>
 
-  <script src="loadHeader.js"></script>
-  <script src="loadNav.js"></script>
-  <script src="loadCarousel.js"></script>
-  <script src="config.production.js"></script>
+  <script src="../scripts/loadHeader.js"></script>
+  <script src="../scripts/loadNav.js"></script>
+  <script src="../scripts/loadCarousel.js"></script>
+  <script src="../config/config.production.js"></script>
 </head>
+
 <body>
 
   <!-- Splash Screen -->
@@ -193,7 +201,7 @@
     <div class="curtain left"></div>
     <div class="curtain right"></div>
     <div class="splash-logo">
-      <img src="https://pedrobrandy.github.io/commute/image/commute-logo.png" alt="Commute Logo" />
+      <img src="../../public/image/commute-logo.png" alt="Commute Logo" />
     </div>
   </div>
 
@@ -212,27 +220,27 @@
   <div id="carousel-container"></div>
 
   <!-- Splash animation logic -->
-<script>
-  window.addEventListener('load', () => {
-    const splash = document.getElementById('splash-screen');
+  <script>
+    window.addEventListener('load', () => {
+      const splash = document.getElementById('splash-screen');
 
-    // Quitar cortinas después de que se abran
-    setTimeout(() => {
-      splash.querySelector('.curtain.left').style.display = 'none';
-      splash.querySelector('.curtain.right').style.display = 'none';
-    }, 1000);
+      // Quitar cortinas después de que se abran
+      setTimeout(() => {
+        splash.querySelector('.curtain.left').style.display = 'none';
+        splash.querySelector('.curtain.right').style.display = 'none';
+      }, 1000);
 
-    // Subir el splash completo
-    setTimeout(() => {
-      splash.classList.add('slide-up');
-    }, 1200);
+      // Subir el splash completo
+      setTimeout(() => {
+        splash.classList.add('slide-up');
+      }, 1200);
 
-    // Eliminarlo completamente del DOM después de animar
-    setTimeout(() => {
-      splash.remove();
-    }, 2200);
-  });
-</script>
+      // Eliminarlo completamente del DOM después de animar
+      setTimeout(() => {
+        splash.remove();
+      }, 2200);
+    });
+  </script>
   <!-- Existing logic -->
   <script>
     const API_CONFIG = {
@@ -246,7 +254,7 @@
       }
     };
 
-    window.addEventListener('message', function(event) {
+    window.addEventListener('message', function (event) {
       if (event.origin !== window.location.origin) return;
 
       const { type, data, success, message } = event.data;
@@ -276,23 +284,23 @@
         },
         body: body
       })
-      .then(res => res.text())
-      .then(result => {
-        document.getElementById('contentFrame').contentWindow.postMessage({
-          type: 'API_RESPONSE',
-          requestId,
-          success: true,
-          data: result
-        }, window.location.origin);
-      })
-      .catch(error => {
-        document.getElementById('contentFrame').contentWindow.postMessage({
-          type: 'API_RESPONSE',
-          requestId,
-          success: false,
-          message: error.message
-        }, window.location.origin);
-      });
+        .then(res => res.text())
+        .then(result => {
+          document.getElementById('contentFrame').contentWindow.postMessage({
+            type: 'API_RESPONSE',
+            requestId,
+            success: true,
+            data: result
+          }, window.location.origin);
+        })
+        .catch(error => {
+          document.getElementById('contentFrame').contentWindow.postMessage({
+            type: 'API_RESPONSE',
+            requestId,
+            success: false,
+            message: error.message
+          }, window.location.origin);
+        });
     }
 
     function handleApiResponse(success, data, message) {
@@ -303,7 +311,7 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const contentFrame = document.getElementById('contentFrame');
       const urlParams = new URLSearchParams(window.location.search);
       const page = urlParams.get('page');
@@ -311,14 +319,15 @@
       else if (page === 'personal') contentFrame.src = 'Personal Ride.html';
     });
 
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
       if (typeof loadHeader === 'function') loadHeader();
       if (typeof loadNavigation === 'function') loadNavigation();
     });
 
-    window.testLoadPersonal = function() {
+    window.testLoadPersonal = function () {
       document.getElementById('contentFrame').src = 'Personal Ride.html';
     };
   </script>
 </body>
+
 </html>

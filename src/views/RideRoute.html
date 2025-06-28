@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Route Details</title>
-  <script src="config.production.js"></script>
-  <script src="auth.js"></script>
+  <script src="../config/config.production.js"></script>
+  <script src="../scripts/auth.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -51,7 +52,7 @@
       padding: 25px;
       border-radius: 12px;
       margin-bottom: 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       border-left: 4px solid #1B263B;
     }
 
@@ -104,14 +105,15 @@
       transform: rotateY(180deg);
     }
 
-    .flip-card-front, .flip-card-back {
+    .flip-card-front,
+    .flip-card-back {
       position: absolute;
       width: 100%;
       min-height: 400px;
       height: auto;
       backface-visibility: hidden;
       border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -193,17 +195,17 @@
     }
 
     #routeDetails::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.1);
+      background: rgba(0, 0, 0, 0.1);
       border-radius: 3px;
     }
 
     #routeDetails::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.3);
+      background: rgba(0, 0, 0, 0.3);
       border-radius: 3px;
     }
 
     #routeDetails::-webkit-scrollbar-thumb:hover {
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
     }
 
     .no-data {
@@ -213,7 +215,7 @@
       font-style: italic;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .loading {
@@ -232,10 +234,11 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-  <h2>Route Assignment Details</h2>
-    
+    <h2>Route Assignment Details</h2>
+
     <div id="tripInfo" class="trip-info" style="display: none;">
       <h3>Trip Information</h3>
       <div id="tripDetails"></div>
@@ -276,19 +279,19 @@
   <script>
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) window.location.href = 'Login.html';
-    
+
     const email = user.email;
     const scriptUrl = CONFIG.GOOGLE_APPS_SCRIPT.MAIN;
     const proxyUrl = scriptUrl;
-    
+
     // Obtener la información del viaje seleccionado
     const selectedTrip = JSON.parse(localStorage.getItem('selectedTrip'));
-    
+
     // Mostrar información del viaje si está disponible
     if (selectedTrip) {
       const tripInfoDiv = document.getElementById('tripInfo');
       const tripDetailsDiv = document.getElementById('tripDetails');
-      
+
       tripDetailsDiv.innerHTML = `
         <p><span class="label">Type:</span> <span class="value">${selectedTrip.type}</span></p>
         <p><span class="label">Date:</span> <span class="value">${selectedTrip.startDate}</span></p>
@@ -298,14 +301,14 @@
         <p><span class="label">Status:</span> <span class="value">${selectedTrip.status}</span></p>
         <p><span class="label">Price:</span> <span class="value">$${selectedTrip.price} CAD</span></p>
       `;
-      
+
       tripInfoDiv.style.display = 'block';
     }
 
     async function loadData() {
       try {
         console.log('Starting loadData function...');
-        
+
         // Ocultar mensajes previos
         document.getElementById('loadingMessage').style.display = 'block';
         document.getElementById('noDataMessage').style.display = 'none';
@@ -334,7 +337,7 @@
           console.error('Reservations API error:', resvRes);
           throw new Error(`Reservations API error: ${resvRes.message || 'Unknown error'}`);
         }
-        
+
         if (!routeRes.success) {
           console.error('Route Assignment API error:', routeRes);
           throw new Error(`Route Assignment API error: ${routeRes.message || 'Unknown error'}`);
@@ -368,23 +371,23 @@
         // Buscar la información de ruta para el usuario
         let userRouteInfo = null;
         let allUserStops = [];
-        
+
         for (const reservation of relevantReservations) {
           console.log('Checking reservation:', reservation);
-          
+
           // Determinar el routeId a usar para el matching
           const reservationRouteId = reservation.routeId || reservation.createdAt;
-          
+
           // Obtener TODAS las asignaciones de esta ruta
           const allRouteAssignments = routeAssignments.filter(r => r.routeId === reservationRouteId);
-          
+
           // Ordenar por timePickDrop para obtener el orden correcto de las paradas
           const sortedRouteAssignments = allRouteAssignments.sort((a, b) => {
             const timeA = new Date(a.timePickDrop || 0);
             const timeB = new Date(b.timePickDrop || 0);
             return timeA - timeB;
           });
-          
+
           // Encontrar todas las paradas de este usuario en esta ruta
           const userStops = sortedRouteAssignments
             .map((assignment, index) => ({
@@ -393,9 +396,9 @@
               formattedTimePickDrop: formatTimePickDrop(assignment.timePickDrop)
             }))
             .filter(assignment => assignment.name === reservation.name);
-          
+
           console.log('User stops found:', userStops);
-          
+
           if (userStops.length > 0) {
             allUserStops = userStops;
             userRouteInfo = userStops[0]; // Mantener compatibilidad
@@ -409,10 +412,10 @@
         if (userRouteInfo) {
           console.log('Displaying route info:', userRouteInfo);
           console.log('All user stops:', allUserStops);
-          
+
           // Mostrar la tarjeta con la información de todas las paradas
           const routeDetailsDiv = document.getElementById('routeDetails');
-          
+
           let stopsHtml = '';
           for (const stop of allUserStops) {
             stopsHtml += `
@@ -431,7 +434,7 @@
               ${stop !== allUserStops[allUserStops.length - 1] ? '<hr style="margin: 10px 0; border: 1px solid #ddd;">' : ''}
             `;
           }
-          
+
           routeDetailsDiv.innerHTML = stopsHtml;
 
           document.getElementById('flipCardContainer').style.display = 'block';
@@ -450,10 +453,10 @@
     }
 
     // Agregar funcionalidad de flip a la tarjeta
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const flipCard = document.getElementById('flipCard');
       if (flipCard) {
-        flipCard.addEventListener('click', function() {
+        flipCard.addEventListener('click', function () {
           this.classList.toggle('flipped');
         });
       }
@@ -462,13 +465,13 @@
     // Función para formatear la hora de timePickDrop
     function formatTimePickDrop(timePickDrop) {
       if (!timePickDrop) return 'Not specified';
-      
+
       try {
         // Si ya está en formato legible (ej: "5:30"), devolverlo tal como está
         if (typeof timePickDrop === 'string' && timePickDrop.match(/^\d{1,2}:\d{2}$/)) {
           return timePickDrop;
         }
-        
+
         // Si es una fecha ISO, convertirla a formato legible
         const date = new Date(timePickDrop);
         if (!isNaN(date.getTime())) {
@@ -476,7 +479,7 @@
           const minutes = date.getMinutes();
           return `${hours}:${minutes.toString().padStart(2, '0')}`;
         }
-        
+
         return timePickDrop;
       } catch (error) {
         console.error('Error formatting timePickDrop:', error);
@@ -487,4 +490,5 @@
     loadData();
   </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -206,7 +207,8 @@
     @media (max-width: 768px) {
       body {
         padding-top: 0;
-        padding-bottom: 120px; /* Add bottom padding for navigation menu */
+        padding-bottom: 120px;
+        /* Add bottom padding for navigation menu */
       }
 
       .summary-header {
@@ -224,7 +226,8 @@
         gap: 12px;
         padding: 15px;
         height: auto;
-        padding-bottom: 20px; /* Extra padding at bottom */
+        padding-bottom: 20px;
+        /* Extra padding at bottom */
       }
 
       .map-card {
@@ -240,8 +243,10 @@
       .action-buttons {
         grid-column: 1;
         grid-row: auto;
-        order: 999; /* Push buttons to the end */
-        margin-bottom: 20px; /* Extra margin for buttons */
+        order: 999;
+        /* Push buttons to the end */
+        margin-bottom: 20px;
+        /* Extra margin for buttons */
       }
 
       .card {
@@ -274,13 +279,15 @@
 
     @media (max-width: 480px) {
       body {
-        padding-bottom: 140px; /* More padding for smaller screens */
+        padding-bottom: 140px;
+        /* More padding for smaller screens */
       }
 
       .summary-grid {
         padding: 12px;
         gap: 10px;
-        padding-bottom: 30px; /* Extra padding for very small screens */
+        padding-bottom: 30px;
+        /* Extra padding for very small screens */
       }
 
       .card {
@@ -301,7 +308,8 @@
       }
 
       .action-buttons {
-        margin-bottom: 30px; /* More margin for very small screens */
+        margin-bottom: 30px;
+        /* More margin for very small screens */
       }
     }
 
@@ -320,15 +328,16 @@
     }
   </style>
 </head>
+
 <body>
   <div class="summary-header">
     <h2>Reservation Summary</h2>
   </div>
-  
+
   <div id="loadingMessage" class="loading">
     Loading reservation details...
   </div>
-  
+
   <div id="summaryContent" class="summary-container" style="display: none;">
     <div class="summary-grid">
       <!-- Trip Details Card -->
@@ -338,7 +347,7 @@
           <!-- Trip details will be populated here -->
         </div>
       </div>
-      
+
       <!-- Trip Info Card -->
       <div class="card">
         <h3>Trip Information</h3>
@@ -346,52 +355,49 @@
           <!-- Trip info will be populated here -->
         </div>
       </div>
-      
+
       <!-- Map Card -->
       <div class="card map-card">
         <h3>Route Map</h3>
         <div id="map"></div>
       </div>
-      
+
       <!-- Price Card -->
       <div id="priceSection" class="card price-card" style="display: none;">
         <span class="trip-price" id="tripPrice"></span>
         <div class="price-label">Total Price</div>
       </div>
-      
+
       <!-- Action Buttons -->
       <div id="actionButtons" class="action-buttons" style="display: none;">
-        <button 
-          class="confirm-button confirm"
+        <button class="confirm-button confirm"
           title="Clicking confirms you accept and pre-confirm – please only click once."
           onclick="updateStatus('Pre-Confirmado')">
           Pre‑Confirm
         </button>
-        
-        <button 
-          class="confirm-button not-accept"
-          title="Someone from our team will be in touch with you shortly."
+
+        <button class="confirm-button not-accept" title="Someone from our team will be in touch with you shortly."
           onclick="updateStatus('No Aceptado')">
           Not Accept
         </button>
       </div>
     </div>
   </div>
-  
+
   <div id="errorMessage" class="error" style="display: none;">
     <!-- Error messages will be shown here -->
   </div>
 
-  <script src="google-maps-utils.js"></script>
-  <script src="auth.js"></script>
-  <script src="config.production.js"></script>
+  <script src="../scripts/google-maps-utils.js"></script>
+  <script src="../scripts/auth.js"></script>
+  <script src="../config/config.production.js"></script>
   <script>
     let googleMapsUtils;
     let reservationData = null;
     let directionsService, directionsRenderer;
 
     // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', async function () {
       try {
         // Initialize Google Maps
         googleMapsUtils = new GoogleMapsUtils(CONFIG.GOOGLE_MAPS_API_KEY);
@@ -403,11 +409,11 @@
           directionsService = directions.directionsService;
           directionsRenderer = directions.directionsRenderer;
         }
-        
+
         // Get reservation data from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const encodedData = urlParams.get('data');
-        
+
         if (encodedData) {
           reservationData = JSON.parse(decodeURIComponent(encodedData));
           displaySummary(reservationData);
@@ -425,9 +431,9 @@
       const summaryContent = document.getElementById('summaryContent');
       const priceSection = document.getElementById('priceSection');
       const actionButtons = document.getElementById('actionButtons');
-      
+
       loadingMessage.style.display = 'none';
-      
+
       // Format date
       function formatDate(dateStr) {
         if (!dateStr) return 'N/A';
@@ -507,7 +513,7 @@
     function showError(message) {
       const loadingMessage = document.getElementById('loadingMessage');
       const errorMessage = document.getElementById('errorMessage');
-      
+
       loadingMessage.style.display = 'none';
       errorMessage.textContent = message;
       errorMessage.style.display = 'block';
@@ -520,13 +526,13 @@
       }
 
       let confirmMessage = "Are you sure?";
-      
+
       if (newStatus === 'No Aceptado') {
         confirmMessage = "Are you sure you don't want to accept this trip?";
       } else if (newStatus === 'Pre-Confirmado') {
         confirmMessage = "Are you sure you want to pre-confirm this trip?";
       }
-      
+
       if (!confirm(confirmMessage)) return;
 
       try {
@@ -545,7 +551,7 @@
 
         const result = await response.text();
         console.log('Status update response:', result);
-        
+
         // Redirect to main page outside the iframe
         window.parent.location.href = 'http://127.0.0.1:5500/My%20Rides.html';
 
@@ -556,4 +562,5 @@
     }
   </script>
 </body>
-</html> 
+
+</html>

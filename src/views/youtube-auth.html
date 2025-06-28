@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Authorization</title>
-  <script src="config.production.js"></script>
+  <script src="../config/config.production.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -12,34 +13,34 @@
       background-color: #f5f5f5;
       color: #0D1B2A;
     }
-    
+
     .container {
       max-width: 800px;
       margin: 0 auto;
       background: white;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    
+
     h1 {
       color: #1B263B;
       text-align: center;
       margin-bottom: 30px;
     }
-    
+
     .step {
       margin: 20px 0;
       padding: 20px;
       border: 1px solid #ddd;
       border-radius: 8px;
     }
-    
+
     .step h3 {
       margin-top: 0;
       color: #1B263B;
     }
-    
+
     .btn {
       background-color: #1B263B;
       color: white;
@@ -51,20 +52,20 @@
       text-decoration: none;
       display: inline-block;
     }
-    
+
     .btn:hover {
       background-color: #415A77;
     }
-    
+
     .btn-success {
       background-color: #28a745;
     }
-    
+
     .btn-warning {
       background-color: #ffc107;
       color: #000;
     }
-    
+
     .result {
       margin-top: 10px;
       padding: 10px;
@@ -72,19 +73,19 @@
       font-family: monospace;
       white-space: pre-wrap;
     }
-    
+
     .success {
       background-color: #d4edda;
       color: #155724;
       border: 1px solid #c3e6cb;
     }
-    
+
     .error {
       background-color: #f8d7da;
       color: #721c24;
       border: 1px solid #f5c6cb;
     }
-    
+
     .info {
       background-color: #d1ecf1;
       color: #0c5460;
@@ -92,31 +93,32 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>🎵 YouTube Authorization Setup</h1>
-    
+
     <div class="step">
       <h3>Step 1: Check Current Status</h3>
       <p>First, let's check if YouTube is already authorized.</p>
       <button class="btn" onclick="checkAuthStatus()">Check Authorization Status</button>
       <div id="statusResult" class="result" style="display: none;"></div>
     </div>
-    
+
     <div class="step">
       <h3>Step 2: Authorize YouTube Access</h3>
       <p>Click the button below to authorize the app to add songs to your YouTube playlist.</p>
       <button class="btn btn-warning" onclick="startAuth()">Authorize YouTube Access</button>
       <div id="authResult" class="result" style="display: none;"></div>
     </div>
-    
+
     <div class="step">
       <h3>Step 3: Test Playlist Addition</h3>
       <p>Once authorized, test adding a song to your playlist.</p>
       <button class="btn btn-success" onclick="testAddToPlaylist()">Test Add to Playlist</button>
       <div id="testResult" class="result" style="display: none;"></div>
     </div>
-    
+
     <div class="step">
       <h3>Step 4: Return to Playlist</h3>
       <p>Once everything is working, you can return to the main playlist page.</p>
@@ -126,7 +128,7 @@
 
   <script>
     const scriptUrl = CONFIG.GOOGLE_APPS_SCRIPT.MAIN;
-    
+
     function showResult(elementId, content, type = 'info') {
       const element = document.getElementById(elementId);
       element.style.display = 'block';
@@ -137,35 +139,35 @@
     async function checkAuthStatus() {
       try {
         showResult('statusResult', 'Checking authorization status...', 'info');
-        
+
         const response = await fetch(`${scriptUrl}?action=youtube_auth_status`);
         const data = await response.json();
-        
+
         if (data.success) {
           if (data.authorized) {
-            showResult('statusResult', 
+            showResult('statusResult',
               '✅ YouTube is already authorized!\n\n' +
               'You can now add songs to your playlist automatically.\n' +
-              'Has refresh token: ' + (data.hasRefreshToken ? 'Yes' : 'No'), 
+              'Has refresh token: ' + (data.hasRefreshToken ? 'Yes' : 'No'),
               'success'
             );
           } else {
-            showResult('statusResult', 
+            showResult('statusResult',
               '❌ YouTube is not authorized yet.\n\n' +
-              'Please proceed to Step 2 to authorize access.', 
+              'Please proceed to Step 2 to authorize access.',
               'error'
             );
           }
         } else {
-          showResult('statusResult', 
-            '❌ Error checking status:\n\n' + 
-            JSON.stringify(data, null, 2), 
+          showResult('statusResult',
+            '❌ Error checking status:\n\n' +
+            JSON.stringify(data, null, 2),
             'error'
           );
         }
       } catch (error) {
-        showResult('statusResult', 
-          '❌ Error: ' + error.message, 
+        showResult('statusResult',
+          '❌ Error: ' + error.message,
           'error'
         );
       }
@@ -174,31 +176,31 @@
     async function startAuth() {
       try {
         showResult('authResult', 'Getting authorization URL...', 'info');
-        
+
         const response = await fetch(`${scriptUrl}?action=youtube_auth_url`);
         const data = await response.json();
-        
+
         if (data.success) {
-          showResult('authResult', 
+          showResult('authResult',
             '✅ Authorization URL generated!\n\n' +
             'Click the link below to authorize:\n\n' +
             data.authUrl + '\n\n' +
-            'After authorization, you will be redirected back here.', 
+            'After authorization, you will be redirected back here.',
             'success'
           );
-          
+
           // Open the auth URL in a new window
           window.open(data.authUrl, '_blank');
         } else {
-          showResult('authResult', 
-            '❌ Failed to get authorization URL:\n\n' + 
-            JSON.stringify(data, null, 2), 
+          showResult('authResult',
+            '❌ Failed to get authorization URL:\n\n' +
+            JSON.stringify(data, null, 2),
             'error'
           );
         }
       } catch (error) {
-        showResult('authResult', 
-          '❌ Error: ' + error.message, 
+        showResult('authResult',
+          '❌ Error: ' + error.message,
           'error'
         );
       }
@@ -207,43 +209,44 @@
     async function testAddToPlaylist() {
       try {
         showResult('testResult', 'Testing playlist addition...', 'info');
-        
+
         // Test with a known video ID
         const testVideoId = 'dQw4w9WgXcQ'; // Rick Roll
-        
+
         const response = await fetch(`${scriptUrl}?action=add_to_youtube&videoId=${testVideoId}`);
         const data = await response.json();
-        
+
         if (data.success) {
-          showResult('testResult', 
+          showResult('testResult',
             '✅ Successfully added to YouTube playlist!\n\n' +
             'Your OAuth2 setup is working correctly.\n\n' +
-            JSON.stringify(data, null, 2), 
+            JSON.stringify(data, null, 2),
             'success'
           );
         } else {
-          showResult('testResult', 
-            '❌ Failed to add to playlist:\n\n' + 
-            JSON.stringify(data, null, 2) + 
+          showResult('testResult',
+            '❌ Failed to add to playlist:\n\n' +
+            JSON.stringify(data, null, 2) +
             '\n\nThis might mean:\n' +
             '1. YouTube is not authorized yet\n' +
             '2. The authorization token expired\n' +
-            '3. There was an API error', 
+            '3. There was an API error',
             'error'
           );
         }
       } catch (error) {
-        showResult('testResult', 
-          '❌ Error: ' + error.message, 
+        showResult('testResult',
+          '❌ Error: ' + error.message,
           'error'
         );
       }
     }
 
     // Check status on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       checkAuthStatus();
     });
   </script>
 </body>
-</html> 
+
+</html>

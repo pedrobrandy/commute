@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuración Twilio - Commut</title>
-    <link rel="stylesheet" href="Style.css">
+    <link rel="stylesheet" href="../styles/Style.css">
     <style>
         .setup-container {
             max-width: 600px;
@@ -14,24 +15,24 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         .setup-title {
             text-align: center;
             color: #333;
             margin-bottom: 30px;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
-        
+
         .form-group input {
             width: 100%;
             padding: 12px;
@@ -39,13 +40,13 @@
             border-radius: 5px;
             font-size: 16px;
         }
-        
+
         .form-group input:focus {
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
         }
-        
+
         .btn-setup {
             width: 100%;
             padding: 15px;
@@ -57,76 +58,76 @@
             cursor: pointer;
             margin-top: 20px;
         }
-        
+
         .btn-setup:hover {
             background: #0056b3;
         }
-        
+
         .btn-setup:disabled {
             background: #6c757d;
             cursor: not-allowed;
         }
-        
+
         .alert {
             padding: 15px;
             margin: 20px 0;
             border-radius: 5px;
         }
-        
+
         .alert-success {
             background-color: #d4edda;
             border: 1px solid #c3e6cb;
             color: #155724;
         }
-        
+
         .alert-danger {
             background-color: #f8d7da;
             border: 1px solid #f5c6cb;
             color: #721c24;
         }
-        
+
         .alert-info {
             background-color: #d1ecf1;
             border: 1px solid #bee5eb;
             color: #0c5460;
         }
-        
+
         .instructions {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 5px;
             margin-bottom: 30px;
         }
-        
+
         .instructions h3 {
             margin-top: 0;
             color: #333;
         }
-        
+
         .instructions ol {
             margin: 10px 0;
             padding-left: 20px;
         }
-        
+
         .instructions li {
             margin: 5px 0;
             line-height: 1.5;
         }
-        
+
         .back-link {
             text-align: center;
             margin-top: 20px;
         }
-        
+
         .back-link a {
             color: #007bff;
             text-decoration: none;
         }
-        
+
         .back-link a:hover {
             text-decoration: underline;
         }
-        
+
         .test-section {
             margin-top: 30px;
             padding: 20px;
@@ -134,7 +135,7 @@
             border-radius: 8px;
             background-color: #f9f9f9;
         }
-        
+
         .btn-test {
             padding: 10px 20px;
             background: #28a745;
@@ -144,16 +145,17 @@
             cursor: pointer;
             margin: 5px;
         }
-        
+
         .btn-test:hover {
             background: #218838;
         }
     </style>
 </head>
+
 <body>
     <div class="setup-container">
         <h1 class="setup-title">🔧 Configuración Twilio</h1>
-        
+
         <div class="instructions">
             <h3>📋 Instrucciones para configurar Twilio:</h3>
             <ol>
@@ -164,30 +166,32 @@
                 <li>Ingresa los datos en el formulario de abajo</li>
             </ol>
         </div>
-        
+
         <form id="twilioSetupForm">
             <div class="form-group">
                 <label for="accountSid">Account SID:</label>
-                <input type="text" id="accountSid" name="accountSid" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required>
+                <input type="text" id="accountSid" name="accountSid" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    required>
             </div>
-            
+
             <div class="form-group">
                 <label for="authToken">Auth Token:</label>
-                <input type="password" id="authToken" name="authToken" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required>
+                <input type="password" id="authToken" name="authToken" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    required>
             </div>
-            
+
             <div class="form-group">
                 <label for="fromNumber">Número de Teléfono (From):</label>
                 <input type="tel" id="fromNumber" name="fromNumber" placeholder="+1234567890" required>
             </div>
-            
+
             <button type="submit" class="btn-setup" id="setupBtn">
                 🔧 Configurar Twilio
             </button>
         </form>
-        
+
         <div id="setupResult"></div>
-        
+
         <div class="test-section">
             <h3>🧪 Probar Configuración</h3>
             <p>Una vez configurado Twilio, puedes probar el envío de SMS:</p>
@@ -198,40 +202,40 @@
             <button class="btn-test" onclick="testSms()">📱 Probar SMS</button>
             <div id="testResult"></div>
         </div>
-        
+
         <div class="back-link">
             <a href="Login.html">← Volver al Login</a>
         </div>
     </div>
 
-    <script src="config.production.js"></script>
-    <script src="api-utils.js"></script>
+    <script src="../config/config.production.js"></script>
+    <script src="../scripts/api-utils.js"></script>
     <script>
-        document.getElementById('twilioSetupForm').addEventListener('submit', async function(e) {
+        document.getElementById('twilioSetupForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const setupBtn = document.getElementById('setupBtn');
             const setupResult = document.getElementById('setupResult');
-            
+
             try {
                 setupBtn.disabled = true;
                 setupBtn.textContent = '🔄 Configurando...';
                 setupResult.innerHTML = '<div class="alert alert-info">Configurando credenciales de Twilio...</div>';
-                
+
                 // Debug: Verificar configuración
                 console.log('Debug - CONFIG:', window.CONFIG);
                 console.log('Debug - API_CONFIG:', window.API_CONFIG);
-                
+
                 const credentials = {
                     accountSid: document.getElementById('accountSid').value.trim(),
                     authToken: document.getElementById('authToken').value.trim(),
                     fromNumber: document.getElementById('fromNumber').value.trim()
                 };
-                
+
                 console.log('Debug - Credentials:', credentials);
-                
+
                 const response = await setupTwilioCredentials(credentials);
-                
+
                 if (response.success) {
                     setupResult.innerHTML = `
                         <div class="alert alert-success">
@@ -255,21 +259,21 @@
                 setupBtn.textContent = '🔧 Configurar Twilio';
             }
         });
-        
+
         async function testSms() {
             const testResult = document.getElementById('testResult');
             const phone = document.getElementById('testPhone').value.trim();
-            
+
             if (!phone) {
                 testResult.innerHTML = '<div class="alert alert-danger">❌ Por favor, ingresa un número de teléfono</div>';
                 return;
             }
-            
+
             try {
                 testResult.innerHTML = '<div class="alert alert-info">📱 Enviando SMS de prueba...</div>';
-                
+
                 const response = await sendSmsCode(phone);
-                
+
                 if (response.success) {
                     testResult.innerHTML = `
                         <div class="alert alert-success">
@@ -289,30 +293,31 @@
                 testResult.innerHTML = `<div class="alert alert-danger">❌ Error enviando SMS: ${error.message}</div>`;
             }
         }
-        
+
         // Auto-load saved credentials
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const savedAccountSid = localStorage.getItem('twilio_account_sid');
             const savedAuthToken = localStorage.getItem('twilio_auth_token');
             const savedFromNumber = localStorage.getItem('twilio_from_number');
-            
+
             if (savedAccountSid) document.getElementById('accountSid').value = savedAccountSid;
             if (savedAuthToken) document.getElementById('authToken').value = savedAuthToken;
             if (savedFromNumber) document.getElementById('fromNumber').value = savedFromNumber;
-            
+
             // Save credentials when changed
-            document.getElementById('accountSid').addEventListener('input', function() {
+            document.getElementById('accountSid').addEventListener('input', function () {
                 localStorage.setItem('twilio_account_sid', this.value);
             });
-            
-            document.getElementById('authToken').addEventListener('input', function() {
+
+            document.getElementById('authToken').addEventListener('input', function () {
                 localStorage.setItem('twilio_auth_token', this.value);
             });
-            
-            document.getElementById('fromNumber').addEventListener('input', function() {
+
+            document.getElementById('fromNumber').addEventListener('input', function () {
                 localStorage.setItem('twilio_from_number', this.value);
             });
         });
     </script>
 </body>
-</html> 
+
+</html>

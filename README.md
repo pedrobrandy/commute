@@ -1,234 +1,169 @@
-# 🚗 Commut - Aplicación de Carpooling
+# Commute - Ride Sharing Application
 
-Una aplicación web moderna para compartir viajes y optimizar el transporte urbano.
+A modern web application for ride sharing and commute management with integrated music playlists and real-time notifications.
 
-## 📁 Estructura del Proyecto
+## 🚀 Quick Start
 
-```
-Commut-pc - Copy/
-├── public/                 # Archivos estáticos públicos
-│   └── image/             # Imágenes y recursos visuales
-│
-├── src/                   # Código fuente principal
-│   ├── assets/           # Recursos estáticos adicionales
-│   ├── components/       # Componentes reutilizables
-│   ├── styles/           # Archivos CSS
-│   │   └── Style.css     # Estilos principales
-│   ├── scripts/          # JavaScript y Google Apps Script
-│   │   ├── api-utils.js          # Utilidades de API
-│   │   ├── twilio-config.js      # Configuración de Twilio
-│   │   ├── config.production.js  # Configuración de producción
-│   │   ├── google-maps-utils.js  # Utilidades de Google Maps
-│   │   ├── auth.js               # Autenticación
-│   │   ├── loadHeader.js         # Carga de header
-│   │   ├── loadNav.js            # Carga de navegación
-│   │   ├── loadCarousel.js       # Carga de carrusel
-│   │   ├── Playlist.gs           # Script de playlist
-│   │   └── setup-twilio-*.gs     # Scripts de configuración Twilio
-│   ├── views/            # Páginas HTML principales
-│   │   ├── index.html            # Página principal
-│   │   ├── Login.html            # Página de login
-│   │   ├── register.html         # Registro
-│   │   ├── My Rides.html         # Mis viajes
-│   │   ├── Personal Ride.html    # Viaje personal
-│   │   ├── Shared Ride.html      # Viaje compartido
-│   │   └── ...                   # Otras páginas
-│   └── config/           # Archivos de configuración
-│       ├── config.production.js  # Configuración de producción
-│       ├── config.js             # Configuración general
-│       └── config.example.js     # Plantilla de configuración
-│
-├── test/                 # Archivos de prueba y testing
-│   ├── test-*.html      # Páginas de prueba
-│   ├── test-*.gs        # Scripts de prueba
-│   ├── debug-users.html # Debug de usuarios
-│   ├── diagnose-network.html # Diagnóstico de red
-│   └── verify-deployment.html # Verificación de deployment
-│
-├── guide/                # Documentación y guías
-│   ├── QUICK_START.md           # Guía de inicio rápido
-│   ├── TWILIO_SETUP.md          # Configuración de Twilio
-│   ├── SMS_AUTH_SETUP.md        # Configuración de SMS
-│   ├── PLAYLIST_SETUP.md        # Configuración de playlist
-│   ├── SECURITY.md              # Guía de seguridad
-│   └── ...                      # Otras guías
-│
-├── .gitignore            # Archivos ignorados por Git
-└── README.md             # Este archivo
-```
+### Prerequisites
+- Modern web browser
+- Local web server (for development)
+- Twilio account (for SMS notifications)
+- Google Cloud Platform account (for Maps and YouTube APIs)
 
-## 🚀 Inicio Rápido
+### Installation
 
-### 1. Configuración Inicial
-
-1. **Clona el repositorio**:
+1. **Clone the repository**
    ```bash
-   git clone [URL_DEL_REPOSITORIO]
-   cd Commut-pc-Copy
+   git clone https://github.com/pedrobrandy/commute.git
+   cd commute
    ```
 
-2. **Configura las credenciales**:
-   - Copia `src/config/config.example.js` a `src/config/config.production.js`
-   - Edita `src/config/config.production.js` con tus credenciales reales
+2. **Set up configuration**
+   - Copy `src/config/config.example.js` to `src/config/config.local.js`
+   - Update `config.local.js` with your real API keys and secrets
+   - The `config.local.js` file is automatically ignored by Git
 
-3. **Configura Google Apps Script**:
-   - Ve a [Google Apps Script](https://script.google.com/)
-   - Crea un nuevo proyecto
-   - Copia el contenido de `src/scripts/Playlist.gs`
-   - Despliega como aplicación web
-
-### 2. Configuración de APIs
-
-#### Google Maps API
-1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
-2. Crea un proyecto o selecciona uno existente
-3. Habilita la API de Google Maps JavaScript
-4. Crea una clave de API con restricciones de dominio
-5. Agrega la clave en `src/config/config.production.js`
-
-#### Twilio SMS
-1. Crea una cuenta en [Twilio](https://www.twilio.com/)
-2. Obtén tu Account SID y Auth Token
-3. Compra un número de teléfono
-4. Configura las credenciales en `src/config/config.production.js`
-
-#### YouTube API
-1. En Google Cloud Console, habilita YouTube Data API v3
-2. Usa la misma clave de Google Maps o crea una nueva
-3. Configura en `src/config/config.production.js`
-
-### 3. Deployment
-
-#### Para GitHub Pages
-1. Sube el código a un repositorio de GitHub
-2. Ve a Settings > Pages
-3. Selecciona la rama principal
-4. El sitio estará disponible en `https://[usuario].github.io/[repositorio]`
-
-#### Para servidor local
-1. Abre `src/views/index.html` en tu navegador
-2. O usa un servidor local:
+3. **Start development server**
    ```bash
-   # Con Python
+   # Using Python (if available)
    python -m http.server 8000
-   
-   # Con Node.js
-   npx serve src/views
+
+   # Using Node.js (if available)
+   npx http-server
+
+   # Or open src/views/index.html directly in your browser
    ```
 
-## 🔧 Desarrollo
+4. **Access the application**
+   - Open `http://localhost:8000/src/views/index.html` in your browser
+   - Or navigate to the appropriate HTML file directly
 
-### Estructura de Archivos
+## 📁 Project Structure
 
-- **`src/views/`**: Contiene todas las páginas HTML principales
-- **`src/scripts/`**: Contiene JavaScript y Google Apps Script
-- **`src/styles/`**: Contiene archivos CSS
-- **`src/config/`**: Contiene archivos de configuración
-- **`public/image/`**: Contiene imágenes y recursos visuales
-
-### Convenciones de Nomenclatura
-
-- **Archivos HTML**: PascalCase (ej: `Login.html`, `MyRides.html`)
-- **Archivos JS**: camelCase (ej: `apiUtils.js`, `googleMapsUtils.js`)
-- **Archivos CSS**: PascalCase (ej: `Style.css`)
-- **Archivos de configuración**: kebab-case (ej: `config-production.js`)
-
-### Flujo de Trabajo
-
-1. **Desarrollo**: Trabaja en `src/`
-2. **Testing**: Usa archivos en `test/`
-3. **Documentación**: Actualiza archivos en `guide/`
-4. **Configuración**: Modifica archivos en `src/config/`
-
-## 🧪 Testing
-
-### Archivos de Prueba Disponibles
-
-- `test/test-api.html` - Pruebas de API
-- `test/test-maps.html` - Pruebas de Google Maps
-- `test/test-registration.html` - Pruebas de registro
-- `test/debug-users.html` - Debug de usuarios
-- `test/diagnose-network.html` - Diagnóstico de red
-
-### Cómo Usar los Tests
-
-1. Abre cualquier archivo de `test/` en tu navegador
-2. Sigue las instrucciones en pantalla
-3. Revisa la consola del navegador para logs
-4. Usa `test/verify-deployment.html` para verificar el deployment
-
-## 📚 Documentación
-
-### Guías Disponibles
-
-- **`guide/QUICK_START.md`** - Inicio rápido
-- **`guide/TWILIO_SETUP.md`** - Configuración de Twilio
-- **`guide/SMS_AUTH_SETUP.md`** - Autenticación por SMS
-- **`guide/PLAYLIST_SETUP.md`** - Configuración de playlist
-- **`guide/SECURITY.md`** - Guía de seguridad
-
-### Configuración
-
-- **`src/config/config.production.js`** - Configuración de producción
-- **`src/config/config.example.js`** - Plantilla de configuración
-- **`src/config/config.js`** - Configuración general
-
-## 🔒 Seguridad
-
-### Credenciales
-
-- ✅ Todas las credenciales están centralizadas en `src/config/`
-- ✅ Los archivos de configuración están seguros para repositorios públicos
-- ✅ Las API keys tienen restricciones de dominio
-- ❌ Nunca commits credenciales reales en archivos de desarrollo
-
-### Archivos Sensibles
-
-- **Seguros para commit**: `src/config/config.production.js`
-- **Nunca commitear**: `.env`, `config.local.js`, `config.secret.js`
-
-## 🚀 Deployment
-
-### GitHub Pages (Recomendado)
-
-1. Sube el código a GitHub
-2. Ve a Settings > Pages
-3. Selecciona la rama principal
-4. El sitio estará en `https://[usuario].github.io/[repositorio]`
-
-### Servidor Local
-
-```bash
-# Con Python
-cd src/views
-python -m http.server 8000
-
-# Con Node.js
-npx serve src/views
-
-# Con PHP
-cd src/views
-php -S localhost:8000
+```
+commute/
+├── src/
+│   ├── assets/          # Static assets
+│   ├── components/      # Reusable components
+│   ├── config/          # Configuration files
+│   │   ├── config.example.js      # Example configuration
+│   │   ├── config.production.js   # Production config (public)
+│   │   └── config.local.js        # Local config (ignored by Git)
+│   ├── scripts/         # JavaScript files
+│   ├── styles/          # CSS files
+│   └── views/           # HTML pages
+├── public/
+│   └── image/           # Images and media
+├── test/                # Test files
+├── guide/               # Documentation
+└── README.md
 ```
 
-## 🤝 Contribución
+## ⚙️ Configuration
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+### Local Development
+Create `src/config/config.local.js` with your real credentials:
 
-## 📞 Soporte
+```javascript
+const CONFIG = {
+  TWILIO: {
+    ACCOUNT_SID: 'your_twilio_account_sid',
+    AUTH_TOKEN: 'your_twilio_auth_token',
+    PHONE_NUMBER: '+1234567890'
+  },
+  GOOGLE_OAUTH: {
+    CLIENT_ID: 'your_google_oauth_client_id',
+    CLIENT_SECRET: 'your_google_oauth_client_secret'
+  },
+  YOUTUBE: {
+    API_KEY: 'your_youtube_api_key'
+  },
+  GOOGLE_MAPS_API_KEY: 'your_google_maps_api_key',
+  GOOGLE_APPS_SCRIPT: {
+    MAIN: 'your_google_apps_script_url',
+    SHARED_RIDE: 'your_shared_ride_script_url',
+    SUMMARY: 'your_summary_script_url'
+  }
+};
+```
 
-- **Documentación**: Revisa los archivos en `guide/`
-- **Testing**: Usa los archivos en `test/`
-- **Configuración**: Consulta `src/config/`
+### Production Deployment
+The `config.production.js` file contains placeholder values for public deployment. For production:
 
-## 📄 Licencia
+1. Use environment variables in your hosting platform
+2. Or replace the placeholder values with restricted API keys
+3. Never commit real secrets to the repository
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+## 🔧 Features
+
+- **Ride Sharing**: Book shared rides with other commuters
+- **Personal Rides**: Reserve private rides for yourself
+- **Music Integration**: Collaborative YouTube playlists
+- **SMS Notifications**: Real-time updates via Twilio
+- **Google Maps Integration**: Route planning and navigation
+- **User Authentication**: Phone number verification
+- **Responsive Design**: Works on desktop and mobile
+
+## 📱 Pages
+
+- **Home**: `src/views/index.html` - Main application interface
+- **Login**: `src/views/Login.html` - User authentication
+- **Register**: `src/views/register.html` - User registration
+- **Shared Ride**: `src/views/Shared Ride.html` - Book shared rides
+- **Personal Ride**: `src/views/Personal Ride.html` - Book private rides
+- **My Rides**: `src/views/My Rides.html` - View ride history
+- **Playlist**: `src/views/CommutePlaylist.html` - Music management
+- **Q&A**: `src/views/qa.html` - Help and support
+
+## 🛠️ Development
+
+### File Structure Changes
+All HTML files have been updated with correct relative paths:
+- Scripts: `../scripts/filename.js`
+- Styles: `../styles/filename.css`
+- Images: `../../public/image/filename.png`
+- Config: `../config/config.production.js`
+
+### Adding New Features
+1. Place HTML files in `src/views/`
+2. Place JavaScript files in `src/scripts/`
+3. Place CSS files in `src/styles/`
+4. Place images in `public/image/`
+5. Update paths in HTML files accordingly
+
+## 🔒 Security
+
+- Sensitive configuration is stored in `config.local.js` (ignored by Git)
+- Production config uses placeholder values
+- API keys should be restricted to specific domains
+- SMS verification prevents unauthorized access
+
+## 📚 Documentation
+
+See the `guide/` directory for detailed setup instructions:
+- `guide/SECURITY.md` - Security best practices
+- `guide/TWILIO_SETUP.md` - Twilio configuration
+- `guide/QUICK_START.md` - Quick setup guide
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Support
+
+For support and questions:
+- Check the `guide/` directory for documentation
+- Review the Q&A page in the application
+- Open an issue on GitHub
 
 ---
 
-**Commut** - Optimizando el transporte urbano, un viaje a la vez. 🚗✨ 
+**Note**: This application requires proper API keys and credentials to function. Make sure to set up all required services before testing.

@@ -1,577 +1,584 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shared Ride</title>
-    <style>
-      @font-face {
-        font-family: 'UberMove';
-        src: url('https://assets.uber.com/fonts/v2/UberMove-Medium.woff2') format('woff2');
-        font-weight: 500;
-        font-style: normal;
-        font-display: swap;
-      }
-      @font-face {
-        font-family: 'UberMoveText';
-        src: url('https://assets.uber.com/fonts/v2/UberMoveText-Regular.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-      }
+  <style>
+    @font-face {
+      font-family: 'UberMove';
+      src: url('https://assets.uber.com/fonts/v2/UberMove-Medium.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'UberMoveText';
+      src: url('https://assets.uber.com/fonts/v2/UberMoveText-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    body {
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Main layout container */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      width: 95%;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Background image section (2 columns) */
+    .background-section {
+      background-image: url('https://pedrobrandy.github.io/commute/image/ShareRidesImage.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: -31px;
+    }
+
+    /* Mobile background image */
+    @media (max-width: 768px) {
       body {
-        font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        min-height: 100vh;
+        height: 100vh;
+        overflow: hidden;
+        padding: 0;
         margin: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        overflow-x: hidden;
       }
 
-      /* Main layout container */
       .main-layout {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        width: 95%;
+        height: auto;
         min-height: 100vh;
-        position: relative;
+        width: 100%;
+        overflow: hidden;
       }
 
-      /* Background image section (2 columns) */
       .background-section {
-        background-image: url('https://pedrobrandy.github.io/commute/image/ShareRidesImage.png');
+        background-image: url('image/MyShareRideMobile.png');
         background-size: cover;
         background-position: center;
-        background-repeat: no-repeat;
+      }
+    }
+
+    /* Form overlay on background image */
+    .form-overlay {
+      background: transparent;
+      backdrop-filter: none;
+      border-radius: 0;
+      padding: 20px;
+      box-shadow: none;
+      max-width: 200px;
+      width: 80%;
+      margin: 0;
+      position: absolute;
+      bottom: 73px;
+      left: 30px;
+      z-index: 10;
+    }
+
+    /* Benefits section (1 column) */
+    .benefits-section {
+      background: #f8f9fa;
+      padding: 40px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-right: -33px;
+    }
+
+    /* Benefits styling */
+    .benefits-container {
+      max-width: 600px;
+      /* Increased from 350px for desktop */
+    }
+
+    .benefits-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1B263B;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .benefits-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      padding: 0;
+    }
+
+    .benefit-icon {
+      width: 133px;
+      /* Keep large size on mobile */
+      height: 100px;
+      /* Keep large size on mobile */
+      flex-shrink: 0;
+      margin-top: 0;
+    }
+
+    .benefit-content {
+      flex: 1;
+    }
+
+    .benefit-text {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #415A77;
+      margin: 0;
+    }
+
+    .terms-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: #0078D4;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .terms-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive design */
+    @media (max-width: 1024px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .background-section {
+        min-height: 400px;
         position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: -31px;
       }
 
-      /* Mobile background image */
-      @media (max-width: 768px) {
-        body {
-          min-height: 100vh;
-          height: 100vh;
-          overflow: hidden;
-          padding: 0;
-          margin: 0;
-        }
-        
-        .main-layout {
-          height: auto;
-          min-height: 100vh;
-          width: 100%;
-          overflow: hidden;
-        }
-        
-        .background-section {
-          background-image: url('image/MyShareRideMobile.png');
-          background-size: cover;
-          background-position: center;
-        }
-      }
-
-      /* Form overlay on background image */
       .form-overlay {
-        background: transparent;
-        backdrop-filter: none;
-        border-radius: 0;
-        padding: 20px;
-        box-shadow: none;
-        max-width: 200px;
-        width: 80%;
-        margin: 0;
         position: absolute;
-        bottom: 73px;
-        left: 30px;
-        z-index: 10;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 220px;
       }
 
-      /* Benefits section (1 column) */
       .benefits-section {
-        background: #f8f9fa;
-        padding: 40px 30px;
+        padding: 30px 20px;
+
+      }
+
+      .benefits-container {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 2px;
+      }
+
+      .main-layout {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        margin-right: -33px;
+        gap: 0;
+        height: auto;
+        min-height: 100vh;
       }
 
-      /* Benefits styling */
+      .ride-selector-buttons {
+        position: static;
+        justify-content: center;
+        margin: 20px 0;
+        gap: 15px;
+        order: 1;
+      }
+
+      .background-section {
+        min-height: 400px;
+        order: 2;
+        border-radius: 25px;
+      }
+
+      .form-overlay {
+        max-width: 280px;
+        padding: 20px;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .benefits-section {
+        padding: 20px 15px;
+        order: 3;
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
+        min-height: auto;
+        margin-left: 10px;
+      }
+
       .benefits-container {
-        max-width: 600px; /* Increased from 350px for desktop */
+        max-width: 100%;
+        width: 100%;
       }
 
       .benefits-title {
-        font-size: 24px;
-        font-weight: 600;
-        color: #1B263B;
-        margin-bottom: 30px;
-        text-align: center;
+        font-size: 20px;
+        margin-bottom: 20px;
       }
 
       .benefits-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
+        gap: 15px;
       }
 
       .benefit-item {
-        display: flex;
+        gap: 12px;
         align-items: flex-start;
-        gap: 15px;
-        padding: 0;
       }
 
       .benefit-icon {
-        width: 133px; /* Keep large size on mobile */
-        height: 100px; /* Keep large size on mobile */
-        flex-shrink: 0;
+        width: 80px;
+        height: 60px;
         margin-top: 0;
       }
 
-      .benefit-content {
-        flex: 1;
-      }
-
       .benefit-text {
-        font-size: 16px;
-        line-height: 1.5;
-        color: #415A77;
-        margin: 0;
-      }
-
-      .terms-link {
-        display: inline-block;
-        margin-top: 30px;
-        color: #0078D4;
-        text-decoration: none;
-        font-weight: 500;
         font-size: 14px;
-        text-align: center;
-        width: 100%;
+        line-height: 1.4;
       }
 
-      .terms-link:hover {
-        text-decoration: underline;
-      }
-
-      /* Responsive design */
-      @media (max-width: 1024px) {
-        .main-layout {
-          grid-template-columns: 1fr;
-          grid-template-rows: auto auto;
-        }
-        
-        .background-section {
-          min-height: 400px;
-          position: relative;
-        }
-        
-        .form-overlay {
-          position: absolute;
-          bottom: 25px;
-          left: 50%;
-          transform: translateX(-50%);
-          max-width: 220px;
-        }
-        
-        .benefits-section {
-          padding: 30px 20px;
-
-        }
-        
-        .benefits-container {
-          max-width: 100%;
-        }
-      }
-
-      @media (max-width: 768px) {
-        body {
-          padding-top: 2px;
-        }
-        
-        .main-layout {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-          height: auto;
-          min-height: 100vh;
-        }
-        
-        .ride-selector-buttons {
-          position: static;
-          justify-content: center;
-          margin: 20px 0;
-          gap: 15px;
-          order: 1;
-        }
-        
-        .background-section {
-          min-height: 400px;
-          order: 2;
-          border-radius: 25px;
-        }
-        
-        .form-overlay {
-          max-width: 280px;
-          padding: 20px;
-          bottom: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-        }
-        
-        .benefits-section {
-          padding: 20px 15px;
-          order: 3;
-          flex: 1;
-          display: flex;
-          align-items: flex-start;
-          min-height: auto;
-          margin-left: 10px;
-        }
-        
-        .benefits-container {
-          max-width: 100%;
-          width: 100%;
-        }
-        
-        .benefits-title {
-          font-size: 20px;
-          margin-bottom: 20px;
-        }
-        
-        .benefits-list {
-          gap: 15px;
-        }
-        
-        .benefit-item {
-          gap: 12px;
-          align-items: flex-start;
-        }
-        
-        .benefit-icon {
-          width: 80px;
-          height: 60px;
-          margin-top: 0;
-        }
-        
-        .benefit-text {
-          font-size: 14px;
-          line-height: 1.4;
-        }
-        
-        .form-fields {
-          gap: 15px;
-        }
-        
-        .input-group {
-          gap: 6px;
-        }
-        
-        /* Specific styles for the date and time row on mobile */
-        .input-group:first-child {
-          display: flex !important;
-          flex-direction: row !important;
-          gap: 8px !important;
-          align-items: stretch !important;
-        }
-        
-        .input-group:first-child .input-with-icon {
-          flex: 1 !important;
-          min-width: 0 !important;
-        }
-        
-        .input-group:first-child .input-with-icon input,
-        .input-group:first-child .input-with-icon select {
-          width: 100% !important;
-          min-width: 0 !important;
-          box-sizing: border-box !important;
-        }
-        
-        .input-group label {
-          font-size: 13px;
-          font-weight: 600;
-        }
-        
-        .input-group input,
-        .input-group select {
-          padding: 10px 10px 10px 40px;
-          font-size: 16px;
-          min-height: 50px;
-          color: #666;
-        }
-        
-        .input-icon {
-          width: 18px;
-          height: 18px;
-          left: 10px;
-        }
-        
-        button[type="submit"] {
-          padding: 14px 24px;
-          font-size: 16px;
-          border-radius: 8px;
-          min-height: 44px;
-          font-weight: 600;
-        }
-        
-        .benefits-title {
-          font-size: 20px;
-          margin-bottom: 20px;
-        }
-        
-        .benefits-list {
-          gap: 15px;
-        }
-        
-        .benefit-text {
-          font-size: 14px;
-        }
-      }
-
-      .form-container {
-        max-width: 500px;
-        width: 100%;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 20px;
-      }
-
-      /* Adjust form elements for smaller size */
       .form-fields {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+        gap: 15px;
       }
 
       .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
+        gap: 6px;
+      }
+
+      /* Specific styles for the date and time row on mobile */
+      .input-group:first-child {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        align-items: stretch !important;
+      }
+
+      .input-group:first-child .input-with-icon {
+        flex: 1 !important;
+        min-width: 0 !important;
+      }
+
+      .input-group:first-child .input-with-icon input,
+      .input-group:first-child .input-with-icon select {
+        width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
       }
 
       .input-group label {
+        font-size: 13px;
         font-weight: 600;
-        color: #1B263B;
-        font-size: 12px;
-      }
-
-      .input-with-icon {
-        position: relative;
-        display: flex;
-        align-items: center;
-      }
-
-      .input-icon {
-        position: absolute;
-        left: 12px;
-        width: 18px;
-        height: 18px;
-        z-index: 2;
-        filter: brightness(0) saturate(100%) invert(15%) sepia(15%) saturate(1034%) hue-rotate(202deg) brightness(95%) contrast(96%);
       }
 
       .input-group input,
       .input-group select {
-        padding: 15px 15px 15px 40px;
-        border: 2px solid white;
-        border-radius: 6px;
+        padding: 10px 10px 10px 40px;
         font-size: 16px;
-        transition: border-color 0.3s ease;
-        width: 100%;
-        box-sizing: border-box;
+        min-height: 50px;
         color: #666;
-        background-color: white;
       }
 
-      .input-group input::placeholder,
-      .input-group select {
-        color: #666;
-        font-size: 16px;
-      }
-
-      .input-group select option {
-        color: #666;
-        font-size: 16px;
-      }
-
-      .input-group select option[value=""] {
-        color: #666;
-        font-style: normal;
-      }
-
-      .input-group input:focus,
-      .input-group select:focus {
-        outline: none;
-        border-color: #778DA9;
-      }
-
-      .input-group input:invalid,
-      .input-group select:invalid {
-        outline: #778DA9;
-        border-color: #E0E1DD;
-      }
-
-      /* Loading state for time select */
-      .input-group select option[value=""] {
-        color: #E0E1DD;
-        outline: none;
-        font-style: italic;
-      }
-
-      /* Success state for time select */
-      .input-group select:not([value=""]) {
-        border-color: white;
-        outline: none;
+      .input-icon {
+        width: 18px;
+        height: 18px;
+        left: 10px;
       }
 
       button[type="submit"] {
-        background-color: #0D1B2A;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-size: 12px;
+        padding: 14px 24px;
+        font-size: 16px;
+        border-radius: 8px;
+        min-height: 44px;
         font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
       }
 
-      button[type="submit"]:hover {
-        background-color: #E0E1DD;
-        color: black;
+      .benefits-title {
+        font-size: 20px;
+        margin-bottom: 20px;
       }
 
-      button[type="submit"]:disabled {
-        background-color: #E0E1DD;
-        cursor: not-allowed;
+      .benefits-list {
+        gap: 15px;
       }
 
-      /* Error message styling */
-      .error-message {
-        color: #dc3545;
+      .benefit-text {
         font-size: 14px;
-        margin-top: 5px;
-        display: none;
+      }
+    }
+
+    .form-container {
+      max-width: 500px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px;
+    }
+
+    /* Adjust form elements for smaller size */
+    .form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      color: #1B263B;
+      font-size: 12px;
+    }
+
+    .input-with-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      width: 18px;
+      height: 18px;
+      z-index: 2;
+      filter: brightness(0) saturate(100%) invert(15%) sepia(15%) saturate(1034%) hue-rotate(202deg) brightness(95%) contrast(96%);
+    }
+
+    .input-group input,
+    .input-group select {
+      padding: 15px 15px 15px 40px;
+      border: 2px solid white;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      width: 100%;
+      box-sizing: border-box;
+      color: #666;
+      background-color: white;
+    }
+
+    .input-group input::placeholder,
+    .input-group select {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .input-group select option {
+      color: #666;
+      font-size: 16px;
+    }
+
+    .input-group select option[value=""] {
+      color: #666;
+      font-style: normal;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: #778DA9;
+    }
+
+    .input-group input:invalid,
+    .input-group select:invalid {
+      outline: #778DA9;
+      border-color: #E0E1DD;
+    }
+
+    /* Loading state for time select */
+    .input-group select option[value=""] {
+      color: #E0E1DD;
+      outline: none;
+      font-style: italic;
+    }
+
+    /* Success state for time select */
+    .input-group select:not([value=""]) {
+      border-color: white;
+      outline: none;
+    }
+
+    button[type="submit"] {
+      background-color: #0D1B2A;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #E0E1DD;
+      color: black;
+    }
+
+    button[type="submit"]:disabled {
+      background-color: #E0E1DD;
+      cursor: not-allowed;
+    }
+
+    /* Error message styling */
+    .error-message {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Loading indicator */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* Success indicator */
+    .success {
+      border-color: #28a745 !important;
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    #summary,
+    #sorryMessage {
+      display: none;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-size: 1rem;
+      line-height: 1.4;
+      width: 80%;
+      max-width: 600px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+    }
+
+    #summaryContent {
+      margin-bottom: 20px;
+    }
+
+    #map {
+      width: 100%;
+      height: 300px;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    p.notice {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #cc0000;
+    }
+
+    #sorryMessage {
+      background: #ffe6e6;
+      color: #cc0000;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 600px) {
+
+      .main-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
       }
 
-      .error-message.show {
-        display: block;
+      .background-section {
+        min-height: 520px;
       }
 
-      /* Loading indicator */
-      .loading {
-        opacity: 0.6;
-        pointer-events: none;
+      .form-overlay {
+        margin: 2px;
+        padding: 20px;
+        max-width: 100%;
       }
 
-      /* Success indicator */
-      .success {
-        border-color: #28a745 !important;
-        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+      .benefits-section {
+        padding: 20px 15px;
+        margin-left: 10px;
+      }
+
+      .benefits-container {
+        max-width: 100%;
+      }
+
+      .benefits-title {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      .benefits-list {
+        gap: 15px;
+      }
+
+      .benefit-text {
+        font-size: 14px;
       }
 
       #summary,
       #sorryMessage {
-        display: none;
-        margin: 20px auto;
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        font-size: 1rem;
-        line-height: 1.4;
-        width: 80%;
-        max-width: 600px;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10000;
+        width: 95%;
+        margin: 10px;
+        padding: 15px;
       }
+    }
 
-      #summaryContent {
-        margin-bottom: 20px;
-      }
-
-      #map {
-        width: 100%;
-        height: 300px;
-        margin-top: 20px;
-        border: 1px solid #ccc;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      }
-
-      p.notice {
-        margin-top: 20px;
-        font-weight: bold;
-        color: #cc0000;
-      }
-
-      #sorryMessage {
-        background: #ffe6e6;
-        color: #cc0000;
-        text-align: center;
-        font-weight: bold;
-        font-size: 1.1rem;
-      }
-
-      @media (max-width: 600px) {
-
-        .main-layout {
-          grid-template-columns: 1fr;
-          grid-template-rows: auto auto;
-        }
-        
-        .background-section {
-          min-height: 520px;
-        }
-        
-        .form-overlay {
-          margin: 2px;
-          padding: 20px;
-          max-width: 100%;
-        }
-        
-        .benefits-section {
-          padding: 20px 15px;
-          margin-left: 10px;
-        }
-        
-        .benefits-container {
-          max-width: 100%;
-        }
-        
-        .benefits-title {
-          font-size: 18px;
-          margin-bottom: 20px;
-        }
-        
-        .benefits-list {
-          gap: 15px;
-        }
-        
-        .benefit-text {
-          font-size: 14px;
-        }
-
-        #summary,
-        #sorryMessage {
-          width: 95%;
-          margin: 10px;
-          padding: 15px;
-        }
-      }
-      #preconfirmControls {
+    #preconfirmControls {
       margin-top: 20px;
       text-align: center;
     }
@@ -659,7 +666,7 @@
       background: white;
       border: 1px solid #E0E1DD;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       z-index: 1000;
       display: none;
       margin-top: 4px;
@@ -855,13 +862,13 @@
       transition: all 0.3s ease;
       border: 2px solid #E0E1DD;
       background: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .ride-option:hover {
       background-color: #f8f9fa;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
 
     .ride-option span {
@@ -923,7 +930,8 @@
       border: 2px solid #e0e0e0;
       border-radius: 8px;
       padding: 12px 14px;
-      font-size: 16px; /* Prevents zoom on iPhone */
+      font-size: 16px;
+      /* Prevents zoom on iPhone */
       font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
       color: #adb5bd;
       width: 100%;
@@ -946,29 +954,30 @@
         border-radius: 8px;
         padding: 12px 14px;
         font-size: 16px;
-        min-height: 44px; /* Minimum touch target size for iOS */
+        min-height: 44px;
+        /* Minimum touch target size for iOS */
       }
-      
+
       input[type="time"]::-webkit-datetime-edit {
         padding: 0;
         color: #E0E1DD;
       }
-      
+
       input[type="time"]::-webkit-datetime-edit-fields-wrapper {
         padding: 0;
       }
-      
+
       input[type="time"]::-webkit-datetime-edit-text {
         padding: 0 2px;
         color: #666;
       }
-      
+
       input[type="time"]::-webkit-datetime-edit-hour-field,
       input[type="time"]::-webkit-datetime-edit-minute-field {
         padding: 0 2px;
         color: grey;
       }
-      
+
       input[type="time"]::-webkit-calendar-picker-indicator {
         background: transparent;
         color: transparent;
@@ -1004,9 +1013,11 @@
       border: 2px solid #E0E1DD;
       border-radius: 8px;
       padding: 12px 14px;
-      font-size: 16px; /* Prevents zoom on iPhone */
+      font-size: 16px;
+      /* Prevents zoom on iPhone */
       font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      color: #1B263B !important; /* Force black color for iPhone */
+      color: #1B263B !important;
+      /* Force black color for iPhone */
       width: 100%;
       box-sizing: border-box;
       transition: all 0.3s ease;
@@ -1028,11 +1039,12 @@
         border-radius: 8px;
         padding: 12px 14px;
         font-size: 16px;
-        min-height: 44px; /* Minimum touch target size for iOS */
+        min-height: 44px;
+        /* Minimum touch target size for iOS */
         color: #000 !important;
         text-align: right;
       }
-      
+
       select option {
         color: #000;
         background: white;
@@ -1048,21 +1060,24 @@
     @media (max-width: 480px) {
       body {
         min-height: 100vh;
-        height: auto; /* Allow natural height */
+        height: auto;
+        /* Allow natural height */
         overflow-x: hidden;
         padding: 0;
         margin: 0;
       }
-      
+
       .main-layout {
-        height: auto; /* Allow natural height */
+        height: auto;
+        /* Allow natural height */
         min-height: 100vh;
         width: 100%;
         overflow: hidden;
       }
 
       .background-section {
-        min-height: 397px; /* Even smaller for iPhone */
+        min-height: 397px;
+        /* Even smaller for iPhone */
         margin-left: 0px
       }
 
@@ -1074,27 +1089,28 @@
         min-height: auto;
         margin-right: 3px;
       }
-      
+
       .benefits-title {
         font-size: 18px;
         margin-bottom: 15px;
       }
-      
+
       .benefits-list {
         gap: 12px;
       }
-      
+
       .benefit-item {
         gap: 10px;
         align-items: flex-start;
       }
-      
+
       .benefit-icon {
-        width: 70px; /* Even smaller for iPhone */
+        width: 70px;
+        /* Even smaller for iPhone */
         height: 53px;
         margin-top: 0;
       }
-      
+
       .benefit-text {
         font-size: 13px;
         line-height: 1.3;
@@ -1105,7 +1121,7 @@
         padding: 25px;
         bottom: -1px;
       }
-      
+
       .input-group input,
       .input-group select {
         padding: 10px 10px 10px 40px;
@@ -1113,27 +1129,27 @@
         min-height: 50px;
         color: #666;
       }
-      
+
       .input-icon {
         width: 20px;
         height: 20px;
         left: 12px;
       }
-      
+
       .input-group label {
         font-size: 14px;
       }
-      
+
       button[type="submit"] {
         padding: 16px 28px;
         font-size: 18px;
         min-height: 50px;
       }
-      
+
       .form-fields {
         gap: 8px;
       }
-      
+
       .input-group {
         gap: 8px;
       }
@@ -1146,27 +1162,28 @@
         padding: 15px;
         bottom: 15px;
       }
-      
+
       .input-group.location-row {
         gap: 6px !important;
       }
-      
+
       .input-group.location-row .input-with-icon input {
         font-size: 16px !important;
         padding: 10px 10px 10px 30px !important;
         min-height: 40px !important;
         color: #666 !important;
       }
-      
+
       .input-group.location-row .input-icon {
         width: 18px !important;
         height: 18px !important;
         left: 8px !important;
       }
     }
-    
+
     /* Ensure proper touch targets for iOS */
     @media (max-width: 768px) {
+
       .input-group input,
       .input-group select,
       button[type="submit"] {
@@ -1174,9 +1191,10 @@
         -moz-appearance: none;
         appearance: none;
         border-radius: 8px;
-        min-height: 44px; /* iOS recommended minimum touch target */
+        min-height: 44px;
+        /* iOS recommended minimum touch target */
       }
-      
+
       .input-group select {
         background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22/%3E%3C/svg%3E");
         background-repeat: no-repeat;
@@ -1193,25 +1211,25 @@
       gap: 10px;
       align-items: stretch;
     }
-    
+
     .location-row .input-with-icon {
       flex: 1;
       min-width: 0;
     }
-    
+
     .location-row .input-with-icon input {
       width: 100%;
       min-width: 0;
       box-sizing: border-box;
     }
-    
+
     /* Ensure proper mobile layout */
     @media (max-width: 768px) {
       .location-row {
         gap: 8px;
       }
     }
-    
+
     @media (max-width: 480px) {
       .location-row {
         gap: 6px;
@@ -1225,20 +1243,21 @@
       gap: 8px !important;
       align-items: stretch !important;
     }
-    
+
     .input-group.location-row .input-with-icon {
       flex: 1 !important;
       min-width: 0 !important;
     }
-    
+
     .input-group.location-row .input-with-icon input {
       width: 100% !important;
       min-width: 0 !important;
       box-sizing: border-box !important;
     }
-    </style>
+  </style>
 
 </head>
+
 <body>
   <!-- Main 3-column layout -->
   <div class="main-layout">
@@ -1266,7 +1285,9 @@
                   <div class="calendar-header">
                     <button class="calendar-nav" id="prevMonth" disabled>
                       <svg viewBox="0 0 24 24" width="16" height="16">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9 12C9 12.2652 9.10536 12.5196 9.29289 12.7071L13.2929 16.7071C13.6834 17.0976 14.3166 17.0976 14.7071 16.7071C15.0976 16.3166 15.0976 15.6834 14.7071 15.2929L11.4142 12L14.7071 8.70711C15.0976 8.31658 15.0976 7.68342 14.7071 7.29289C14.3166 6.90237 13.6834 6.90237 13.2929 7.29289L9.29289 11.2929C9.10536 11.4804 9 11.7348 9 12Z"></path>
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M9 12C9 12.2652 9.10536 12.5196 9.29289 12.7071L13.2929 16.7071C13.6834 17.0976 14.3166 17.0976 14.7071 16.7071C15.0976 16.3166 15.0976 15.6834 14.7071 15.2929L11.4142 12L14.7071 8.70711C15.0976 8.31658 15.0976 7.68342 14.7071 7.29289C14.3166 6.90237 13.6834 6.90237 13.2929 7.29289L9.29289 11.2929C9.10536 11.4804 9 11.7348 9 12Z">
+                        </path>
                       </svg>
                     </button>
                     <div class="calendar-title">
@@ -1275,7 +1296,9 @@
                     </div>
                     <button class="calendar-nav" id="nextMonth">
                       <svg viewBox="0 0 24 24" width="16" height="16">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.29289 7.29289C8.90237 7.68342 8.90237 8.31658 9.29289 8.70711L12.5858 12L9.29289 15.2929C8.90237 15.6834 8.90237 16.3166 9.29289 16.7071C9.68342 17.0976 10.3166 17.0976 10.7071 16.7071L14.7071 12.7071C14.8946 12.5196 15 12.2652 15 12C15 11.7348 14.8946 11.4804 14.7071 11.2929L10.7071 7.29289C10.3166 6.90237 9.68342 6.90237 9.29289 7.29289Z"></path>
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M9.29289 7.29289C8.90237 7.68342 8.90237 8.31658 9.29289 8.70711L12.5858 12L9.29289 15.2929C8.90237 15.6834 8.90237 16.3166 9.29289 16.7071C9.68342 17.0976 10.3166 17.0976 10.7071 16.7071L14.7071 12.7071C14.8946 12.5196 15 12.2652 15 12C15 11.7348 14.8946 11.4804 14.7071 11.2929L10.7071 7.29289C10.3166 6.90237 9.68342 6.90237 9.29289 7.29289Z">
+                        </path>
                       </svg>
                     </button>
                   </div>
@@ -1296,12 +1319,14 @@
             <!-- Second line: Pickup and Drop-off Location -->
             <div class="input-group location-row">
               <div class="input-with-icon pickup-field">
-                <img src="https://www.iconpacks.net/icons/2/free-location-icon-2955-thumb.png" alt="Location" class="input-icon">
+                <img src="https://www.iconpacks.net/icons/2/free-location-icon-2955-thumb.png" alt="Location"
+                  class="input-icon">
                 <input type="text" id="pickup" placeholder="Pickup Location" required />
               </div>
 
               <div class="input-with-icon dropoff-field">
-                <img src="https://www.iconpacks.net/icons/2/free-location-icon-2955-thumb.png" alt="Location" class="input-icon">
+                <img src="https://www.iconpacks.net/icons/2/free-location-icon-2955-thumb.png" alt="Location"
+                  class="input-icon">
                 <input type="text" id="dropoff" placeholder="Drop-off Location" required />
               </div>
             </div>
@@ -1309,7 +1334,9 @@
             <!-- Third line: Trip Start Time -->
             <div class="input-group">
               <div class="input-with-icon">
-                <img src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png" alt="Time" class="input-icon">
+                <img
+                  src="https://static.vecteezy.com/system/resources/previews/017/259/098/non_2x/clock-icon-time-sign-free-png.png"
+                  alt="Time" class="input-icon">
                 <select id="time" required>
                   <option value="">Trip Start Time (to First Stop)</option>
                 </select>
@@ -1328,48 +1355,57 @@
       <div class="benefits-container">
         <h3 class="benefits-title">How it work?</h3>
         <ul class="benefits-list">
-          <li class="benefit-item" aria-label="Step 1: Tell us your route and hang tight — we'll match you with others going your way">
+          <li class="benefit-item"
+            aria-label="Step 1: Tell us your route and hang tight — we'll match you with others going your way">
             <div class="benefit-icon">
-              <img alt="" src="https://pedrobrandy.github.io/commute/image/Step1Commute.png" class="benefit-icon">
+              <img alt="" src="../../public/image/Step1Commute.png" class="benefit-icon">
             </div>
             <div class="benefit-content">
               <div>
-                <p class="benefit-text">Step 1: Tell us your route and hang tight — we'll match you with others going your way.</p>
+                <p class="benefit-text">Step 1: Tell us your route and hang tight — we'll match you with others going
+                  your way.</p>
               </div>
             </div>
           </li>
-          <li class="benefit-item" aria-label="Step 2: Once the ride is full, confirm your estimated arrival time. Not a good fit? You can cancel up to 90 minutes before. Otherwise, welcome aboard!">
+          <li class="benefit-item"
+            aria-label="Step 2: Once the ride is full, confirm your estimated arrival time. Not a good fit? You can cancel up to 90 minutes before. Otherwise, welcome aboard!">
             <div class="benefit-icon">
-              <img alt="" src="https://pedrobrandy.github.io/commute/image/Step2Commute.png" class="benefit-icon">
+              <img alt="" src="../../public/image/Step2Commute.png" class="benefit-icon">
             </div>
             <div class="benefit-content">
               <div>
-                <p class="benefit-text">Step 2: Once the ride is full, confirm your estimated arrival time. Not a good fit? You can cancel up to 90 minutes before. Otherwise, welcome aboard!</p>
+                <p class="benefit-text">Step 2: Once the ride is full, confirm your estimated arrival time. Not a good
+                  fit? You can cancel up to 90 minutes before. Otherwise, welcome aboard!</p>
               </div>
             </div>
           </li>
-          <li class="benefit-item" aria-label="Step 3: Got a long ride? Pick your favorite music vibe and share some tunes with fellow riders.">
+          <li class="benefit-item"
+            aria-label="Step 3: Got a long ride? Pick your favorite music vibe and share some tunes with fellow riders.">
             <div class="benefit-icon">
-              <img alt="" src="https://pedrobrandy.github.io/commute/image/Step3Commute.png" class="benefit-icon">
+              <img alt="" src="../../public/image/Step3Commute.png" class="benefit-icon">
             </div>
             <div class="benefit-content">
               <div>
-                <p class="benefit-text">Step 3: Got a long ride? Pick your favorite music vibe and share some tunes with fellow riders.</p>
+                <p class="benefit-text">Step 3: Got a long ride? Pick your favorite music vibe and share some tunes with
+                  fellow riders.</p>
               </div>
             </div>
           </li>
-          <li class="benefit-item" aria-label="Step 4: Arrive at work or home on time, comfortably and stress-free — no last-minute cancellations, just good company and smooth travels.">
+          <li class="benefit-item"
+            aria-label="Step 4: Arrive at work or home on time, comfortably and stress-free — no last-minute cancellations, just good company and smooth travels.">
             <div class="benefit-icon">
-              <img alt="" src="https://pedrobrandy.github.io/commute/image/Step4Commute.png" class="benefit-icon">
+              <img alt="" src="../../public/image/Step4Commute.png" class="benefit-icon">
             </div>
             <div class="benefit-content">
               <div>
-                <p class="benefit-text">Step 4: Arrive at work or home on time, comfortably and stress-free — no last-minute cancellations, just good company and smooth travels.</p>
+                <p class="benefit-text">Step 4: Arrive at work or home on time, comfortably and stress-free — no
+                  last-minute cancellations, just good company and smooth travels.</p>
               </div>
             </div>
           </li>
         </ul>
-        <a aria-label="" href="https://www.uber.com/ca/en/ride/how-it-works/reserve/#see-prices" target="_self" class="terms-link">See terms</a>
+        <a aria-label="" href="https://www.uber.com/ca/en/ride/how-it-works/reserve/#see-prices" target="_self"
+          class="terms-link">See terms</a>
       </div>
     </div>
   </div>
@@ -1385,183 +1421,184 @@
   </div>
 
   <div id="sorryMessage" style="display: none;">
-    <p>Sorry, this route is not available for shared rides. Please try a different route or contact us for assistance.</p>
+    <p>Sorry, this route is not available for shared rides. Please try a different route or contact us for assistance.
+    </p>
   </div>
 
-  <script src="google-maps-utils.js"></script>
-  <script src="auth.js"></script>
-  <script src="config.production.js"></script>
+  <script src="../scripts/google-maps-utils.js"></script>
+  <script src="../scripts/auth.js"></script>
+  <script src="../config/config.production.js"></script>
   <script>
-  let directionsService, directionsRenderer;
-  const additionalMinutes = 10;
-  let googleMapsUtils;
+    let directionsService, directionsRenderer;
+    const additionalMinutes = 10;
+    let googleMapsUtils;
 
-  async function initMap() {
+    async function initMap() {
       console.log('Initializing Google Maps...');
-      
+
       try {
-          // Initialize Google Maps utilities
-          googleMapsUtils = new GoogleMapsUtils(CONFIG.GOOGLE_MAPS_API_KEY);
-          await googleMapsUtils.init();
+        // Initialize Google Maps utilities
+        googleMapsUtils = new GoogleMapsUtils(CONFIG.GOOGLE_MAPS_API_KEY);
+        await googleMapsUtils.init();
 
-          // Initialize directions service
-          const directions = googleMapsUtils.initDirectionsService();
-          if (directions) {
-              directionsService = directions.directionsService;
-              directionsRenderer = directions.directionsRenderer;
-          }
+        // Initialize directions service
+        const directions = googleMapsUtils.initDirectionsService();
+        if (directions) {
+          directionsService = directions.directionsService;
+          directionsRenderer = directions.directionsRenderer;
+        }
 
-          // Initialize autocomplete for pickup and dropoff
-          const pickupInput = document.getElementById("pickup");
-          const dropoffInput = document.getElementById("dropoff");
+        // Initialize autocomplete for pickup and dropoff
+        const pickupInput = document.getElementById("pickup");
+        const dropoffInput = document.getElementById("dropoff");
 
-          if (pickupInput) {
-              googleMapsUtils.initAutocomplete(pickupInput);
-          }
+        if (pickupInput) {
+          googleMapsUtils.initAutocomplete(pickupInput);
+        }
 
-          if (dropoffInput) {
-              googleMapsUtils.initAutocomplete(dropoffInput);
-          }
+        if (dropoffInput) {
+          googleMapsUtils.initAutocomplete(dropoffInput);
+        }
 
-          console.log('Google Maps initialized successfully');
+        console.log('Google Maps initialized successfully');
       } catch (error) {
-          console.error('Error initializing Google Maps:', error);
+        console.error('Error initializing Google Maps:', error);
       }
     }
 
     function getRouteInfo(origin, destination, travelMode) {
-        return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         directionsService.route(
-            {
+          {
             origin,
             destination,
             travelMode,
-            },
-            (response, status) => {
+          },
+          (response, status) => {
             if (status === "OK") {
-                const leg = response.routes[0].legs[0];
-                resolve({
+              const leg = response.routes[0].legs[0];
+              resolve({
                 distanceText: leg.distance.text,
                 distanceValue: leg.distance.value,
                 durationValue: leg.duration.value,
                 durationText: leg.duration.text,
-                });
+              });
             } else {
-                reject("Directions request failed due to " + status);
+              reject("Directions request failed due to " + status);
             }
-            }
+          }
         );
-        });
+      });
     }
 
     function calculatePrice(distanceKm) {
-        if (distanceKm >= 100) return 25;
-        if (distanceKm >= 80) return 20;
-        if (distanceKm >= 35) return 15;
-        return 0;
+      if (distanceKm >= 100) return 25;
+      if (distanceKm >= 80) return 20;
+      if (distanceKm >= 35) return 15;
+      return 0;
     }
 
     function convertTimeToHHMMSS(timeStr) {
-        // Handle undefined or empty time strings
-        if (!timeStr || typeof timeStr !== 'string') {
-            console.warn('Invalid time string:', timeStr);
-            return "00:00:00";
-        }
-        
-        // Handle 24-hour format (e.g., "14:30")
-        const time24Match = timeStr.match(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/);
-        if (time24Match) {
-            const hours = time24Match[1].padStart(2, '0');
-            const minutes = time24Match[2];
-            return `${hours}:${minutes}:00`;
-        }
-        
-        // Handle 12-hour format (e.g., "530am", "1pm", "9pm")
-        const match = timeStr.match(/(\d{1,2})(\d{2})?(am|pm)/i);
-        if (match) {
-            let hours = parseInt(match[1]);
-            let minutes = match[2] || "00";
-            
-            // Convert to 24-hour format
-            if (match[3].toLowerCase() === 'pm' && hours !== 12) {
-                hours += 12;
-            } else if (match[3].toLowerCase() === 'am' && hours === 12) {
-                hours = 0;
-            }
-            
-            return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
-        }
-        
-        console.warn('Time string format not recognized:', timeStr);
+      // Handle undefined or empty time strings
+      if (!timeStr || typeof timeStr !== 'string') {
+        console.warn('Invalid time string:', timeStr);
         return "00:00:00";
+      }
+
+      // Handle 24-hour format (e.g., "14:30")
+      const time24Match = timeStr.match(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/);
+      if (time24Match) {
+        const hours = time24Match[1].padStart(2, '0');
+        const minutes = time24Match[2];
+        return `${hours}:${minutes}:00`;
+      }
+
+      // Handle 12-hour format (e.g., "530am", "1pm", "9pm")
+      const match = timeStr.match(/(\d{1,2})(\d{2})?(am|pm)/i);
+      if (match) {
+        let hours = parseInt(match[1]);
+        let minutes = match[2] || "00";
+
+        // Convert to 24-hour format
+        if (match[3].toLowerCase() === 'pm' && hours !== 12) {
+          hours += 12;
+        } else if (match[3].toLowerCase() === 'am' && hours === 12) {
+          hours = 0;
+        }
+
+        return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
+      }
+
+      console.warn('Time string format not recognized:', timeStr);
+      return "00:00:00";
     }
 
-  // Function to determine if a location is in KWC area
-  function isKWCLocation(location) {
+    // Function to determine if a location is in KWC area
+    function isKWCLocation(location) {
       const kwcKeywords = [
-          'kitchener', 'waterloo', 'cambridge', 'guelph', 'guelp', 'kwc', 'kw',
-          'conestoga', 'university of waterloo', 'wilfrid laurier',
-          'fairview park', 'boardwalk', 'laurier', 'uwaterloo',
-          'prospect avenue', 'prospect ave', 'prospect av', 'prospect',
-          'kitchener ontario', 'waterloo ontario', 'cambridge ontario', 'guelph ontario',
-          'imperial road', 'imperial rd', 'imperial'
+        'kitchener', 'waterloo', 'cambridge', 'guelph', 'guelp', 'kwc', 'kw',
+        'conestoga', 'university of waterloo', 'wilfrid laurier',
+        'fairview park', 'boardwalk', 'laurier', 'uwaterloo',
+        'prospect avenue', 'prospect ave', 'prospect av', 'prospect',
+        'kitchener ontario', 'waterloo ontario', 'cambridge ontario', 'guelph ontario',
+        'imperial road', 'imperial rd', 'imperial'
       ];
-      
+
       const locationLower = location.toLowerCase();
       return kwcKeywords.some(keyword => locationLower.includes(keyword));
-  }
+    }
 
-  // Function to determine if a location is in Toronto/Mississauga area
-  function isTorontoMississaugaLocation(location) {
+    // Function to determine if a location is in Toronto/Mississauga area
+    function isTorontoMississaugaLocation(location) {
       const torontoKeywords = [
-          'toronto', 'mississauga', 'pearson', 'airport', 'downtown toronto',
-          'scarborough', 'etobicoke', 'north york', 'york', 'east york',
-          'brampton', 'oakville', 'burlington', 'milton', 'vaughan',
-          'markham', 'richmond hill', 'aurora', 'newmarket',
-          'union station', 'front street', 'front st', 'front',
-          'toronto ontario', 'mississauga ontario', 'pearson airport', 'yyz',
-          'cibc square', 'cibc', 'bay street', 'bay st', 'bay',
-          'silver dart drive', 'silver dart'
+        'toronto', 'mississauga', 'pearson', 'airport', 'downtown toronto',
+        'scarborough', 'etobicoke', 'north york', 'york', 'east york',
+        'brampton', 'oakville', 'burlington', 'milton', 'vaughan',
+        'markham', 'richmond hill', 'aurora', 'newmarket',
+        'union station', 'front street', 'front st', 'front',
+        'toronto ontario', 'mississauga ontario', 'pearson airport', 'yyz',
+        'cibc square', 'cibc', 'bay street', 'bay st', 'bay',
+        'silver dart drive', 'silver dart'
       ];
-      
+
       const locationLower = location.toLowerCase();
       return torontoKeywords.some(keyword => locationLower.includes(keyword));
-  }
+    }
 
-  // Function to determine trip direction based on pickup and dropoff
-  function determineTripDirection(pickup, dropoff) {
+    // Function to determine trip direction based on pickup and dropoff
+    function determineTripDirection(pickup, dropoff) {
       const pickupIsKWC = isKWCLocation(pickup);
       const dropoffIsKWC = isKWCLocation(dropoff);
       const pickupIsToronto = isTorontoMississaugaLocation(pickup);
       const dropoffIsToronto = isTorontoMississaugaLocation(dropoff);
 
       if (pickupIsKWC && dropoffIsToronto) {
-          return {
-              direction: 'kwc-t',
-              directionText: 'KWC → Mississauga / Toronto',
-              availableTimes: [
-                  { value: "530am", label: "5:30 AM" },
-                  { value: "1pm", label: "1:00 PM" },
-                  { value: "9pm", label: "9:00 PM" }
-              ]
-          };
+        return {
+          direction: 'kwc-t',
+          directionText: 'KWC → Mississauga / Toronto',
+          availableTimes: [
+            { value: "530am", label: "5:30 AM" },
+            { value: "1pm", label: "1:00 PM" },
+            { value: "9pm", label: "9:00 PM" }
+          ]
+        };
       } else if (pickupIsToronto && dropoffIsKWC) {
-          return {
-              direction: 't-kwc',
-              directionText: 'Mississauga / Toronto → KWC',
-              availableTimes: [
-                  { value: "10am", label: "10:00 AM" },
-                  { value: "4pm", label: "4:00 PM" },
-                  { value: "11pm", label: "11:00 PM" }
-              ]
-          };
+        return {
+          direction: 't-kwc',
+          directionText: 'Mississauga / Toronto → KWC',
+          availableTimes: [
+            { value: "10am", label: "10:00 AM" },
+            { value: "4pm", label: "4:00 PM" },
+            { value: "11pm", label: "11:00 PM" }
+          ]
+        };
       } else {
-          return null; // Invalid route
+        return null; // Invalid route
       }
-  }
+    }
 
-  // Function to update time selection based on direction
-  function updateTimeSelection(direction) {
+    // Function to update time selection based on direction
+    function updateTimeSelection(direction) {
       const timeSelect = document.getElementById('time');
       if (!timeSelect) return;
 
@@ -1569,20 +1606,20 @@
       timeSelect.innerHTML = '<option value="">Trip Start Time (to First Stop)</option>';
 
       if (direction && direction.availableTimes) {
-          direction.availableTimes.forEach(time => {
-              const option = document.createElement('option');
-              option.value = time.value;
-              option.textContent = time.label;
-              timeSelect.appendChild(option);
-          });
-          
-          // Add visual feedback for successful detection
-          timeSelect.classList.add('success');
-          
-          // Remove success class after a delay
-          setTimeout(() => {
-              timeSelect.classList.remove('success');
-          }, 2000);
+        direction.availableTimes.forEach(time => {
+          const option = document.createElement('option');
+          option.value = time.value;
+          option.textContent = time.label;
+          timeSelect.appendChild(option);
+        });
+
+        // Add visual feedback for successful detection
+        timeSelect.classList.add('success');
+
+        // Remove success class after a delay
+        setTimeout(() => {
+          timeSelect.classList.remove('success');
+        }, 2000);
       }
     }
 
@@ -1598,19 +1635,19 @@
       const origin = document.getElementById("pickup").value;
       const destination = document.getElementById("dropoff").value;
 
-    // Determine trip direction automatically
-    const tripDirection = determineTripDirection(origin, destination);
-    if (!tripDirection) {
-      alert('Invalid route. Please ensure one location is in KWC area and the other is in Toronto/Mississauga area.');
-      return;
-    }
+      // Determine trip direction automatically
+      const tripDirection = determineTripDirection(origin, destination);
+      if (!tripDirection) {
+        alert('Invalid route. Please ensure one location is in KWC area and the other is in Toronto/Mississauga area.');
+        return;
+      }
 
-    const timeSelect = document.getElementById("time");
-    const selectedTime = timeSelect.value;
-    if (!selectedTime) {
-      alert('Please select a time for your trip.');
-      return;
-    }
+      const timeSelect = document.getElementById("time");
+      const selectedTime = timeSelect.value;
+      if (!selectedTime) {
+        alert('Please select a time for your trip.');
+        return;
+      }
 
       try {
         const drivingInfo = await getRouteInfo(origin, destination, google.maps.TravelMode.DRIVING);
@@ -1680,14 +1717,14 @@
           formData.append('transitDurationText', transitInfo.durationText);
           formData.append('estimatedArrivalTime', "-");
 
-            const response = await fetch(CONFIG.GOOGLE_APPS_SCRIPT.SHARED_RIDE, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData.toString()
-            });
+          const response = await fetch(CONFIG.GOOGLE_APPS_SCRIPT.SHARED_RIDE, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData.toString()
+          });
 
           // Redirect to summary page with data
           const encodedData = encodeURIComponent(JSON.stringify(reservationData));
@@ -1697,8 +1734,8 @@
           }, window.location.origin);
 
         } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while submitting the reservation. Please try again.');
+          console.error('Error:', error);
+          alert('An error occurred while submitting the reservation. Please try again.');
         }
 
       } catch (error) {
@@ -1707,19 +1744,19 @@
     });
 
     // Initialize map on page load
-  document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       initMap();
-  });
+    });
 
-  // Also initialize when window loads (fallback)
-  window.addEventListener('load', function() {
+    // Also initialize when window loads (fallback)
+    window.addEventListener('load', function () {
       if (!googleMapsUtils) {
-          initMap();
+        initMap();
       }
-  });
+    });
 
-  // Add event listeners for pickup and dropoff changes
-  document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners for pickup and dropoff changes
+    document.addEventListener('DOMContentLoaded', function () {
       const pickupInput = document.getElementById('pickup');
       const dropoffInput = document.getElementById('dropoff');
       const timeSelect = document.getElementById('time');
@@ -1732,98 +1769,98 @@
 
       // Initialize calendar
       function initCalendar() {
+        updateCalendar();
+
+        // Show calendar when clicking on date input
+        dateInput.addEventListener('click', function () {
+          calendarDropdown.classList.toggle('show');
+        });
+
+        // Hide calendar when clicking outside
+        document.addEventListener('click', function (e) {
+          if (!dateInput.contains(e.target) && !calendarDropdown.contains(e.target)) {
+            calendarDropdown.classList.remove('show');
+          }
+        });
+
+        // Navigation buttons
+        document.getElementById('prevMonth').addEventListener('click', function () {
+          currentDate.setMonth(currentDate.getMonth() - 1);
           updateCalendar();
-          
-          // Show calendar when clicking on date input
-          dateInput.addEventListener('click', function() {
-              calendarDropdown.classList.toggle('show');
-          });
+        });
 
-          // Hide calendar when clicking outside
-          document.addEventListener('click', function(e) {
-              if (!dateInput.contains(e.target) && !calendarDropdown.contains(e.target)) {
-                  calendarDropdown.classList.remove('show');
-              }
-          });
-
-          // Navigation buttons
-          document.getElementById('prevMonth').addEventListener('click', function() {
-              currentDate.setMonth(currentDate.getMonth() - 1);
-              updateCalendar();
-          });
-
-          document.getElementById('nextMonth').addEventListener('click', function() {
-              currentDate.setMonth(currentDate.getMonth() + 1);
-              updateCalendar();
-          });
+        document.getElementById('nextMonth').addEventListener('click', function () {
+          currentDate.setMonth(currentDate.getMonth() + 1);
+          updateCalendar();
+        });
       }
 
       function updateCalendar() {
-          const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                             'July', 'August', 'September', 'October', 'November', 'December'];
-          
-          document.getElementById('currentMonth').textContent = monthNames[currentDate.getMonth()];
-          document.getElementById('currentYear').textContent = currentDate.getFullYear();
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'];
 
-          const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-          const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-          const startDate = new Date(firstDay);
-          startDate.setDate(startDate.getDate() - firstDay.getDay());
+        document.getElementById('currentMonth').textContent = monthNames[currentDate.getMonth()];
+        document.getElementById('currentYear').textContent = currentDate.getFullYear();
 
-          const calendarDays = document.getElementById('calendarDays');
-          calendarDays.innerHTML = '';
+        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const startDate = new Date(firstDay);
+        startDate.setDate(startDate.getDate() - firstDay.getDay());
 
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
+        const calendarDays = document.getElementById('calendarDays');
+        calendarDays.innerHTML = '';
 
-          for (let i = 0; i < 42; i++) {
-              const date = new Date(startDate);
-              date.setDate(startDate.getDate() + i);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-              const dayButton = document.createElement('button');
-              dayButton.className = 'calendar-day';
-              dayButton.textContent = date.getDate();
+        for (let i = 0; i < 42; i++) {
+          const date = new Date(startDate);
+          date.setDate(startDate.getDate() + i);
 
-              // Check if date is from other month
-              if (date.getMonth() !== currentDate.getMonth()) {
-                  dayButton.classList.add('other-month');
-              }
+          const dayButton = document.createElement('button');
+          dayButton.className = 'calendar-day';
+          dayButton.textContent = date.getDate();
 
-              // Check if date is today
-              if (date.getTime() === today.getTime()) {
-                  dayButton.classList.add('today');
-              }
-
-              // Check if date is selected
-              if (selectedDate && date.getTime() === selectedDate.getTime()) {
-                  dayButton.classList.add('selected');
-              }
-
-              // Disable past dates
-              if (date < today) {
-                  dayButton.classList.add('disabled');
-              } else {
-                  dayButton.addEventListener('click', function() {
-                      selectDate(date);
-                  });
-              }
-
-              calendarDays.appendChild(dayButton);
+          // Check if date is from other month
+          if (date.getMonth() !== currentDate.getMonth()) {
+            dayButton.classList.add('other-month');
           }
 
-          // Update navigation buttons
-          document.getElementById('prevMonth').disabled = false;
-          document.getElementById('nextMonth').disabled = false;
+          // Check if date is today
+          if (date.getTime() === today.getTime()) {
+            dayButton.classList.add('today');
+          }
+
+          // Check if date is selected
+          if (selectedDate && date.getTime() === selectedDate.getTime()) {
+            dayButton.classList.add('selected');
+          }
+
+          // Disable past dates
+          if (date < today) {
+            dayButton.classList.add('disabled');
+          } else {
+            dayButton.addEventListener('click', function () {
+              selectDate(date);
+            });
+          }
+
+          calendarDays.appendChild(dayButton);
+        }
+
+        // Update navigation buttons
+        document.getElementById('prevMonth').disabled = false;
+        document.getElementById('nextMonth').disabled = false;
       }
 
       function selectDate(date) {
-          selectedDate = date;
-          const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-          const formattedDate = `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-          dateInput.value = formattedDate;
-          calendarDropdown.classList.remove('show');
-          updateCalendar();
+        selectedDate = date;
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const formattedDate = `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        dateInput.value = formattedDate;
+        calendarDropdown.classList.remove('show');
+        updateCalendar();
       }
 
       // Initialize calendar
@@ -1831,155 +1868,156 @@
 
       // Create time select element if it doesn't exist
       if (!timeSelect) {
-          const timeGroup = document.createElement('div');
-          timeGroup.className = 'input-group';
-          timeGroup.innerHTML = `
+        const timeGroup = document.createElement('div');
+        timeGroup.className = 'input-group';
+        timeGroup.innerHTML = `
               <label for="time">Select Time:</label>
               <select id="time" required>
                   <option value="">Enter locations</option>
               </select>
           `;
-          
-          // Insert before the ETAY field
-          const etayGroup = document.querySelector('label[for="ETAY"]').parentElement;
-          etayGroup.parentNode.insertBefore(timeGroup, etayGroup);
+
+        // Insert before the ETAY field
+        const etayGroup = document.querySelector('label[for="ETAY"]').parentElement;
+        etayGroup.parentNode.insertBefore(timeGroup, etayGroup);
       }
 
       // Function to check and update direction when locations change
       function checkAndUpdateDirection() {
-          const pickup = pickupInput.value.trim();
-          const dropoff = dropoffInput.value.trim();
-          const timeSelect = document.getElementById('time');
+        const pickup = pickupInput.value.trim();
+        const dropoff = dropoffInput.value.trim();
+        const timeSelect = document.getElementById('time');
 
-          // Don't show loading if both fields are empty
-          if (!pickup && !dropoff) {
-              timeSelect.innerHTML = '<option value="">Enter locations</option>';
-              return;
-          }
+        // Don't show loading if both fields are empty
+        if (!pickup && !dropoff) {
+          timeSelect.innerHTML = '<option value="">Enter locations</option>';
+          return;
+        }
 
-          // Show loading only if both fields have some content
-          if (pickup && dropoff) {
-              timeSelect.innerHTML = '<option value="">Analyzing route...</option>';
-              timeSelect.classList.add('loading');
+        // Show loading only if both fields have some content
+        if (pickup && dropoff) {
+          timeSelect.innerHTML = '<option value="">Analyzing route...</option>';
+          timeSelect.classList.add('loading');
 
-              // Add a small delay to avoid premature validation
-              setTimeout(() => {
-                  const direction = determineTripDirection(pickup, dropoff);
-                  
-                  if (direction) {
-                      updateTimeSelection(direction);
-                      timeSelect.classList.remove('loading');
-                      timeSelect.classList.add('success');
-                      console.log('Trip direction determined:', direction.directionText);
-                  } else {
-                      // Invalid route - show helpful message
-                      timeSelect.innerHTML = '<option value="">Invalid route - Please check locations</option>';
-                      timeSelect.classList.remove('loading');
-                      timeSelect.classList.remove('success');
-                      console.log('Invalid route detected');
-                  }
-              }, 500); // 500ms delay to avoid premature validation
-          } else {
-              // Reset to initial state if either field is empty
-              timeSelect.innerHTML = '<option value="">Enter locations</option>';
-              timeSelect.classList.remove('loading', 'success');
-          }
+          // Add a small delay to avoid premature validation
+          setTimeout(() => {
+            const direction = determineTripDirection(pickup, dropoff);
+
+            if (direction) {
+              updateTimeSelection(direction);
+              timeSelect.classList.remove('loading');
+              timeSelect.classList.add('success');
+              console.log('Trip direction determined:', direction.directionText);
+            } else {
+              // Invalid route - show helpful message
+              timeSelect.innerHTML = '<option value="">Invalid route - Please check locations</option>';
+              timeSelect.classList.remove('loading');
+              timeSelect.classList.remove('success');
+              console.log('Invalid route detected');
+            }
+          }, 500); // 500ms delay to avoid premature validation
+        } else {
+          // Reset to initial state if either field is empty
+          timeSelect.innerHTML = '<option value="">Enter locations</option>';
+          timeSelect.classList.remove('loading', 'success');
+        }
       }
 
       // Add event listeners for location changes with debouncing
       let timeoutId;
       function debouncedCheck() {
-          clearTimeout(timeoutId);
-          timeoutId = setTimeout(checkAndUpdateDirection, 500); // 500ms debounce
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(checkAndUpdateDirection, 500); // 500ms debounce
       }
 
       pickupInput.addEventListener('input', debouncedCheck);
       dropoffInput.addEventListener('input', debouncedCheck);
-      
+
       // Also check on blur for immediate feedback
       pickupInput.addEventListener('blur', checkAndUpdateDirection);
       dropoffInput.addEventListener('blur', checkAndUpdateDirection);
     });
 
     function checkUser() {
-        const user = JSON.parse(localStorage.getItem('user'));
-        const userInfoElement = document.getElementById('userName');
-        const logoutBtn = document.querySelector('.logout-btn');
-        const userIcon = document.querySelector('.user-icon');
-        
-        if (user) {
-            userInfoElement.textContent = `Welcome, ${user.fullName}`;
-            logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-            logoutBtn.onclick = logout;
-            userIcon.className = 'fas fa-user user-icon';
-        } else {
-            userInfoElement.textContent = '';
-            logoutBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
-            logoutBtn.onclick = checkAuth;
-            userIcon.className = 'fas fa-sign-in-alt user-icon';
-        }
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userInfoElement = document.getElementById('userName');
+      const logoutBtn = document.querySelector('.logout-btn');
+      const userIcon = document.querySelector('.user-icon');
+
+      if (user) {
+        userInfoElement.textContent = `Welcome, ${user.fullName}`;
+        logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+        logoutBtn.onclick = logout;
+        userIcon.className = 'fas fa-user user-icon';
+      } else {
+        userInfoElement.textContent = '';
+        logoutBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+        logoutBtn.onclick = checkAuth;
+        userIcon.className = 'fas fa-sign-in-alt user-icon';
+      }
     }
 
     function toggleUserMenu() {
-        const userInfo = document.querySelector('.user-info');
-        userInfo.classList.toggle('mobile-active');
+      const userInfo = document.querySelector('.user-info');
+      userInfo.classList.toggle('mobile-active');
     }
 
     function checkAuth() {
-        window.location.href = 'Login.html';
+      window.location.href = 'Login.html';
     }
 
-    window.onload = function() {
-        checkUser();
-        initMap();
+    window.onload = function () {
+      checkUser();
+      initMap();
     };
 
     // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-        const userInfo = document.querySelector('.user-info');
-        const userIcon = document.querySelector('.user-icon');
-        if (!userInfo.contains(event.target)) {
-            userInfo.classList.remove('mobile-active');
-        }
+    document.addEventListener('click', function (event) {
+      const userInfo = document.querySelector('.user-info');
+      const userIcon = document.querySelector('.user-icon');
+      if (!userInfo.contains(event.target)) {
+        userInfo.classList.remove('mobile-active');
+      }
     });
 
     // Handle ETA label visibility
-    document.addEventListener('DOMContentLoaded', function() {
-        const etayInput = document.getElementById('ETAY');
-        const etayLabel = document.querySelector('label[for="ETAY"]');
-        
-        if (etayInput && etayLabel) {
-            // Hide label when input has a value and show the actual time
-            function updateLabelVisibility() {
-                if (etayInput.value) {
-                    etayLabel.style.display = 'none';
-                    // Ensure the input shows the selected time value
-                    etayInput.style.color = '#1B263B';
-                } else {
-                    etayLabel.style.display = 'block';
-                    // Reset input color when empty
-                    etayInput.style.color = '#1B263B';
-                }
-            }
-            
-            // Check on load
-            updateLabelVisibility();
-            
-            // Check on input change
-            etayInput.addEventListener('input', updateLabelVisibility);
-            etayInput.addEventListener('change', updateLabelVisibility);
-            etayInput.addEventListener('focus', function() {
-                // Hide label when input is focused
-                etayLabel.style.display = 'none';
-            });
-            etayInput.addEventListener('blur', function() {
-                // Show label only if input is empty when losing focus
-                if (!etayInput.value) {
-                    etayLabel.style.display = 'block';
-                }
-            });
+    document.addEventListener('DOMContentLoaded', function () {
+      const etayInput = document.getElementById('ETAY');
+      const etayLabel = document.querySelector('label[for="ETAY"]');
+
+      if (etayInput && etayLabel) {
+        // Hide label when input has a value and show the actual time
+        function updateLabelVisibility() {
+          if (etayInput.value) {
+            etayLabel.style.display = 'none';
+            // Ensure the input shows the selected time value
+            etayInput.style.color = '#1B263B';
+          } else {
+            etayLabel.style.display = 'block';
+            // Reset input color when empty
+            etayInput.style.color = '#1B263B';
+          }
         }
+
+        // Check on load
+        updateLabelVisibility();
+
+        // Check on input change
+        etayInput.addEventListener('input', updateLabelVisibility);
+        etayInput.addEventListener('change', updateLabelVisibility);
+        etayInput.addEventListener('focus', function () {
+          // Hide label when input is focused
+          etayLabel.style.display = 'none';
+        });
+        etayInput.addEventListener('blur', function () {
+          // Show label only if input is empty when losing focus
+          if (!etayInput.value) {
+            etayLabel.style.display = 'block';
+          }
+        });
+      }
     });
   </script>
 </body>
+
 </html>

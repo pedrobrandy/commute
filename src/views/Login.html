@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Commut</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="Style.css">
+    <link rel="stylesheet" href="../styles/Style.css">
     <style>
         body {
             font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -26,7 +27,7 @@
             background-color: whitesmoke;
             padding: 35px;
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
             margin: 0 auto;
@@ -297,63 +298,65 @@
         }
 
         .test-section {
-          margin: 20px 0;
-          padding: 15px;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          background-color: #f9f9f9;
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
         }
-        
+
         .test-result {
-          margin-top: 10px;
+            margin-top: 10px;
         }
-        
+
         .test-details {
-          margin-top: 10px;
-          font-size: 14px;
+            margin-top: 10px;
+            font-size: 14px;
         }
-        
+
         .test-details ul {
-          margin: 5px 0;
-          padding-left: 20px;
+            margin: 5px 0;
+            padding-left: 20px;
         }
-        
+
         .test-details li {
-          margin: 2px 0;
+            margin: 2px 0;
         }
-        
+
         .setup-links {
-          margin-top: 15px;
-          text-align: center;
+            margin-top: 15px;
+            text-align: center;
         }
-        
+
         .setup-link {
-          color: #007bff;
-          text-decoration: none;
-          font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
         }
-        
+
         .setup-link:hover {
-          text-decoration: underline;
+            text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
-        
+
         <!-- Phone Input Form -->
         <form id="phoneForm">
             <div class="form-group">
                 <label for="phone">What is your Phone Number?:</label>
                 <div class="phone-input-container">
                     <span class="phone-prefix">+1</span>
-                    <input type="tel" id="phone" class="phone-input" required placeholder="(555) 123-4567" maxlength="10">
+                    <input type="tel" id="phone" class="phone-input" required placeholder="(555) 123-4567"
+                        maxlength="10">
+                </div>
             </div>
-            </div>
-            
+
             <div id="error-message" class="error-message"></div>
             <div id="success-message" class="success-message"></div>
-            
+
             <button type="submit" class="login-button" id="sendCodeBtn">
                 Send Code
             </button>
@@ -364,7 +367,7 @@
             <p style="text-align: center; margin-bottom: 20px; color: #6c757d;">
                 Enter the 6-digit code sent to your phone
             </p>
-            
+
             <div class="code-input">
                 <input type="text" maxlength="1" class="code-digit" data-index="0">
                 <input type="text" maxlength="1" class="code-digit" data-index="1">
@@ -373,73 +376,73 @@
                 <input type="text" maxlength="1" class="code-digit" data-index="4">
                 <input type="text" maxlength="1" class="code-digit" data-index="5">
             </div>
-            
+
             <button type="button" class="login-button" id="verifyCodeBtn">
                 Verify Code
             </button>
-            
+
             <button type="button" class="resend-button" id="resendBtn">
                 Resend code
             </button>
         </div>
     </div>
 
-    <script src="config.production.js"></script>
-    <script src="api-utils.js"></script>
+    <script src="../config/config.production.js"></script>
+    <script src="../scripts/api-utils.js"></script>
     <script>
         let currentPhone = '';
         let resendTimer = null;
         let resendCountdown = 60;
 
         // Format phone number as user types
-        document.getElementById('phone').addEventListener('input', function(e) {
+        document.getElementById('phone').addEventListener('input', function (e) {
             let value = e.target.value.replace(/\D/g, '');
-            
+
             if (value.length >= 6) {
                 value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
             } else if (value.length >= 3) {
                 value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
             }
-            
+
             e.target.value = value;
         });
 
         // Handle phone form submission
-        document.getElementById('phoneForm').addEventListener('submit', async function(e) {
+        document.getElementById('phoneForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const phoneInput = document.getElementById('phone');
             const phone = phoneInput.value.replace(/\D/g, '');
             const errorMessage = document.getElementById('error-message');
             const successMessage = document.getElementById('success-message');
             const sendCodeBtn = document.getElementById('sendCodeBtn');
-            
+
             // Clear previous messages
             errorMessage.textContent = '';
             successMessage.textContent = '';
-            
+
             if (phone.length !== 10) {
                 errorMessage.textContent = 'Please enter a valid phone number (10 digits)';
                 return;
             }
-            
+
             try {
                 sendCodeBtn.disabled = true;
                 sendCodeBtn.innerHTML = 'Sending...';
-                
+
                 const result = await sendSmsCode('+1' + phone, true);
-                
+
                 if (result.success) {
                     currentPhone = '+1' + phone;
                     successMessage.textContent = 'Code sent successfully to your phone';
-                    
+
                     // Show verification form
                     document.getElementById('phoneForm').style.display = 'none';
                     document.getElementById('verificationContainer').classList.add('show');
-                    
+
                     // Start resend timer
                     startResendTimer();
-                    
+
                     // Focus first code input
                     setTimeout(() => {
                         document.querySelector('.code-digit[data-index="0"]').focus();
@@ -458,18 +461,18 @@
 
         // Handle code input navigation
         document.querySelectorAll('.code-digit').forEach(input => {
-            input.addEventListener('input', function(e) {
+            input.addEventListener('input', function (e) {
                 const value = e.target.value;
                 const index = parseInt(this.dataset.index);
-                
+
                 if (value && index < 5) {
                     document.querySelector(`.code-digit[data-index="${index + 1}"]`).focus();
                 }
             });
-            
-            input.addEventListener('keydown', function(e) {
+
+            input.addEventListener('keydown', function (e) {
                 const index = parseInt(this.dataset.index);
-                
+
                 if (e.key === 'Backspace' && !this.value && index > 0) {
                     document.querySelector(`.code-digit[data-index="${index - 1}"]`).focus();
                 }
@@ -477,12 +480,12 @@
         });
 
         // Handle verification
-        document.getElementById('verifyCodeBtn').addEventListener('click', async function() {
+        document.getElementById('verifyCodeBtn').addEventListener('click', async function () {
             const codeInputs = document.querySelectorAll('.code-digit');
             const code = Array.from(codeInputs).map(input => input.value).join('');
             const errorMessage = document.getElementById('error-message');
             const verifyBtn = document.getElementById('verifyCodeBtn');
-            
+
             errorMessage.textContent = '';
 
             if (code.length !== 6) {
@@ -493,9 +496,9 @@
             try {
                 verifyBtn.disabled = true;
                 verifyBtn.innerHTML = 'Verifying...';
-                
+
                 const result = await verifySmsCode(currentPhone, code);
-                
+
                 console.log('📱 Frontend received result:', result);
                 console.log('📱 currentPhone:', currentPhone);
                 console.log('📱 result.userExists:', result.userExists);
@@ -509,7 +512,7 @@
                             phone: currentPhone,
                             avatar: result.avatar
                         }));
-                        
+
                         window.location.href = 'index.html';
                     } else {
                         // User doesn't exist, redirect to registration
@@ -532,15 +535,15 @@
         });
 
         // Handle resend
-        document.getElementById('resendBtn').addEventListener('click', async function() {
+        document.getElementById('resendBtn').addEventListener('click', async function () {
             const resendBtn = document.getElementById('resendBtn');
             const errorMessage = document.getElementById('error-message');
-            
+
             try {
                 resendBtn.disabled = true;
-                
+
                 const result = await sendSmsCode(currentPhone, true);
-                
+
                 if (result.success) {
                     errorMessage.textContent = '';
                     startResendTimer();
@@ -556,14 +559,14 @@
         function startResendTimer() {
             const resendBtn = document.getElementById('resendBtn');
             resendCountdown = 60;
-            
+
             resendBtn.disabled = true;
             resendBtn.textContent = `Resend code (${resendCountdown}s)`;
-            
+
             resendTimer = setInterval(() => {
                 resendCountdown--;
                 resendBtn.textContent = `Resend code (${resendCountdown}s)`;
-                
+
                 if (resendCountdown <= 0) {
                     clearInterval(resendTimer);
                     resendBtn.disabled = false;
@@ -573,7 +576,7 @@
         }
 
         // Check if user is already logged in
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const user = JSON.parse(localStorage.getItem('user'));
             // Temporarily comment out auto-redirect for testing
             // if (user) {
@@ -581,7 +584,8 @@
             // }
         });
     </script>
-    <script src="loadNav.js"></script> 
-    <script src="loadHeader.js"></script>
+    <script src="../scripts/loadNav.js"></script>
+    <script src="../scripts/loadHeader.js"></script>
 </body>
+
 </html>

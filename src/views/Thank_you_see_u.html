@@ -1,209 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thank You</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<style>
-      body {
-        font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
-        margin: 0;
-        background-color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 220px;
-        padding-bottom: 150px;
-      }
+  <style>
+    body {
+      font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 220px;
+      padding-bottom: 150px;
+    }
 
+    nav {
+      background-color: #fff;
+      width: 100%;
+      padding: 10px 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .menu {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      list-style: none;
+      margin: 0;
+      padding: 20;
+    }
+
+    .menu-item {
+      position: relative;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #0078D4;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .submenu {
+      display: none;
+      position: absolute;
+      background: white;
+      top: 100%;
+      left: 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 10px;
+      z-index: 1000;
+    }
+
+    .menu-item:hover .submenu {
+      display: block;
+    }
+
+    .submenu a {
+      display: block;
+      padding: 5px 10px;
+      color: #0078D4;
+    }
+
+    .submenu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .user-info span {
+      color: #333;
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #0078D4;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .logout-btn:hover {
+      background-color: #f0f0f0;
+    }
+
+    .user-icon {
+      display: none;
+      font-size: 1.2rem;
+      color: #0078D4;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      transition: background-color 0.3s;
+    }
+
+    .user-icon:hover {
+      background-color: #f0f0f0;
+    }
+
+    .content-wrapper {
+      max-width: 80%;
+      width: 100%;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .thank-you-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #0078D4;
+      margin-bottom: 20px;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+    }
+
+    p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .home-button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #0078D4;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+
+    .home-button:hover {
+      background-color: #005A9E;
+    }
+
+    @media (max-width: 600px) {
       nav {
-        background-color: #fff;
-        width: 100%;
-        padding: 10px 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        padding: 10px;
       }
 
       .menu {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-        list-style: none;
-        margin: 0;
-        padding: 20;
-      }
-
-      .menu-item {
-        position: relative;
-      }
-
-      nav a {
-        text-decoration: none;
-        color: #0078D4;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
         gap: 5px;
-      }
-
-      .submenu {
-        display: none;
-        position: absolute;
-        background: white;
-        top: 100%;
-        left: 0;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        border-radius: 8px;
         padding: 10px;
-        z-index: 1000;
-      }
-
-      .menu-item:hover .submenu {
-        display: block;
-      }
-
-      .submenu a {
-        display: block;
-        padding: 5px 10px;
-        color: #0078D4;
-      }
-
-      .submenu a:hover {
-        background-color: #f0f0f0;
-      }
-
-      .user-info {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        position: relative;
-      }
-
-      .user-info span {
-        color: #333;
-      }
-
-      .logout-btn {
-        background: none;
-        border: none;
-        color: #0078D4;
-        cursor: pointer;
-        font-weight: 600;
-        padding: 5px 10px;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .logout-btn:hover {
-        background-color: #f0f0f0;
-      }
-
-      .user-icon {
-        display: none;
-        font-size: 1.2rem;
-        color: #0078D4;
-        cursor: pointer;
-        padding: 5px;
-        border-radius: 50%;
-        transition: background-color 0.3s;
-      }
-
-      .user-icon:hover {
-        background-color: #f0f0f0;
       }
 
       .content-wrapper {
-        max-width: 80%;
-        width: 100%;
-        margin: 40px auto;
-        padding: 0 20px;
+        margin: 20px 10px;
+        padding: 0 10px;
       }
 
       .thank-you-container {
+        padding: 20px;
+      }
+
+      .user-info span {
+        display: none;
+      }
+
+      .user-icon {
+        display: block;
+      }
+
+      .logout-btn {
+        display: none;
+      }
+
+      .user-info.mobile-active .logout-btn {
+        display: flex;
+        position: absolute;
+        top: 100%;
+        right: 0;
         background: white;
-        padding: 30px;
-        border-radius: 12px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        text-align: center;
+        border-radius: 4px;
+        padding: 10px;
+        z-index: 1000;
+        white-space: nowrap;
       }
-
-      h1 {
-        color: #0078D4;
-        margin-bottom: 20px;
-        font-size: clamp(1.4rem, 3vw, 2rem);
-      }
-
-      p {
-        color: #666;
-        line-height: 1.6;
-        margin-bottom: 30px;
-      }
-
-      .home-button {
-        display: inline-block;
-        padding: 12px 24px;
-        background-color: #0078D4;
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-        transition: background-color 0.3s;
-      }
-
-      .home-button:hover {
-        background-color: #005A9E;
-      }
-
-      @media (max-width: 600px) {
-        nav {
-          padding: 10px;
-        }
-        .menu {
-          gap: 5px;
-          padding: 10px;
-        }
-
-        .content-wrapper {
-          margin: 20px 10px;
-          padding: 0 10px;
-        }
-
-        .thank-you-container {
-          padding: 20px;
-        }
-
-        .user-info span {
-          display: none;
-        }
-
-        .user-icon {
-          display: block;
-        }
-
-        .logout-btn {
-          display: none;
-        }
-
-        .user-info.mobile-active .logout-btn {
-          display: flex;
-          position: absolute;
-          top: 100%;
-          right: 0;
-          background: white;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-          border-radius: 4px;
-          padding: 10px;
-          z-index: 1000;
-          white-space: nowrap;
-        }
-      }
-    </style>
+    }
+  </style>
 </head>
+
 <body>
 
 
@@ -215,14 +218,14 @@
     </div>
   </div>
 
-  <script src="auth.js"></script>
+  <script src="../scripts/auth.js"></script>
   <script>
     function checkUser() {
       const user = JSON.parse(localStorage.getItem('user'));
       const userInfoElement = document.getElementById('userName');
       const logoutBtn = document.querySelector('.logout-btn');
       const userIcon = document.querySelector('.user-icon');
-      
+
       if (user) {
         userInfoElement.textContent = `Welcome, ${user.fullName}`;
         logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
@@ -248,7 +251,7 @@
     window.onload = checkUser;
 
     // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
       const userInfo = document.querySelector('.user-info');
       const userIcon = document.querySelector('.user-icon');
       if (!userInfo.contains(event.target)) {
@@ -257,4 +260,5 @@
     });
   </script>
 </body>
+
 </html>

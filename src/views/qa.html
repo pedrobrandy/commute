@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Q&amp;A</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="Style.css">
+  <link rel="stylesheet" href="../styles/Style.css">
   <style>
     @font-face {
       font-family: 'UberMove';
@@ -14,6 +15,7 @@
       font-style: normal;
       font-display: swap;
     }
+
     @font-face {
       font-family: 'UberMoveText';
       src: url('https://assets.uber.com/fonts/v2/UberMoveText-Regular.woff2') format('woff2');
@@ -21,7 +23,7 @@
       font-style: normal;
       font-display: swap;
     }
-    
+
     body {
       font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
       margin: 0;
@@ -30,8 +32,10 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      padding-top: 150px; /* More space for header and navigation */
-      padding-bottom: 120px; /* Space for bottom navigation */
+      padding-top: 150px;
+      /* More space for header and navigation */
+      padding-bottom: 120px;
+      /* Space for bottom navigation */
     }
 
     .main-content {
@@ -46,7 +50,7 @@
       background: #fff;
       padding: 40px 30px;
       border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
       border: 1px solid #e0e0e0;
       margin-top: 20px;
     }
@@ -92,28 +96,30 @@
     /* Responsive design */
     @media (max-width: 768px) {
       body {
-        padding-top: 130px; /* More space on mobile */
-        padding-bottom: 100px; /* Space for bottom nav on mobile */
+        padding-top: 130px;
+        /* More space on mobile */
+        padding-bottom: 100px;
+        /* Space for bottom nav on mobile */
       }
-      
+
       .main-content {
         padding: 15px;
       }
-      
+
       .qa-section {
         padding: 25px 20px;
         border-radius: 15px;
       }
-      
+
       .qa-title {
         font-size: 1.5rem;
         margin-bottom: 25px;
       }
-      
+
       .question strong {
         font-size: 1rem;
       }
-      
+
       .answer {
         font-size: 0.95rem;
       }
@@ -121,31 +127,34 @@
 
     @media (max-width: 480px) {
       body {
-        padding-top: 140px; /* Much more space on small mobile */
-        padding-bottom: 80px; /* Space for bottom nav on small mobile */
+        padding-top: 140px;
+        /* Much more space on small mobile */
+        padding-bottom: 80px;
+        /* Space for bottom nav on small mobile */
       }
-      
+
       .main-content {
         padding: 10px;
       }
-      
+
       .qa-section {
         padding: 20px 15px;
         border-radius: 12px;
       }
-      
+
       .qa-title {
         font-size: 1.3rem;
         margin-bottom: 20px;
       }
     }
   </style>
-  <script src="loadHeader.js"></script>
-  <script src="loadNav.js"></script>
+  <script src="../scripts/loadHeader.js"></script>
+  <script src="../scripts/loadNav.js"></script>
 </head>
+
 <body>
   <!-- Header and navigation will be loaded here -->
-  
+
   <div class="main-content">
     <div class="qa-section">
       <h2 class="qa-title">Frequently Asked Questions</h2>
@@ -153,7 +162,8 @@
       <div class="question">
         <strong>Q: What is the difference between Personal and Shared rides?</strong>
         <div class="answer">
-          A Personal Ride offers a direct route with no stops. Shared Rides are coordinated with others, and routes are finalized the night before.
+          A Personal Ride offers a direct route with no stops. Shared Rides are coordinated with others, and routes are
+          finalized the night before.
         </div>
       </div>
 
@@ -181,27 +191,33 @@
       <div class="question">
         <strong>Q: Can I cancel a reservation?</strong>
         <div class="answer">
-          Yes, you can cancel up to 1 hour before the scheduled time. Please contact us through the <strong>Contact</strong> link above to cancel your reservation.<br><br>
-          If you cancel less than 1 hour before your ride, a <strong>$3 CAD</strong> fee will apply on your next ride.<br>
-          If your trip is canceled by us within that hour, you will receive a <strong>$3 CAD discount</strong> on your next ride.
+          Yes, you can cancel up to 1 hour before the scheduled time. Please contact us through the
+          <strong>Contact</strong> link above to cancel your reservation.<br><br>
+          If you cancel less than 1 hour before your ride, a <strong>$3 CAD</strong> fee will apply on your next
+          ride.<br>
+          If your trip is canceled by us within that hour, you will receive a <strong>$3 CAD discount</strong> on your
+          next ride.
         </div>
       </div>
 
       <div class="question">
         <strong>Q: What happens if I don't arrive at the drop-off on time during a shared ride?</strong>
         <div class="answer">
-          Life isn't always predictable—traffic in Toronto and coordination with other passengers can affect timing. If you must arrive on time for something very important, we recommend choosing a <strong>Personal Ride</strong> to ensure your arrival.<br><br>
+          Life isn't always predictable—traffic in Toronto and coordination with other passengers can affect timing. If
+          you must arrive on time for something very important, we recommend choosing a <strong>Personal Ride</strong>
+          to ensure your arrival.<br><br>
           <strong>What if I notice I'm running late?</strong><br>
-          Please communicate with the person or workplace that's expecting you and explain the situation. We always do our best to arrive on time, but external factors can sometimes cause delays.
+          Please communicate with the person or workplace that's expecting you and explain the situation. We always do
+          our best to arrive on time, but external factors can sometimes cause delays.
         </div>
       </div>
     </div>
   </div>
 
-  <script src="auth.js"></script>
+  <script src="../scripts/auth.js"></script>
   <script>
     // Load header and navigation
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       console.log('Loading header and navigation for QA page');
       if (typeof loadHeader === 'function') {
         loadHeader();
@@ -212,4 +228,5 @@
     });
   </script>
 </body>
+
 </html>
